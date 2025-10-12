@@ -1,0 +1,48 @@
+<aside class="sidebar">
+  <!-- HEADER -->
+  <header class="sidebar-header">
+    <div class="profile">
+      <img [src]="userProfile.avatar" [alt]="userProfile.name" class="avatar" />
+      <span class="username">{{ userProfile.name }}</span>
+    </div>
+    <button class="settings-btn" title="Configuración">
+      <img src="/logo.png" alt="" />
+    </button>
+  </header>
+
+  <!-- MENU -->
+  <nav class="nav-menu">
+    <div
+      *ngFor="let item of menuItems; let i = index"
+      class="nav-item"
+      [class.active]="activeItem === item.id"
+      [style.animation-delay.ms]="i * 60"
+      (click)="setActiveItem(item.id)"
+    >
+      <div class="nav-icon" [innerHTML]="item.icon"></div>
+      <span class="nav-label">{{ item.label }}</span>
+      <span class="badge" *ngIf="item.badge">{{ item.badge }}</span>
+      <span class="new-label" *ngIf="item.isNew">NEW</span>
+    </div>
+  </nav>
+
+  <!-- FOOTER -->
+  <footer class="sidebar-footer">
+    <div class="points-container">
+      <div class="point-item">
+        <div class="point-icon">🔥</div>
+        <div class="point-info">
+          <span class="point-number">15</span>
+          <span class="point-label">Racha</span>
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">💰</div>
+        <div class="point-info">
+          <span class="point-number">2.4K</span>
+          <span class="point-label">Coins</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</aside>
