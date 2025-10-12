@@ -1,0 +1,319 @@
+<div class="super-container">
+  <app-sidebar-component></app-sidebar-component>
+  <div class="dashboard-container">
+    <!-- Header -->
+
+    <div class="dashboard-content">
+      <div class="header">
+        <div>
+          <h1 class="title">¡Bienvenido de nuevo! 👋</h1>
+          <p class="subtitle">Continúa tu viaje de aprendizaje en CodeQuest</p>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="main-grid">
+        <!-- Current Courses -->
+        <div class="section courses-section">
+          <div class="section-header">
+            <svg
+              class="section-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+            <h2>Mis Cursos</h2>
+          </div>
+
+          <div class="courses-grid">
+            <div
+              *ngFor="let course of courses; let i = index"
+              class="course-card"
+              [style.animation-delay.s]="i * 0.1"
+            >
+              <div class="course-content">
+                <div class="course-icon-wrapper">
+                  <span class="course-icon">{{ course.icon }}</span>
+                </div>
+                <div class="course-info">
+                  <div class="course-header">
+                    <h3>{{ course.name }}</h3>
+                    <span class="category-badge">{{ course.category }}</span>
+                  </div>
+                  <div class="course-lessons">
+                    {{ course.completedLessons }} de {{ course.lessons }} lecciones completadas
+                  </div>
+                  <div class="next-lesson">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                    Siguiente: {{ course.nextLesson }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="progress-bar-container">
+                <div class="progress-bar" [style.width.%]="course.progress"></div>
+              </div>
+              <div class="progress-text">{{ course.progress }}%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-column">
+          <!-- Weekly Activity -->
+          <div class="section activity-section">
+            <div class="section-header">
+              <svg
+                class="section-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <h2>Actividad Semanal</h2>
+            </div>
+
+            <div class="activity-chart">
+              <div *ngFor="let day of weeklyActivity; let i = index" class="activity-bar-wrapper">
+                <div
+                  class="activity-bar"
+                  [style.height.px]="day.value * 20"
+                  [class.active]="day.value > 3"
+                  [style.animation-delay.s]="i * 0.1"
+                ></div>
+                <span class="day-label">{{ day.day }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="stats-container">
+            <div class="stat-card" [class.animate-pulse]="animateStats">
+              <svg
+                class="stat-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+                />
+              </svg>
+              <div class="stat-value">{{ streak }}</div>
+              <div class="stat-label">Días de racha</div>
+            </div>
+            <div class="stat-card gold" [class.animate-pulse]="animateStats">
+              <svg
+                class="stat-icon gold"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+              <div class="stat-value gold">{{ coins }}</div>
+              <div class="stat-label">CodeCoins</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Second Row -->
+      <div class="second-grid">
+        <!-- Wishlist -->
+        <div class="section wishlist-section">
+          <div class="section-header">
+            <svg
+              class="section-icon gold"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+              />
+            </svg>
+            <h2>Lista de Deseos</h2>
+          </div>
+
+          <div class="wishlist-grid">
+            <div
+              *ngFor="let course of wishlistCourses; let i = index"
+              class="wishlist-card"
+              [style.animation-delay.s]="i * 0.1"
+            >
+              <div class="wishlist-image-container">
+                <img [src]="course.image" [alt]="course.name" class="wishlist-image" />
+                <div class="wishlist-overlay">
+                  <svg
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    stroke="white"
+                    stroke-width="2"
+                  >
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                </div>
+              </div>
+              <div class="wishlist-content">
+                <h4>{{ course.name }}</h4>
+                <div class="wishlist-meta">
+                  <span class="level-badge">{{ course.level }}</span>
+                  <span class="duration">{{ course.duration }}</span>
+                </div>
+                <div class="students-count">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                  {{ course.students.toLocaleString() }} estudiantes
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Achievements -->
+        <div class="section achievements-section">
+          <div class="section-header">
+            <svg
+              class="section-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+              <path d="M4 22h16" />
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+            </svg>
+            <h2>Logros Recientes</h2>
+          </div>
+
+          <div class="achievements-list">
+            <div
+              *ngFor="let achievement of recentAchievements; let i = index"
+              class="achievement-card"
+              [attr.data-rarity]="achievement.rarity"
+              [style.animation-delay.s]="i * 0.1"
+            >
+              <div class="achievement-icon" [attr.data-rarity]="achievement.rarity">
+                {{ achievement.icon }}
+              </div>
+              <div class="achievement-info">
+                <div class="achievement-name">{{ achievement.name }}</div>
+                <div class="achievement-date">{{ achievement.date }}</div>
+              </div>
+              <svg
+                class="achievement-check"
+                [attr.data-rarity]="achievement.rarity"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Achievements -->
+        <div class="section upcoming-section">
+          <div class="section-header">
+            <svg
+              class="section-icon accent"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <h2>Próximos Logros</h2>
+          </div>
+
+          <div class="upcoming-list">
+            <div
+              *ngFor="let achievement of upcomingAchievements; let i = index"
+              class="upcoming-card"
+              [style.animation-delay.s]="0.5 + i * 0.1"
+            >
+              <div class="upcoming-header">
+                <span class="upcoming-icon">{{ achievement.icon }}</span>
+                <div class="upcoming-name">{{ achievement.name }}</div>
+                <svg
+                  class="lock-icon"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+              <div class="upcoming-progress-bar">
+                <div class="upcoming-progress" [style.width.%]="achievement.progress"></div>
+              </div>
+              <div class="upcoming-progress-text">{{ achievement.progress }}% completado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

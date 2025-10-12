@@ -1,0 +1,184 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <!-- Logo -->
+  <div class="sidebar-header">
+    <div class="logo-container" (click)="toggleSidebar()">
+      <div class="logo-icon">
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M16 18l2-2-2-2" />
+          <path d="M8 6L6 8l2 2" />
+          <line x1="12" y1="2" x2="12" y2="6" />
+          <line x1="12" y1="18" x2="12" y2="22" />
+          <circle cx="12" cy="12" r="4" />
+        </svg>
+      </div>
+      <span class="logo-text" *ngIf="!isCollapsed">CodeQuest</span>
+    </div>
+    <button class="toggle-btn" (click)="toggleSidebar()" *ngIf="!isCollapsed">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- User Profile -->
+  <div class="user-profile" *ngIf="!isCollapsed">
+    <div class="avatar-container">
+      <img [src]="userProfile.avatar" [alt]="userProfile.name" class="avatar" />
+      <div class="status-indicator"></div>
+    </div>
+    <div class="user-info">
+      <h3 class="user-name">{{ userProfile.name }}</h3>
+      <div class="user-rank">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <polygon
+            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+          />
+        </svg>
+        <span>{{ userProfile.rank }}</span>
+      </div>
+    </div>
+    <div class="level-badge">
+      <span class="level-number">{{ userProfile.level }}</span>
+    </div>
+  </div>
+
+  <!-- XP Progress -->
+  <div class="xp-section" *ngIf="!isCollapsed">
+    <div class="xp-header">
+      <span class="xp-label">Experiencia</span>
+      <span class="xp-value">{{ userProfile.xp }}/{{ userProfile.maxXp }} XP</span>
+    </div>
+    <div class="xp-bar">
+      <div class="xp-progress" [style.width.%]="(userProfile.xp / userProfile.maxXp) * 100"></div>
+      <div class="xp-glow"></div>
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="nav-menu">
+    <div class="nav-section">
+      <div
+        *ngFor="let item of menuItems; let i = index"
+        class="nav-item"
+        [class.active]="activeItem === item.id"
+        [class.collapsed]="isCollapsed"
+        [style.animation-delay.s]="i * 0.05"
+        (click)="setActiveItem(item.id)"
+      >
+        <div class="nav-icon" [innerHTML]="item.icon"></div>
+        <span class="nav-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+        <span class="nav-badge" *ngIf="item.badge && !isCollapsed">{{ item.badge }}</span>
+        <span class="new-tag" *ngIf="item.isNew && !isCollapsed">NUEVO</span>
+        <div class="active-indicator"></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Quick Stats -->
+  <div class="quick-stats" *ngIf="!isCollapsed">
+    <div class="stat-item">
+      <div class="stat-icon fire">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+          />
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">15</span>
+        <span class="stat-label">Días Racha</span>
+      </div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon coins">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 6v6l4 2" />
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-value">2,450</span>
+        <span class="stat-label">CodeCoins</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Actions -->
+  <div class="sidebar-footer">
+    <button class="footer-btn" [class.collapsed]="isCollapsed" title="Configuración">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="3" />
+        <path
+          d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m7.08-7.08l4.24-4.24"
+        />
+      </svg>
+      <span *ngIf="!isCollapsed">Configuración</span>
+    </button>
+    <button class="footer-btn" [class.collapsed]="isCollapsed" title="Cerrar Sesión">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <polyline points="16 17 21 12 16 7" />
+        <line x1="21" y1="12" x2="9" y2="12" />
+      </svg>
+      <span *ngIf="!isCollapsed">Cerrar Sesión</span>
+    </button>
+  </div>
+
+  <!-- Collapse Button (when collapsed) -->
+  <button class="expand-btn" (click)="toggleSidebar()" *ngIf="isCollapsed">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  </button>
+</aside>
