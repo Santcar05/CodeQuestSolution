@@ -1,3 +1,5 @@
+/* dashboard-component.css */
+
 :host {
   display: block;
   width: 100%;
@@ -7,38 +9,22 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-}
-
-.dashboard-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0b0d0f 0%, #1a1f26 100%);
-  color: #ffffff;
-  padding: 2rem;
-  width: 100%;
 }
 
-.dashboard-content {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-:host {
-  display: block;
-  width: 100%;
-}
-
-.super-container {
+.title-container {
   display: flex;
-  width: 100%;
-  min-height: 100vh;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 70%;
 }
-
 app-sidebar-component {
-  width: 300px;
-  min-width: 300px;
+  width: 260px;
+  min-width: 260px;
   height: 100vh;
   background: linear-gradient(180deg, #0f141a 0%, #0b0d0f 100%);
-  border-right: 1px solid #1a2633;
+  border-right: 1px solid rgba(255, 90, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   flex-shrink: 0;
@@ -46,10 +32,9 @@ app-sidebar-component {
   top: 0;
   align-self: flex-start;
 }
-
-app-sidebar-component.collapsed {
-  width: 80px;
-  min-width: 80px;
+#logo {
+  width: 200px;
+  height: 200px;
 }
 
 .dashboard-container {
@@ -57,44 +42,320 @@ app-sidebar-component.collapsed {
   min-height: 100vh;
   background: linear-gradient(135deg, #0b0d0f 0%, #1a1f26 100%);
   color: #ffffff;
-  padding: 2rem;
+  padding-top: 2rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Ajustar el grid principal para que use el espacio extra */
-app-sidebar-component.collapsed ~ .dashboard-container .main-grid {
-  grid-template-columns: 2.5fr 1fr; /* Más espacio para los cursos */
-}
-
-app-sidebar-component.collapsed ~ .dashboard-container .second-grid {
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Tarjetas más grandes */
 }
 
 .dashboard-content {
+  max-width: 1400px;
   margin: 0 auto;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Cuando el sidebar está colapsado, expandir el contenido */
-app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
-  max-width: 1520px; /* 1400px + 120px extra */
-}
 .right-column {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: center;
   justify-content: flex-start;
 }
 
 /* Header */
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
   animation: slideDown 0.6s ease-out;
+  gap: 1rem;
+}
+
+/* Streak Card */
+.streak-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: linear-gradient(135deg, rgba(255, 90, 0, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%);
+  border: 2px solid rgba(255, 90, 0, 0.2);
+  border-radius: 1.25rem;
+  padding: 1.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+  animation: slideInRight 0.8s ease-out;
+  transition: all 0.3s ease;
+}
+
+.streak-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 90, 0, 0.1), transparent);
+  animation: shimmerStreak 3s infinite;
+}
+
+.streak-card:hover {
+  transform: translateY(-5px);
+  border-color: #ff5a00;
+  box-shadow: 0 12px 32px rgba(255, 90, 0, 0.3);
+}
+
+/* Flame Icon */
+.streak-flame {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff5a00 0%, #f97316 100%);
+  border-radius: 1rem;
+  animation: flameGlow 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.streak-flame svg {
+  stroke: white;
+  filter: drop-shadow(0 2px 8px rgba(255, 90, 0, 0.5));
+  animation: flameBounce 1.5s ease-in-out infinite;
+}
+
+/* Flame Particles */
+.flame-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #fbbf24;
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleRise 2s ease-out infinite;
+}
+
+.particle:nth-child(1) {
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+  left: 50%;
+  animation-delay: 0.7s;
+}
+
+.particle:nth-child(3) {
+  left: 80%;
+  animation-delay: 1.4s;
+}
+
+/* Streak Info */
+.streak-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.streak-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ff5a00 0%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  animation: numberPulse 2s ease-in-out infinite;
+}
+
+.streak-label {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.streak-progress {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.streak-progress-bar {
+  width: 140px;
+  height: 6px;
+  background: rgba(255, 90, 0, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.streak-progress-fill {
+  height: 100%;
+  width: 75%;
+  background: linear-gradient(90deg, #ff5a00 0%, #fbbf24 100%);
+  border-radius: 3px;
+  position: relative;
+  animation: progressGrow 1.5s ease-out;
+}
+
+.streak-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: progressShimmer 2s infinite;
+}
+
+.streak-goal {
+  font-size: 0.7rem;
+  color: #ff5a00;
+  font-weight: 700;
+  animation: textGlow 2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes shimmerStreak {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes flameGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(255, 90, 0, 0.4), 0 0 40px rgba(255, 90, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 90, 0, 0.6), 0 0 60px rgba(255, 90, 0, 0.3);
+  }
+}
+
+@keyframes flameBounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-3px) scale(1.05);
+  }
+}
+
+@keyframes particleRise {
+  0% {
+    bottom: 10%;
+    opacity: 0;
+    transform: scale(0);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    bottom: 90%;
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes numberPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes progressGrow {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes progressShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes textGlow {
+  0%,
+  100% {
+    text-shadow: 0 0 5px rgba(255, 90, 0, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(255, 90, 0, 0.6);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .streak-card {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .streak-card {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .streak-flame {
+    width: 56px;
+    height: 56px;
+  }
+
+  .streak-flame svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .streak-number {
+    font-size: 2rem;
+  }
+
+  .streak-progress-bar {
+    width: 120px;
+  }
 }
 
 .title {
@@ -117,6 +378,7 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
 .stats-container {
   display: flex;
   gap: 1rem;
+  width: 100%;
 }
 
 .stat-card {
@@ -124,7 +386,7 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
   border: 1px solid #1a2633;
   border-radius: 1rem;
   padding: 1.5rem;
-  min-width: 150px;
+  flex: 1;
 }
 
 .stat-card.animate-pulse {
@@ -316,9 +578,6 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
 .activity-section {
   animation-delay: 0.2s;
   width: 100%;
-  overflow-y: auto;
-  padding-right: 1rem;
-  margin-right: -1rem;
 }
 
 .activity-chart {
@@ -352,36 +611,69 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
   color: #94a3b8;
 }
 
-/* Second Grid */
-.second-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 1.5rem;
+/* Horizontal Sections */
+.horizontal-section {
+  margin-bottom: 1.5rem;
 }
 
-/* Wishlist */
+.horizontal-scroll-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.horizontal-scroll-content {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 1rem;
+  scroll-behavior: smooth;
+  /* Scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 90, 0, 0.3) rgba(255, 90, 0, 0.05);
+}
+
+.horizontal-scroll-content::-webkit-scrollbar {
+  height: 8px;
+}
+
+.horizontal-scroll-content::-webkit-scrollbar-track {
+  background: rgba(255, 90, 0, 0.05);
+  border-radius: 4px;
+}
+
+.horizontal-scroll-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #ff5a00 0%, #f97316 100%);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.horizontal-scroll-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #f97316 0%, #ff5a00 100%);
+}
+
+/* Wishlist Cards */
 .wishlist-section {
   animation-delay: 0.3s;
 }
 
-.wishlist-grid {
-  display: grid;
-  gap: 1rem;
-}
-
 .wishlist-card {
+  min-width: 320px;
+  max-width: 320px;
   background: #1b242c;
   border-radius: 0.75rem;
   overflow: hidden;
   border: 1px solid transparent;
   transition: all 0.3s ease;
   cursor: pointer;
-  animation: slideRight 0.6s ease-out both;
+  animation: slideUp 0.6s ease-out both;
+  flex-shrink: 0;
 }
 
 .wishlist-card:hover {
   border-color: #ff5a00;
-  transform: translateX(5px);
+  transform: translateY(-5px);
 }
 
 .wishlist-card:hover .wishlist-overlay {
@@ -462,25 +754,29 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
   stroke: #94a3b8;
 }
 
-/* Achievements */
+/* Achievement Cards */
 .achievements-section {
   animation-delay: 0.4s;
 }
 
-.achievements-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
 .achievement-card {
+  min-width: 300px;
+  max-width: 300px;
   background: #1b242c;
   padding: 1rem;
   border-radius: 0.75rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  animation: slideLeft 0.6s ease-out both;
+  animation: slideUp 0.6s ease-out both;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.achievement-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .achievement-card[data-rarity='common'] {
@@ -507,6 +803,7 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
+  flex-shrink: 0;
 }
 
 .achievement-icon[data-rarity='common'] {
@@ -527,16 +824,24 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
 
 .achievement-info {
   flex: 1;
+  min-width: 0;
 }
 
 .achievement-name {
   font-weight: 600;
   margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .achievement-date {
   font-size: 0.875rem;
   color: #94a3b8;
+}
+
+.achievement-check {
+  flex-shrink: 0;
 }
 
 .achievement-check[data-rarity='common'] {
@@ -555,22 +860,26 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
   stroke: #fbbf24;
 }
 
-/* Upcoming */
+/* Upcoming Achievement Cards */
 .upcoming-section {
   animation-delay: 0.5s;
 }
 
-.upcoming-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
 .upcoming-card {
+  min-width: 300px;
+  max-width: 300px;
   background: #1b242c;
   padding: 1rem;
   border-radius: 0.75rem;
-  animation: fadeIn 0.6s ease-out both;
+  animation: slideUp 0.6s ease-out both;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upcoming-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .upcoming-header {
@@ -582,15 +891,20 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
 
 .upcoming-icon {
   font-size: 1.5rem;
+  flex-shrink: 0;
 }
 
 .upcoming-name {
   flex: 1;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .lock-icon {
   stroke: #94a3b8;
+  flex-shrink: 0;
 }
 
 .upcoming-progress-bar {
@@ -613,7 +927,7 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
   color: #94a3b8;
 }
 
-/* Animaciones CSS */
+/* Animations */
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -658,6 +972,17 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
   }
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes growBar {
   from {
     height: 0;
@@ -680,8 +1005,11 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
     grid-template-columns: 1fr;
   }
 
-  .second-grid {
-    grid-template-columns: 1fr;
+  .wishlist-card,
+  .achievement-card,
+  .upcoming-card {
+    min-width: 280px;
+    max-width: 280px;
   }
 }
 
@@ -697,16 +1025,27 @@ app-sidebar-component.collapsed ~ .dashboard-container .dashboard-content {
   }
 
   .stats-container {
+    flex-direction: column;
     width: 100%;
-    justify-content: space-between;
   }
 
   .stat-card {
-    min-width: auto;
-    flex: 1;
+    width: 100%;
   }
 
   .title {
     font-size: 2rem;
+  }
+
+  .wishlist-card,
+  .achievement-card,
+  .upcoming-card {
+    min-width: 260px;
+    max-width: 260px;
+  }
+
+  app-sidebar-component {
+    position: fixed;
+    z-index: 1000;
   }
 }

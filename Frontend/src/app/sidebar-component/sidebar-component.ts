@@ -32,7 +32,7 @@ export class SidebarComponent implements OnInit {
   activeItem = 'inicio';
 
   userProfile: UserProfile = {
-    name: 'Juan Pérez',
+    name: 'Santiago Castro',
     level: 24,
     xp: 3250,
     maxXp: 5000,

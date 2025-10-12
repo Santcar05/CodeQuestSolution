@@ -114,6 +114,30 @@ export class DashboardComponent implements OnInit {
       duration: '18h',
       students: 18790,
     },
+    {
+      id: 4,
+      name: 'React Native para Android',
+      image: 'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=400&h=300&fit=crop',
+      level: 'Intermedio',
+      duration: '14h',
+      students: 15420,
+    },
+    {
+      id: 5,
+      name: 'React Native para iOS',
+      image: 'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=400&h=300&fit=crop',
+      level: 'Intermedio',
+      duration: '14h',
+      students: 15420,
+    },
+    {
+      id: 6,
+      name: 'React Native para Web',
+      image: 'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=400&h=300&fit=crop',
+      level: 'Intermedio',
+      duration: '14h',
+      students: 15420,
+    },
   ];
 
   recentAchievements: Achievement[] = [
