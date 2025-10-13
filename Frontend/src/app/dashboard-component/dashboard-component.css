@@ -42,7 +42,7 @@ app-sidebar-component {
   min-height: 100vh;
   background: linear-gradient(135deg, #0b0d0f 0%, #1a1f26 100%);
   color: #ffffff;
-  padding-top: 2rem;
+  padding-top: 1rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
