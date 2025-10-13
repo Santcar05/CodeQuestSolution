@@ -27,6 +27,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'logros',
+    loadComponent: () =>
+      import('./logros-component/logros-component').then((m) => m.LogrosComponent),
+  },
+  {
     path: '',
     loadComponent: () =>
       import('./dashboard-component/dashboard-component').then((m) => m.DashboardComponent),
