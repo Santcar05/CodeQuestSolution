@@ -387,7 +387,7 @@
               <span>{{ course.students.toLocaleString() }}</span>
             </div>
           </div>
-          <button class="course-btn">
+          <button class="course-btn" (click)="goToCourse(course.id)">
             Ver Curso
             <svg
               width="16"

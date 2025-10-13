@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
+import { Router } from '@angular/router';
 
 interface Course {
   id: number;
@@ -25,6 +26,7 @@ interface Course {
   styleUrls: ['./ver-cursos-component.css'],
 })
 export class VerCursosComponent implements OnInit {
+  constructor(private router: Router) {}
   // Search
   searchTerm: string = '';
 
@@ -376,5 +378,9 @@ export class VerCursosComponent implements OnInit {
       this.selectedCategories.length > 0 ||
       this.selectedDurations.length > 0
     );
+  }
+
+  goToCourse(courseId: number) {
+    this.router.navigate(['/detalle-curso', courseId]);
   }
 }
