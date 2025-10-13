@@ -32,6 +32,11 @@ export const routes: Routes = [
       import('./logros-component/logros-component').then((m) => m.LogrosComponent),
   },
   {
+    path: 'comunidad',
+    loadComponent: () =>
+      import('./comunidad-component/comunidad-component').then((m) => m.ComunidadComponent),
+  },
+  {
     path: '',
     loadComponent: () =>
       import('./dashboard-component/dashboard-component').then((m) => m.DashboardComponent),
