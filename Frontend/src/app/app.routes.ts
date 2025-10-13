@@ -20,6 +20,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'shop',
+    loadComponent: () =>
+      import('./tienda-codequest-component/tienda-codequest-component').then(
+        (m) => m.TiendaCodequestComponent
+      ),
+  },
+  {
     path: '',
     loadComponent: () =>
       import('./dashboard-component/dashboard-component').then((m) => m.DashboardComponent),
