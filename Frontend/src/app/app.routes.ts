@@ -7,4 +7,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./dashboard-component/dashboard-component').then((m) => m.DashboardComponent),
   },
+  {
+    path: 'catalogo-cursos',
+    loadComponent: () =>
+      import('./ver-cursos-component/ver-cursos-component').then((m) => m.VerCursosComponent),
+  },
 ];

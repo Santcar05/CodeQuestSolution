@@ -1,6 +1,7 @@
 // sidebar.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface MenuItem {
   id: string;
@@ -28,6 +29,8 @@ interface UserProfile {
   styleUrls: ['./sidebar-component.css'],
 })
 export class SidebarComponent implements OnInit {
+  constructor(private router: Router) {}
+
   isCollapsed = false;
   activeItem = 'inicio';
 
@@ -45,7 +48,7 @@ export class SidebarComponent implements OnInit {
       id: 'inicio',
       label: 'Inicio',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
-      path: '/dashboard',
+      path: '',
     },
     {
       id: 'mi-ruta',
@@ -55,10 +58,10 @@ export class SidebarComponent implements OnInit {
       badge: 3,
     },
     {
-      id: 'cursos',
+      id: 'catalogo-cursos',
       label: 'Cursos',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
-      path: '/courses',
+      path: '/catalogo-cursos',
     },
     {
       id: 'logros',
@@ -106,7 +109,9 @@ export class SidebarComponent implements OnInit {
 
   setActiveItem(itemId: string) {
     this.activeItem = itemId;
-    // Aquí puedes agregar lógica de navegación
+    // Lógica de Navegacion
+    this.router.navigate([`/${itemId}`]);
+
     console.log('Navegando a:', itemId);
   }
 }
