@@ -1,0 +1,255 @@
+<div class="super-container">
+  <app-sidebar-component></app-sidebar-component>
+  <div class="ruta-profesional-container">
+    <!-- Header Section -->
+    <div class="ruta-header">
+      <div class="header-content">
+        <h1 class="ruta-title">{{ careerPath.title }}</h1>
+        <p class="ruta-subtitle">{{ careerPath.subtitle }}</p>
+        <p class="ruta-description">{{ careerPath.description }}</p>
+
+        <div class="action-buttons">
+          <button class="action-btn btn-primary" (click)="simulateProgress()">
+            <span>🚀 Simular Progreso +500XP</span>
+          </button>
+          <button class="action-btn btn-secondary">
+            <span>📊 Exportar Progreso</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="header-stats">
+        <div class="progress-ring">
+          <div class="ring-bg"></div>
+          <div
+            class="ring-progress"
+            [style.transform]="'rotate(' + getRingRotation() + 'deg)'"
+          ></div>
+          <div class="ring-content">
+            <span class="ring-percent">{{ progressPercentage | number : '1.0-0' }}%</span>
+            <span class="ring-label">Completado</span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value">{{ careerPath.currentXP | number }}</span>
+            <span class="stat-label">XP Acumulados</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ remainingXP | number }}</span>
+            <span class="stat-label">XP Restantes</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ careerPath.level }}</span>
+            <span class="stat-label">Nivel Actual</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ careerPath.salaryRange }}</span>
+            <span class="stat-label">Salario Promedio</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="ruta-content">
+      <div class="main-content">
+        <!-- Mapa de Aprendizaje -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">🗺️</div>
+            <div>
+              <h2 class="card-title">Mapa de Aprendizaje</h2>
+              <p class="card-subtitle">Tu roadmap interactivo hacia la maestría</p>
+            </div>
+          </div>
+
+          <div class="roadmap-container">
+            <div
+              *ngFor="let item of roadmapItems"
+              class="roadmap-item"
+              [class.completed]="item.status === 'completed'"
+              [class.current]="item.status === 'current'"
+              [class.upcoming]="item.status === 'upcoming'"
+              (click)="navigateToRoadmapItem(item.id)"
+            >
+              <div class="roadmap-icon">{{ item.icon }}</div>
+              <div class="roadmap-content">
+                <h4>{{ item.title }}</h4>
+                <p>{{ item.description }}</p>
+                <div class="roadmap-meta">
+                  <span class="meta-item">📚 {{ item.courses }} cursos</span>
+                  <span class="meta-item">⭐ {{ item.xp }} XP</span>
+                  <span class="meta-item">⏱️ {{ item.duration }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cursos y Recursos -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">📚</div>
+            <div>
+              <h2 class="card-title">Cursos y Recursos</h2>
+              <p class="card-subtitle">Materiales específicos para esta ruta</p>
+            </div>
+          </div>
+
+          <div class="courses-grid">
+            <div
+              *ngFor="let course of courses"
+              class="course-card"
+              [class.completed]="course.status === 'completed'"
+              (click)="startCourse(course.id)"
+            >
+              <div class="course-header">
+                <h3 class="course-title">{{ course.title }}</h3>
+                <span class="course-status">
+                  {{
+                    course.status === 'completed'
+                      ? '✅'
+                      : course.status === 'in-progress'
+                      ? '🔄'
+                      : '⏳'
+                  }}
+                  {{
+                    course.status === 'completed'
+                      ? 'Completado'
+                      : course.status === 'in-progress'
+                      ? 'En Progreso'
+                      : 'Pendiente'
+                  }}
+                </span>
+              </div>
+              <p class="course-desc">{{ course.description }}</p>
+              <div class="course-meta">
+                <span>⏱️ {{ course.duration }}</span>
+                <span>🎯 {{ course.difficulty }}</span>
+                <span class="course-xp">⭐ {{ course.xp }} XP</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proyectos Reales -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">🧩</div>
+            <div>
+              <h2 class="card-title">Proyectos de la Ruta</h2>
+              <p class="card-subtitle">Aplica tus conocimientos en proyectos reales</p>
+            </div>
+          </div>
+
+          <div class="projects-grid">
+            <div
+              *ngFor="let project of projects"
+              class="project-card"
+              (click)="viewProject(project.id)"
+            >
+              <span class="project-badge">
+                {{
+                  project.type === 'guided'
+                    ? 'Guiado'
+                    : project.type === 'free'
+                    ? 'Libre'
+                    : 'Colaborativo'
+                }}
+              </span>
+              <h3 class="project-title">{{ project.title }}</h3>
+              <p class="project-desc">{{ project.description }}</p>
+              <div class="project-meta">
+                <span>🛠️ {{ project.technologies.join(', ') }}</span>
+                <span>⭐ {{ project.xp }} XP</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-content">
+        <!-- Desafíos y Bonos -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">⚡</div>
+            <div>
+              <h2 class="card-title">Desafíos y Bonos</h2>
+              <p class="card-subtitle">Gana XP extra acelerando tu progreso</p>
+            </div>
+          </div>
+
+          <div class="challenges-grid">
+            <div
+              *ngFor="let challenge of challenges"
+              class="challenge-card"
+              (click)="takeChallenge(challenge.id)"
+            >
+              <div class="challenge-icon">{{ challenge.icon }}</div>
+              <h3 class="challenge-title">{{ challenge.title }}</h3>
+              <p class="challenge-desc">{{ challenge.description }}</p>
+              <span class="challenge-xp">+{{ challenge.xp }} XP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Perfil de Competencias -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">📊</div>
+            <div>
+              <h2 class="card-title">Perfil de Competencias</h2>
+              <p class="card-subtitle">Tu nivel de dominio por área</p>
+            </div>
+          </div>
+
+          <div class="skills-radar-container">
+            <h4 style="color: #ffffff; margin-bottom: 1rem">Habilidades Técnicas</h4>
+            <div class="skill-item" *ngFor="let skill of getTechnicalSkills()">
+              <span class="skill-name">{{ skill.name }}</span>
+              <div class="skill-bar">
+                <div class="skill-fill" [style.width.%]="skill.level"></div>
+              </div>
+              <span class="skill-percent">{{ skill.level }}%</span>
+            </div>
+
+            <h4 style="color: #ffffff; margin: 1.5rem 0 1rem 0">Habilidades Blandas</h4>
+            <div class="skill-item" *ngFor="let skill of getSoftSkills()">
+              <span class="skill-name">{{ skill.name }}</span>
+              <div class="skill-bar">
+                <div class="skill-fill" [style.width.%]="skill.level"></div>
+              </div>
+              <span class="skill-percent">{{ skill.level }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logros y Medallas -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">🏆</div>
+            <div>
+              <h2 class="card-title">Logros y Medallas</h2>
+              <p class="card-subtitle">Reconocimientos de esta ruta</p>
+            </div>
+          </div>
+
+          <div class="badges-grid">
+            <div
+              *ngFor="let badge of badges"
+              class="badge-item"
+              [class.earned]="badge.earned"
+              [class.locked]="!badge.earned"
+            >
+              <div class="badge-icon">{{ badge.icon }}</div>
+              <h3 class="badge-name">{{ badge.name }}</h3>
+              <p class="badge-desc">{{ badge.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,455 @@
+<!-- logros-component.html -->
+<div class="super-container">
+  <app-sidebar-component></app-sidebar-component>
+  <div class="logros-container">
+    <!-- Header Section -->
+    <div class="logros-header">
+      <div class="header-content">
+        <h1 class="page-title">Galería de Logros</h1>
+        <p class="page-subtitle">Descubre y desbloquea todos los logros de CodeQuest</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge">
+          <span class="stat-number">{{ totalLogros }}</span>
+          <span class="stat-label">Logros Totales</span>
+        </div>
+        <div class="stat-badge">
+          <span class="stat-number">{{ puntosDesbloqueados }}</span>
+          <span class="stat-label">Puntos Ganados</span>
+        </div>
+        <div class="stat-badge">
+          <span class="stat-number">{{ progresoGlobal }}%</span>
+          <span class="stat-label">Progreso Global</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-label">Tu progreso en logros</span>
+        <span class="progress-percentage">{{ progresoGlobal }}%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progresoGlobal"></div>
+      </div>
+    </div>
+
+    <!-- Search and Filters Section -->
+    <div class="search-filter-section">
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-icon">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </div>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Buscar logros por nombre, descripción..."
+          [(ngModel)]="searchTerm"
+          (input)="filterLogros()"
+        />
+        <button class="search-clear" *ngIf="searchTerm" (click)="clearSearch()">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-container">
+        <!-- Categoria Filter -->
+        <div class="filter-group">
+          <button
+            class="filter-btn"
+            [class.active]="showCategoriaFilter"
+            (click)="toggleFilter('categoria')"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+            Categoría
+            <svg
+              class="chevron"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="filter-dropdown" *ngIf="showCategoriaFilter">
+            <label class="filter-option" *ngFor="let categoria of categorias">
+              <input
+                type="checkbox"
+                [value]="categoria"
+                [checked]="selectedCategorias.includes(categoria)"
+                (change)="toggleCategoria(categoria)"
+              />
+              <span class="checkbox-custom"></span>
+              <span class="option-text">{{ categoria }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Rareza Filter -->
+        <div class="filter-group">
+          <button
+            class="filter-btn"
+            [class.active]="showRarezaFilter"
+            (click)="toggleFilter('rareza')"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+              />
+            </svg>
+            Rareza
+            <svg
+              class="chevron"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="filter-dropdown" *ngIf="showRarezaFilter">
+            <label class="filter-option" *ngFor="let rareza of rarezas">
+              <input
+                type="checkbox"
+                [value]="rareza"
+                [checked]="selectedRarezas.includes(rareza)"
+                (change)="toggleRareza(rareza)"
+              />
+              <span class="checkbox-custom" [style.background]="getRarezaGradient(rareza)"></span>
+              <span class="option-text">{{ rareza }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Estado Filter -->
+        <div class="filter-group">
+          <button
+            class="filter-btn"
+            [class.active]="showEstadoFilter"
+            (click)="toggleFilter('estado')"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            Estado
+            <svg
+              class="chevron"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="filter-dropdown" *ngIf="showEstadoFilter">
+            <label class="filter-option" *ngFor="let estado of estados">
+              <input
+                type="checkbox"
+                [value]="estado"
+                [checked]="selectedEstados.includes(estado)"
+                (change)="toggleEstado(estado)"
+              />
+              <span class="checkbox-custom"></span>
+              <span class="option-text">{{ estado }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Sort -->
+        <div class="filter-group">
+          <button class="filter-btn" [class.active]="showSortFilter" (click)="toggleFilter('sort')">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="4" y1="6" x2="20" y2="6" />
+              <line x1="4" y1="12" x2="16" y2="12" />
+              <line x1="4" y1="18" x2="12" y2="18" />
+            </svg>
+            Ordenar
+            <svg
+              class="chevron"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="filter-dropdown" *ngIf="showSortFilter">
+            <button
+              class="sort-option"
+              *ngFor="let sort of sortOptions"
+              [class.active]="selectedSort === sort.value"
+              (click)="selectSort(sort.value)"
+            >
+              {{ sort.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Clear Filters -->
+        <button class="clear-filters-btn" *ngIf="hasActiveFilters()" (click)="clearAllFilters()">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="3 6 5 6 21 6" />
+            <path
+              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+            />
+          </svg>
+          Limpiar
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Filters Tags -->
+    <div class="active-filters" *ngIf="hasActiveFilters()">
+      <span
+        class="filter-tag"
+        *ngFor="let categoria of selectedCategorias"
+        (click)="toggleCategoria(categoria)"
+      >
+        {{ categoria }}
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </span>
+      <span
+        class="filter-tag"
+        *ngFor="let rareza of selectedRarezas"
+        (click)="toggleRareza(rareza)"
+      >
+        {{ rareza }}
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </span>
+      <span
+        class="filter-tag"
+        *ngFor="let estado of selectedEstados"
+        (click)="toggleEstado(estado)"
+      >
+        {{ estado }}
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </span>
+    </div>
+
+    <!-- Results Count -->
+    <div class="results-header">
+      <h3 class="results-count">
+        {{ filteredLogros.length }}
+        {{ filteredLogros.length === 1 ? 'logro encontrado' : 'logros encontrados' }}
+      </h3>
+    </div>
+
+    <!-- Logros Grid -->
+    <div class="logros-grid" *ngIf="filteredLogros.length > 0">
+      <div
+        class="logro-card"
+        *ngFor="let logro of filteredLogros; let i = index"
+        [class.desbloqueado]="logro.desbloqueado"
+        [class.no-desbloqueado]="!logro.desbloqueado"
+        [style.animation-delay.ms]="i * 50"
+      >
+        <div class="logro-medal" [style.background]="getRarezaGradient(logro.rareza)">
+          <span class="medal-icon">{{ logro.imagen }}</span>
+          <div class="medal-ribbon"></div>
+        </div>
+
+        <div class="logro-content">
+          <div class="logro-header">
+            <h3 class="logro-title">{{ logro.nombre }}</h3>
+            <span class="logro-rareza" [style.background]="getRarezaGradient(logro.rareza)">
+              {{ logro.rareza }}
+            </span>
+          </div>
+
+          <p class="logro-descripcion">{{ logro.descripcion }}</p>
+
+          <div class="logro-meta">
+            <div class="meta-item">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+              <span>{{ logro.puntos }} pts</span>
+            </div>
+            <div class="meta-item">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+              </svg>
+              <span>{{ logro.categoria }}</span>
+            </div>
+          </div>
+
+          <div class="logro-requisitos"><strong>Requisitos:</strong> {{ logro.requisitos }}</div>
+
+          <div class="logro-estado" *ngIf="logro.desbloqueado; else noDesbloqueado">
+            <div class="estado-desbloqueado">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              <span>Desbloqueado {{ logro.fechaDesbloqueo | date : 'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+          <ng-template #noDesbloqueado>
+            <div class="estado-pendiente">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span>Por desbloquear</span>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredLogros.length === 0">
+      <div class="empty-icon">
+        <svg
+          width="120"
+          height="120"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+      </div>
+      <h3 class="empty-title">No se encontraron logros</h3>
+      <p class="empty-text">Intenta ajustar tus filtros o buscar con otros términos</p>
+      <button class="empty-btn" (click)="clearAllFilters()">Limpiar filtros</button>
+    </div>
+  </div>
+</div>

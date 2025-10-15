@@ -1,0 +1,213 @@
+<div class="super-container">
+  <div class="payment-container">
+    <!-- Header Section -->
+    <div class="payment-header">
+      <div class="header-content">
+        <h1 class="page-title">Proceso de Pago</h1>
+        <p class="page-subtitle">Completa tu compra de forma segura</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Seguro</span>
+        </div>
+        <div class="stat-badge">
+          <span class="stat-number">SSL</span>
+          <span class="stat-label">Encriptado</span>
+        </div>
+        <div class="stat-badge">
+          <span class="stat-number">24/7</span>
+          <span class="stat-label">Soporte</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-label">Progreso del pago</span>
+        <span class="progress-percentage">50%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 50%"></div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="payment-content">
+      <!-- Order Summary -->
+      <div class="order-summary-section">
+        <div class="section-header">
+          <h2 class="section-title">Resumen del Pedido</h2>
+          <div class="section-decoration"></div>
+        </div>
+
+        <div class="order-items">
+          <div class="order-item">
+            <div class="item-info">
+              <h3 class="item-name">Premium Subscription</h3>
+              <p class="item-description">Acceso completo por 1 mes</p>
+            </div>
+            <div class="item-price">$50.00</div>
+          </div>
+
+          <div class="order-divider"></div>
+
+          <div class="order-totals">
+            <div class="total-row">
+              <span class="total-label">Subtotal</span>
+              <span class="total-value">$50.00</span>
+            </div>
+            <div class="total-row">
+              <span class="total-label">Impuestos</span>
+              <span class="total-value">$0.00</span>
+            </div>
+            <div class="total-row grand-total">
+              <span class="total-label">Total</span>
+              <span class="total-value">$50.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Form -->
+      <div class="payment-form-section">
+        <div class="section-header">
+          <h2 class="section-title">Información de Pago</h2>
+          <div class="section-decoration"></div>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="form-section">
+          <h3 class="form-section-title">Información Personal</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Nombre Completo</label>
+              <input type="text" class="form-input" placeholder="Ingresa tu nombre completo" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-input" placeholder="tu@email.com" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Billing Information -->
+        <div class="form-section">
+          <h3 class="form-section-title">Dirección de Facturación</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Dirección</label>
+              <input type="text" class="form-input" placeholder="Dirección principal" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ciudad</label>
+              <input type="text" class="form-input" placeholder="Ciudad" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Código Postal</label>
+              <input type="text" class="form-input" placeholder="Código postal" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">País</label>
+              <select class="form-input">
+                <option value="">Selecciona tu país</option>
+                <option value="US">Estados Unidos</option>
+                <option value="MX">México</option>
+                <option value="ES">España</option>
+                <option value="AR">Argentina</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="form-section">
+          <h3 class="form-section-title">Método de Pago</h3>
+          <div class="payment-methods">
+            <div class="payment-method active">
+              <div class="method-icon">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+              </div>
+              <span class="method-name">Tarjeta de Crédito/Débito</span>
+            </div>
+          </div>
+
+          <!-- Stripe Card Element -->
+          <div class="card-element-container">
+            <div id="card-element" class="stripe-card-element"></div>
+            <div class="card-icons">
+              <div class="card-icon">💳</div>
+              <div class="card-icon">🔒</div>
+            </div>
+          </div>
+
+          <!-- Security Badges -->
+          <div class="security-badges">
+            <div class="security-badge">
+              <div class="badge-icon">🔒</div>
+              <span class="badge-text">Pago Seguro SSL</span>
+            </div>
+            <div class="security-badge">
+              <div class="badge-icon">🛡️</div>
+              <span class="badge-text">Protegido por Stripe</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Button -->
+        <div class="payment-actions">
+          <button class="pay-button" (click)="pay()">
+            <span class="button-text">Pagar $50.00</span>
+            <span class="button-loading" *ngIf="processing">
+              <div class="loading-spinner"></div>
+              Procesando...
+            </span>
+            <div class="button-shine"></div>
+          </button>
+
+          <p class="payment-note">
+            Al completar tu compra, aceptas nuestros
+            <a href="#" class="link">Términos de Servicio</a> y
+            <a href="#" class="link">Política de Privacidad</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Success Modal -->
+    <div class="success-modal" *ngIf="paymentSuccess">
+      <div class="modal-overlay" (click)="closeModal()"></div>
+      <div class="modal-content">
+        <div class="success-animation">
+          <div class="success-checkmark">
+            <div class="check-icon">
+              <span class="icon-line line-tip"></span>
+              <span class="icon-line line-long"></span>
+              <div class="icon-circle"></div>
+              <div class="icon-fix"></div>
+            </div>
+          </div>
+        </div>
+        <h2 class="modal-title">¡Pago Exitoso!</h2>
+        <p class="modal-text">
+          Tu pago ha sido procesado correctamente. Hemos enviado un correo de confirmación a tu
+          email.
+        </p>
+        <div class="modal-actions">
+          <button class="modal-button primary" (click)="closeModal()">Continuar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

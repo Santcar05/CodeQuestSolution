@@ -1,0 +1,309 @@
+<div class="super-container">
+  <app-sidebar-component></app-sidebar-component>
+  <div class="comunidad-container">
+    <!-- Header -->
+    <div class="comunidad-header">
+      <div class="header-content">
+        <h1 class="page-title">Comunidad CodeQuest 🌐</h1>
+        <p class="page-subtitle">Comparte, aprende y crece junto a otros desarrolladores</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-badge">
+          <span class="stat-number">{{ publicaciones.length }}</span>
+          <span class="stat-label">Publicaciones</span>
+        </div>
+        <div class="stat-badge">
+          <span class="stat-number">{{ miembrosDestacados.length }}</span>
+          <span class="stat-label">Miembros</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="comunidad-layout">
+      <!-- Columna Izquierda - Miembros Destacados -->
+      <div class="columna-izquierda">
+        <div class="panel-miembros">
+          <h3 class="panel-title">🌟 Miembros Destacados</h3>
+          <div class="miembros-lista">
+            <div
+              class="miembro-card"
+              *ngFor="let miembro of miembrosDestacados"
+              [class.online]="miembro.online"
+            >
+              <div class="miembro-avatar" [style.background]="getNivelGradient(miembro.nivel)">
+                {{ miembro.avatar }}
+                <div class="online-indicator" *ngIf="miembro.online"></div>
+              </div>
+              <div class="miembro-info">
+                <h4 class="miembro-nombre">{{ miembro.nombre }}</h4>
+                <div class="miembro-details">
+                  <span class="miembro-nivel" [style.color]="getNivelColor(miembro.nivel)">
+                    {{ miembro.nivel }}
+                  </span>
+                  <span class="miembro-puntos">{{ miembro.puntos }} pts</span>
+                </div>
+              </div>
+              <div class="miembro-insignia">
+                {{ miembro.insignia }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Central - Feed -->
+      <div class="columna-central">
+        <!-- Crear Publicación -->
+        <div class="crear-publicacion-card">
+          <div class="usuario-avatar" [style.background]="getNivelGradient(usuarioActual.nivel)">
+            {{ usuarioActual.avatar }}
+          </div>
+          <div class="publicacion-form">
+            <textarea
+              [(ngModel)]="nuevoContenido"
+              placeholder="¿Qué quieres compartir con la comunidad?"
+              class="publicacion-input"
+              maxlength="500"
+            ></textarea>
+            <div class="publicacion-actions">
+              <div class="action-buttons">
+                <button class="action-btn" title="Agregar imagen">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                  Imagen
+                </button>
+                <button class="action-btn" title="Agregar código">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="16 18 22 12 16 6" />
+                    <polyline points="8 6 2 12 8 18" />
+                  </svg>
+                  Código
+                </button>
+              </div>
+              <button
+                class="publicar-btn"
+                (click)="crearPublicacion()"
+                [disabled]="(!nuevoContenido.trim() && !nuevaImagen) || publicando"
+                [class.publicando]="publicando"
+              >
+                <span *ngIf="!publicando">Publicar</span>
+                <span *ngIf="publicando" class="loading-spinner"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feed de Publicaciones -->
+        <div class="feed-publicaciones">
+          <div
+            class="publicacion-card"
+            *ngFor="let publicacion of publicaciones"
+            [class.con-imagen]="publicacion.imagen"
+          >
+            <!-- Header Publicación -->
+            <div class="publicacion-header">
+              <div class="usuario-info">
+                <div
+                  class="usuario-avatar"
+                  [style.background]="getNivelGradient(publicacion.nivel)"
+                >
+                  {{ publicacion.avatar }}
+                </div>
+                <div class="usuario-details">
+                  <h4 class="usuario-nombre">{{ publicacion.usuario }}</h4>
+                  <div class="publicacion-meta">
+                    <span class="publicacion-fecha">{{ publicacion.fecha }}</span>
+                    <span class="usuario-nivel" [style.color]="getNivelColor(publicacion.nivel)">
+                      • {{ publicacion.nivel }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contenido Publicación -->
+            <div class="publicacion-contenido">
+              <p class="publicacion-texto">{{ publicacion.contenido }}</p>
+              <img
+                *ngIf="publicacion.imagen"
+                [src]="publicacion.imagen"
+                [alt]="'Imagen de ' + publicacion.usuario"
+                class="publicacion-imagen"
+                (load)="onImageLoad($event)"
+              />
+            </div>
+
+            <!-- Stats y Acciones -->
+            <div class="publicacion-stats">
+              <div class="stat">
+                <span class="stat-number">{{ publicacion.likes }}</span>
+                <span class="stat-label">me gusta</span>
+              </div>
+              <div class="stat">
+                <span class="stat-number">{{ publicacion.comentarios.length }}</span>
+                <span class="stat-label">comentarios</span>
+              </div>
+            </div>
+
+            <div class="publicacion-actions">
+              <button
+                class="action-btn like-btn"
+                [class.liked]="publicacion.liked"
+                (click)="darLike(publicacion.id)"
+                [attr.data-publicacion]="publicacion.id"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                  />
+                </svg>
+                Me gusta
+              </button>
+              <button class="action-btn comment-btn" (click)="toggleComentario(publicacion.id)">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                Comentar
+              </button>
+            </div>
+
+            <!-- Comentarios -->
+            <div class="comentarios-section" *ngIf="comentarioActivo === publicacion.id">
+              <div class="comentarios-lista">
+                <div class="comentario-card" *ngFor="let comentario of publicacion.comentarios">
+                  <div class="comentario-avatar">
+                    {{ comentario.avatar }}
+                  </div>
+                  <div class="comentario-content">
+                    <div class="comentario-header">
+                      <span class="comentario-usuario">{{ comentario.usuario }}</span>
+                    </div>
+                    <p class="comentario-texto">{{ comentario.texto }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="nuevo-comentario">
+                <div
+                  class="usuario-avatar"
+                  [style.background]="getNivelGradient(usuarioActual.nivel)"
+                >
+                  {{ usuarioActual.avatar }}
+                </div>
+                <div class="comentario-input-container">
+                  <input
+                    type="text"
+                    [(ngModel)]="nuevoComentario"
+                    placeholder="Escribe un comentario..."
+                    class="comentario-input"
+                    (keyup.enter)="agregarComentario(publicacion.id)"
+                    maxlength="200"
+                  />
+                  <button
+                    class="enviar-comentario-btn"
+                    (click)="agregarComentario(publicacion.id)"
+                    [disabled]="!nuevoComentario.trim()"
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <line x1="22" y1="2" x2="11" y2="13" />
+                      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha - Tendencias -->
+      <div class="columna-derecha">
+        <div class="panel-tendencias">
+          <h3 class="panel-title">🔥 Tendencias</h3>
+          <div class="tendencias-lista">
+            <div
+              class="tendencia-card"
+              *ngFor="let tendencia of tendencias"
+              [class.trending]="tendencia.trending"
+            >
+              <div class="tendencia-info">
+                <span class="tendencia-tag">{{ tendencia.tag }}</span>
+                <span class="tendencia-count">{{ tendencia.publicaciones }} publicaciones</span>
+              </div>
+              <div class="tendencia-indicator" *ngIf="tendencia.trending">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                  <polyline points="17 6 23 6 23 12" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats de Comunidad -->
+        <div class="panel-stats">
+          <h3 class="panel-title">📊 Estadísticas</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value">1.2K</span>
+              <span class="stat-label">Miembros activos</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">5.7K</span>
+              <span class="stat-label">Publicaciones totales</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">89%</span>
+              <span class="stat-label">Tasa de engagement</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
