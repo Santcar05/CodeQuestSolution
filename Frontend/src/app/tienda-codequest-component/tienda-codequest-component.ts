@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
+
+import { Router } from '@angular/router';
+
 interface Power {
   id: number;
   name: string;
@@ -61,6 +64,10 @@ interface Course {
   styleUrls: ['./tienda-codequest-component.css'],
 })
 export class TiendaCodequestComponent implements OnInit {
+
+  constructor(private router: Router) {}
+
+
   activeTab: string = 'poderes';
   userBalance: number = 12500;
   dailyBonus: number = 100;
@@ -364,4 +371,9 @@ export class TiendaCodequestComponent implements OnInit {
     }
     return this.userBalance;
   }
+
+  buyPremiumPlan(): void {
+    this.router.navigate(['/pago']);
+  }
+
 }

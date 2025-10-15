@@ -1,0 +1,380 @@
+<div class="super-container">
+  <app-sidebar-component></app-sidebar-component>
+  <div class="proyecto-container">
+    <!-- Hero Section -->
+    <div class="proyecto-hero">
+      <div class="hero-content">
+        <h1 class="proyecto-title">{{ project.title }}</h1>
+        <p class="proyecto-subtitle">{{ project.subtitle }}</p>
+        <p class="ruta-description">{{ project.description }}</p>
+
+        <div class="hero-meta">
+          <div class="meta-badge">
+            <span class="meta-icon">🎯</span>
+            <span class="meta-text">{{ project.type | titlecase }}</span>
+          </div>
+          <div class="meta-badge">
+            <span class="meta-icon">🔥</span>
+            <span class="meta-text">Dificultad: {{ project.difficulty | titlecase }}</span>
+          </div>
+          <div class="meta-badge">
+            <span class="meta-icon">⏱️</span>
+            <span class="meta-text">{{ project.duration }}</span>
+          </div>
+          <div class="meta-badge">
+            <span class="meta-icon">⭐</span>
+            <span class="meta-text">{{ project.totalXP }} XP Total</span>
+          </div>
+          <div class="meta-badge">
+            <span class="meta-icon">🤖</span>
+            <span class="meta-text"
+              >Evaluación IA: {{ project.iaEvaluation ? 'Activada' : 'Desactivada' }}</span
+            >
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button
+            class="action-btn btn-primary"
+            (click)="startProject()"
+            *ngIf="project.status === 'no-iniciado'"
+          >
+            <span>🚀 Iniciar Proyecto</span>
+          </button>
+          <button
+            class="action-btn btn-success"
+            (click)="submitForEvaluation()"
+            *ngIf="project.status === 'en-progreso'"
+          >
+            <span>📤 Enviar para Evaluación</span>
+          </button>
+          <button
+            class="action-btn btn-secondary"
+            (click)="downloadCertificate()"
+            *ngIf="project.status === 'completado'"
+          >
+            <span>🏆 Descargar Certificado</span>
+          </button>
+          <button class="action-btn btn-secondary" (click)="shareProject()">
+            <span>📢 Compartir Proyecto</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="proyecto-card">
+      <div class="card-header">
+        <div class="card-icon">📊</div>
+        <div>
+          <h2 class="card-title">Progreso del Proyecto</h2>
+          <p class="card-subtitle">Sigue tu avance y gana recompensas</p>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-ring">
+          <div class="ring-bg"></div>
+          <div
+            class="ring-progress"
+            [style.transform]="'rotate(' + getRingRotation() + 'deg)'"
+          ></div>
+          <div class="ring-content">
+            <span class="ring-percent">{{ project.progress }}%</span>
+            <span class="ring-label">Completado</span>
+          </div>
+        </div>
+
+        <div class="xp-display">
+          <div class="xp-total">+{{ project.totalXP }} XP</div>
+          <div class="xp-label">Experiencia Total del Proyecto</div>
+          <div class="xp-breakdown">
+            <div class="xp-item">
+              <span class="xp-value">{{ project.baseXP }}</span>
+              <span class="xp-desc">XP Base</span>
+            </div>
+            <div class="xp-item">
+              <span class="xp-value">+{{ project.bonusXP }}</span>
+              <span class="xp-desc">Bonus Disponibles</span>
+            </div>
+            <div class="xp-item">
+              <span class="xp-value">{{ getEarnedBadges().length }}/{{ badges.length }}</span>
+              <span class="xp-desc">Insignias</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="proyecto-content">
+      <div class="main-content">
+        <!-- Roadmap de Desarrollo -->
+        <div class="proyecto-card">
+          <div class="card-header">
+            <div class="card-icon">🗺️</div>
+            <div>
+              <h2 class="card-title">Etapas del Proyecto</h2>
+              <p class="card-subtitle">Sigue el roadmap paso a paso hacia el éxito</p>
+            </div>
+          </div>
+
+          <div class="roadmap-container">
+            <!-- <div class="roadmap-line"></div>-->
+            <div
+              *ngFor="let phase of roadmapPhases"
+              class="roadmap-item"
+              [class.completed]="phase.status === 'completado'"
+              [class.active]="phase.id === activePhase"
+              [class.upcoming]="phase.status === 'pendiente'"
+              (click)="setActivePhase(phase.id)"
+            >
+              <div class="roadmap-icon">{{ phase.icon }}</div>
+              <div class="roadmap-content">
+                <h4>{{ phase.title }}</h4>
+                <p>{{ phase.description }}</p>
+                <div class="roadmap-meta">
+                  <span class="meta-item">⭐ {{ phase.xp }} XP</span>
+                  <span class="meta-item">⏱️ {{ phase.duration }}</span>
+                  <span class="meta-item">📚 {{ phase.resources.length }} recursos</span>
+                </div>
+
+                <div class="roadmap-objectives" *ngIf="phase.id === activePhase">
+                  <h5 class="objectives-title">Objetivos Específicos:</h5>
+                  <ul class="objectives-list">
+                    <li *ngFor="let objective of phase.objectives">{{ objective }}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detalles Técnicos -->
+        <div class="proyecto-card">
+          <div class="card-header">
+            <div class="card-icon">⚙️</div>
+            <div>
+              <h2 class="card-title">Detalles Técnicos</h2>
+              <p class="card-subtitle">Tecnologías y herramientas para el proyecto</p>
+            </div>
+          </div>
+
+          <div class="tech-grid">
+            <div
+              *ngFor="let tech of technologies"
+              class="tech-card"
+              [class.required]="tech.required"
+            >
+              <div class="tech-icon">{{ tech.icon }}</div>
+              <h3 class="tech-name">{{ tech.name }}</h3>
+              <p class="tech-category">{{ tech.category }}</p>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="action-btn btn-secondary">
+              <span>📥 Descargar Configuración</span>
+            </button>
+            <button class="action-btn btn-secondary">
+              <span>🔧 Ver Dependencias</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Pruebas y Validación -->
+        <div class="proyecto-card">
+          <div class="card-header">
+            <div class="card-icon">🧪</div>
+            <div>
+              <h2 class="card-title">Pruebas y Validación</h2>
+              <p class="card-subtitle">Verifica la calidad de tu implementación</p>
+            </div>
+          </div>
+
+          <div class="tests-grid">
+            <div
+              *ngFor="let test of testCases"
+              class="test-card"
+              [class.passed]="test.status === 'pasado'"
+              [class.failed]="test.status === 'fallado'"
+              (click)="runTests()"
+            >
+              <div class="test-icon">
+                {{ test.status === 'pasado' ? '✅' : test.status === 'fallado' ? '❌' : '⏳' }}
+              </div>
+              <h3 class="test-title">{{ test.title }}</h3>
+              <p class="test-desc">{{ test.description }}</p>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="action-btn btn-primary" (click)="runTests()">
+              <span>⚡ Ejecutar Todas las Pruebas</span>
+            </button>
+            <button class="action-btn btn-secondary">
+              <span>➕ Agregar Prueba Personalizada</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-content">
+        <!-- Asistente IA del Proyecto -->
+        <div class="proyecto-card">
+          <div class="card-header">
+            <div class="card-icon">🤖</div>
+            <div>
+              <h2 class="card-title">Asistente IA</h2>
+              <p class="card-subtitle">Tu mentor inteligente para este proyecto</p>
+            </div>
+          </div>
+
+          <div class="chat-container">
+            <div
+              *ngFor="let message of chatMessages"
+              class="chat-message"
+              [class.user]="message.isUser"
+            >
+              <div
+                class="message-avatar"
+                [class.ai]="!message.isUser"
+                [class.user]="message.isUser"
+              >
+                {{ message.isUser ? 'Tú' : 'IA' }}
+              </div>
+              <div class="message-content">
+                <p class="message-text">{{ message.text }}</p>
+                <p class="message-time">{{ message.timestamp | date : 'HH:mm' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-input">
+            <input
+              type="text"
+              placeholder="Pregunta a tu asistente IA..."
+              [(ngModel)]="newMessage"
+              (keyup.enter)="sendMessage()"
+            />
+            <button (click)="sendMessage()">
+              <span>Enviar</span>
+              <span>📤</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Requisitos -->
+        <div class="proyecto-card">
+          <div class="card-header">
+            <div class="card-icon">🎓</div>
+            <div>
+              <h2 class="card-title">Requisitos Previos</h2>
+              <p class="card-subtitle">Lo que necesitas saber antes de comenzar</p>
+            </div>
+          </div>
+
+          <ul class="requirements-list">
+            <li *ngFor="let req of requirements" [class.completed]="req.status === 'completado'">
+              <span class="requirement-icon">
+                {{ req.status === 'completado' ? '✅' : '📚' }}
+              </span>
+              <span class="requirement-text">{{ req.description }}</span>
+              <span class="requirement-status">
+                {{
+                  req.status === 'completado'
+                    ? 'Completado'
+                    : req.status === 'en-progreso'
+                    ? 'En Progreso'
+                    : 'Pendiente'
+                }}
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Habilidades a Desarrollar -->
+        <div class="proyecto-card">
+          <div class="card-header">
+            <div class="card-icon">🧠</div>
+            <div>
+              <h2 class="card-title">Habilidades a Desarrollar</h2>
+              <p class="card-subtitle">Competencias que fortalecerás</p>
+            </div>
+          </div>
+
+          <div class="skills-container">
+            <div class="skill-category">
+              <h4>Técnicas</h4>
+              <div class="skill-item" *ngFor="let skill of getTechnicalSkills()">
+                <span class="skill-name">{{ skill.name }}</span>
+                <div class="skill-bar">
+                  <div class="skill-fill" [style.width.%]="skill.level"></div>
+                </div>
+                <span class="skill-percent">{{ skill.level }}%</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <h4>Blandas</h4>
+              <div class="skill-item" *ngFor="let skill of getSoftSkills()">
+                <span class="skill-name">{{ skill.name }}</span>
+                <div class="skill-bar">
+                  <div class="skill-fill" [style.width.%]="skill.level"></div>
+                </div>
+                <span class="skill-percent">{{ skill.level }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logros y Recompensas -->
+        <div class="proyecto-card">
+          <div class="card-header">
+            <div class="card-icon">🏆</div>
+            <div>
+              <h2 class="card-title">Logros y Recompensas</h2>
+              <p class="card-subtitle">Insignias por completar objetivos</p>
+            </div>
+          </div>
+
+          <div class="badges-grid">
+            <div
+              *ngFor="let badge of badges"
+              class="badge-item"
+              [class.earned]="badge.earned"
+              [class.locked]="!badge.earned"
+            >
+              <div class="badge-icon">{{ badge.icon }}</div>
+              <h3 class="badge-name">{{ badge.name }}</h3>
+              <p class="badge-xp">+{{ badge.xp }} XP</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recursos de Apoyo -->
+        <div class="proyecto-card">
+          <div class="card-header">
+            <div class="card-icon">📂</div>
+            <div>
+              <h2 class="card-title">Recursos de Apoyo</h2>
+              <p class="card-subtitle">Materiales para ayudarte en el proyecto</p>
+            </div>
+          </div>
+
+          <div class="resources-grid">
+            <a
+              *ngFor="let resource of resources"
+              class="resource-card"
+              [href]="resource.url"
+              target="_blank"
+            >
+              <div class="resource-icon">{{ resource.icon }}</div>
+              <h3 class="resource-title">{{ resource.title }}</h3>
+              <p class="resource-desc">{{ resource.description }}</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

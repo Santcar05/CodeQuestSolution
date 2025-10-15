@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
 
+import { PaymentComponent } from '../payment-component/payment-component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
 interface Course {
   id: number;
   name: string;
@@ -47,7 +50,9 @@ interface WeeklyActivity {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, SidebarComponent],
+
+  imports: [CommonModule, SidebarComponent, PaymentComponent, HttpClientModule],
+
   templateUrl: './dashboard-component.html',
   styleUrls: ['./dashboard-component.css'],
 })

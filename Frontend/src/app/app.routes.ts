@@ -20,6 +20,13 @@ export const routes: Routes = [
       ),
   },
   {
+
+    path: 'pago',
+    loadComponent: () =>
+      import('./payment-component/payment-component').then((m) => m.PaymentComponent),
+  },
+  {
+
     path: 'shop',
     loadComponent: () =>
       import('./tienda-codequest-component/tienda-codequest-component').then(
@@ -37,8 +44,39 @@ export const routes: Routes = [
       import('./comunidad-component/comunidad-component').then((m) => m.ComunidadComponent),
   },
   {
+
+    path: 'mi-ruta',
+    loadComponent: () =>
+      import('./mi-ruta-component/mi-ruta-component').then((m) => m.MiRutaComponent),
+  },
+  {
+    path: 'ruta-profesional/:id',
+    loadComponent: () =>
+      import('./ruta-profesional-component/ruta-profesional-component').then(
+        (m) => m.RutaProfesionalComponent
+      ),
+  },
+  {
+    path: 'detalle-proyecto/:id',
+    loadComponent: () =>
+      import('./detalle-proyecto-component/detalle-proyecto-component').then(
+        (m) => m.DetalleProyectoComponent
+      ),
+  },
+  {
+    path: 'visualizar-tema/:id',
+    loadComponent: () =>
+      import('./visualizar-tema-component/visualizar-tema-component').then(
+        (m) => m.VisualizarTemaComponent
+      ),
+  },
+  {
     path: '',
     loadComponent: () =>
-      import('./dashboard-component/dashboard-component').then((m) => m.DashboardComponent),
+      import('./formulario-inicial-component/formulario-inicial-component').then(
+        (m) => m.FormularioInicialComponent
+      ),
   },
+
+
 ];
