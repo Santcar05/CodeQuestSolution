@@ -20,11 +20,13 @@ export const routes: Routes = [
       ),
   },
   {
+
     path: 'pago',
     loadComponent: () =>
       import('./payment-component/payment-component').then((m) => m.PaymentComponent),
   },
   {
+
     path: 'shop',
     loadComponent: () =>
       import('./tienda-codequest-component/tienda-codequest-component').then(
@@ -42,6 +44,7 @@ export const routes: Routes = [
       import('./comunidad-component/comunidad-component').then((m) => m.ComunidadComponent),
   },
   {
+
     path: 'mi-ruta',
     loadComponent: () =>
       import('./mi-ruta-component/mi-ruta-component').then((m) => m.MiRutaComponent),
@@ -74,11 +77,6 @@ export const routes: Routes = [
         (m) => m.FormularioInicialComponent
       ),
   },
-  /*
-  {
-    path: '',
-    loadComponent: () =>
-      import('./dashboard-component/dashboard-component').then((m) => m.DashboardComponent),
-  },
-  */
+
+
 ];

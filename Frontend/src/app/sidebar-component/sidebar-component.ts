@@ -54,7 +54,9 @@ export class SidebarComponent implements OnInit {
       id: 'mi-ruta',
       label: 'Mi Ruta',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+
       path: '/mi-ruta',
+
       badge: 3,
     },
     {
@@ -85,12 +87,14 @@ export class SidebarComponent implements OnInit {
       isNew: true,
     },
     {
+
       id: 'Proyectos',
       label: 'Proyectos',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>',
       path: '/proyectos',
     },
     {
+
       id: 'shop',
       label: 'CodeTienda',
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
