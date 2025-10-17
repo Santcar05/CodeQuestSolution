@@ -12,6 +12,7 @@ import { environment } from '../../../environment';
 
 // Pipe para sanitizar URLs de recursos
 import { Pipe, PipeTransform } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Pipe({
   name: 'safeResourceUrl',
@@ -110,7 +111,7 @@ export class VisualizarTemaComponent implements OnInit {
     apiUrl: 'https://api.jdoodle.com/v1/execute',
   };
 
-  constructor(private sanitizer: DomSanitizer, private http: HttpClient) {}
+  constructor(private sanitizer: DomSanitizer, private http: HttpClient, private router: Router) {}
   // Datos de ejemplo actualizados con explicaciones de código
   modules: Module[] = [
     {
@@ -736,5 +737,11 @@ int main() {
   // Obtener explicaciones de código si existen
   getCodeExplanations(): CodeExplanation[] {
     return this.selectedLesson.content.codeExplanations || [];
+  }
+
+  closeSidebar(): void {}
+
+  openQuiz(): void {
+    this.router.navigate(['/examen', this.selectedLesson.id]);
   }
 }

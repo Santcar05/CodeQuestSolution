@@ -1,0 +1,315 @@
+<div class="super-container">
+  <app-sidebar-component></app-sidebar-component>
+  <div class="examen-container">
+    <!-- Exam Header -->
+    <div class="examen-header" *ngIf="!examFinished">
+      <div class="header-content">
+        <div class="header-text">
+          <h1>Examen Final - JavaScript & React</h1>
+          <p>
+            Demuestra tu conocimiento en desarrollo web moderno. 8 preguntas teóricas + 1 práctica
+            de código.
+          </p>
+        </div>
+
+        <div class="header-stats">
+          <!-- Timer -->
+          <div class="timer-container">
+            <div class="timer-label">TIEMPO RESTANTE</div>
+            <div class="timer-display" [class.timer-warning]="isTimeWarning">
+              {{ formattedTime }}
+            </div>
+          </div>
+
+          <!-- Progress -->
+          <div class="progress-section">
+            <div class="progress-ring">
+              <div class="ring-bg"></div>
+              <div
+                class="ring-progress"
+                [style.transform]="'rotate(' + getRingRotation() + 'deg)'"
+              ></div>
+              <div class="ring-content">
+                <span class="ring-percent">{{ progressPercentage | number : '1.0-0' }}%</span>
+                <span class="ring-label">Progreso</span>
+              </div>
+            </div>
+
+            <div class="progress-info">
+              <div class="progress-text">
+                Pregunta {{ currentQuestionIndex + 1 }} de {{ questions.length }}
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+              </div>
+              <div style="font-size: 0.875rem; color: #94a3b8; margin-top: 0.5rem">
+                {{ answeredQuestions }} de {{ questions.length }} respondidas
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exam Content -->
+    <div *ngIf="!examStarted && !examFinished" class="examen-card">
+      <div class="card-header">
+        <div class="card-icon">🎯</div>
+        <div>
+          <h2 class="card-title">Instrucciones del Examen</h2>
+          <p class="card-subtitle">Lee cuidadosamente antes de comenzar</p>
+        </div>
+      </div>
+
+      <div class="instructions-panel">
+        <h3 class="instructions-title">📝 Información General</h3>
+        <ul class="instructions-list">
+          <li>El examen consta de 8 preguntas teóricas y 1 ejercicio práctico de código</li>
+          <li>Tienes 30 minutos para completar todo el examen</li>
+          <li>Para aprobar necesitas un mínimo de 70% de respuestas correctas</li>
+          <li>Puedes marcar preguntas para revisarlas después usando el botón "Marcar"</li>
+          <li>Una vez que envíes el examen, no podrás modificarlo</li>
+        </ul>
+
+        <h3 class="instructions-title" style="margin-top: 2rem">💻 Ejercicio Práctico</h3>
+        <ul class="instructions-list">
+          <li>El editor de código incluye resaltado de sintaxis</li>
+          <li>Puedes ejecutar tu código para verificar que funcione correctamente</li>
+          <li>Se evaluará tanto la funcionalidad como la calidad del código</li>
+        </ul>
+
+        <div class="action-buttons">
+          <button class="action-btn btn-primary" (click)="startExam()">
+            <span>🚀 Comenzar Examen</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Questions Content -->
+    <div *ngIf="examStarted && !examFinished" class="examen-content">
+      <div class="main-content">
+        <!-- Question Card -->
+        <div class="examen-card">
+          <div class="card-header">
+            <div class="card-icon">
+              {{ currentQuestion.type === 'teorica' ? '📚' : '💻' }}
+            </div>
+            <div>
+              <h2 class="card-title">
+                {{ currentQuestion.type === 'teorica' ? 'Pregunta Teórica' : 'Ejercicio Práctico' }}
+              </h2>
+              <p class="card-subtitle">
+                {{
+                  currentQuestion.type === 'teorica'
+                    ? 'Selecciona la respuesta correcta'
+                    : 'Escribe tu solución en el editor'
+                }}
+              </p>
+            </div>
+          </div>
+
+          <div class="question-container">
+            <div class="question-header">
+              <span class="question-number">Pregunta {{ currentQuestionIndex + 1 }}</span>
+              <span class="question-type">
+                {{ currentQuestion.type === 'teorica' ? 'TEÓRICA' : 'PRÁCTICA' }}
+              </span>
+            </div>
+
+            <p class="question-text">{{ currentQuestion.text }}</p>
+
+            <!-- Theoretical Questions -->
+            <div *ngIf="currentQuestion.type === 'teorica'" class="options-grid">
+              <div
+                *ngFor="let option of currentQuestion.options; let i = index"
+                class="option-card"
+                [class.selected]="currentQuestion.userAnswer === i"
+                (click)="selectAnswer(currentQuestionIndex, i)"
+              >
+                <div class="option-content">
+                  <div class="option-marker">60</div>
+                  <p class="option-text">{{ option }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Practical Question -->
+            <div *ngIf="currentQuestion.type === 'practica'">
+              <div class="code-editor-container">
+                <div class="editor-header">
+                  <h3 class="editor-title">editor.js</h3>
+                  <div class="editor-actions">
+                    <button class="editor-btn" (click)="runCode()">▶️ Ejecutar</button>
+                    <button class="editor-btn" (click)="resetCode()">🔄 Reiniciar</button>
+                  </div>
+                </div>
+                <textarea
+                  class="code-editor"
+                  [(ngModel)]="userCode"
+                  placeholder="Escribe tu código aquí..."
+                  spellcheck="false"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="action-buttons">
+            <button class="action-btn btn-secondary" (click)="toggleFlag()">
+              <span>{{ currentQuestion.flagged ? '✅' : '🚩' }}</span>
+              <span>{{ currentQuestion.flagged ? 'Desmarcar' : 'Marcar' }}</span>
+            </button>
+
+            <div style="display: flex; gap: 1rem; flex: 1">
+              <button
+                class="action-btn btn-secondary"
+                (click)="previousQuestion()"
+                [disabled]="currentQuestionIndex === 0"
+              >
+                <span>⬅️</span>
+                <span>Anterior</span>
+              </button>
+
+              <button
+                *ngIf="currentQuestionIndex < questions.length - 1"
+                class="action-btn btn-primary"
+                (click)="nextQuestion()"
+              >
+                <span>Siguiente</span>
+                <span>➡️</span>
+              </button>
+
+              <button
+                *ngIf="currentQuestionIndex === questions.length - 1"
+                class="action-btn btn-success"
+                (click)="finishExam()"
+              >
+                <span>📤</span>
+                <span>Finalizar Examen</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-content">
+        <!-- Questions Navigation -->
+        <div class="examen-card">
+          <div class="card-header">
+            <div class="card-icon">🧭</div>
+            <div>
+              <h2 class="card-title">Navegación</h2>
+              <p class="card-subtitle">Salta entre preguntas</p>
+            </div>
+          </div>
+
+          <div class="questions-nav">
+            <div
+              *ngFor="let question of questions; let i = index"
+              class="nav-item"
+              [class]="getQuestionStatus(i)"
+              (click)="goToQuestion(i)"
+            >
+              {{ i + 1 }}
+            </div>
+          </div>
+
+          <div
+            style="
+              margin-top: 1.5rem;
+              display: flex;
+              gap: 0.5rem;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <div style="display: flex; align-items: center; gap: 0.25rem">
+              <div style="width: 12px; height: 12px; background: #ff5a00; border-radius: 2px"></div>
+              <span style="font-size: 0.75rem; color: #94a3b8">Actual</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.25rem">
+              <div style="width: 12px; height: 12px; background: #10b981; border-radius: 2px"></div>
+              <span style="font-size: 0.75rem; color: #94a3b8">Respondida</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.25rem">
+              <div style="width: 12px; height: 12px; background: #f59e0b; border-radius: 2px"></div>
+              <span style="font-size: 0.75rem; color: #94a3b8">Marcada</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="examen-card">
+          <div class="card-header">
+            <div class="card-icon">⚡</div>
+            <div>
+              <h2 class="card-title">Acciones Rápidas</h2>
+              <p class="card-subtitle">Atajos útiles</p>
+            </div>
+          </div>
+
+          <div class="action-buttons" style="margin-top: 1rem">
+            <button class="action-btn btn-secondary" (click)="finishExam()">
+              <span>⏱️</span>
+              <span>Terminar Ahora</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div *ngIf="examFinished && examResults" class="examen-card">
+      <div class="results-container">
+        <div class="results-icon">
+          {{ examResults.passed ? '🏆' : '📊' }}
+        </div>
+
+        <h1 class="results-title">
+          {{ examResults.passed ? '¡Felicidades!' : 'Examen Completado' }}
+        </h1>
+
+        <div class="results-score">{{ examResults.score }}%</div>
+
+        <p class="results-text">
+          {{
+            examResults.passed
+              ? 'Has demostrado un sólido conocimiento en los conceptos evaluados. ¡Sigue así!'
+              : 'Necesitas repasar algunos conceptos. Revisa los temas donde tuviste dificultades.'
+          }}
+        </p>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-value"
+              >{{ examResults.correctAnswers }}/{{ examResults.totalQuestions }}</span
+            >
+            <span class="stat-label">Respuestas Correctas</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value">{{ examResults.score }}%</span>
+            <span class="stat-label">Puntuación Final</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value">{{ examResults.timeSpent }}</span>
+            <span class="stat-label">Tiempo Utilizado</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="action-btn btn-primary" (click)="restartExam()">
+            <span>🔄</span>
+            <span>Reintentar Examen</span>
+          </button>
+          <button class="action-btn btn-secondary" (click)="router.navigate(['/cursos'])">
+            <span>📚</span>
+            <span>Volver a Cursos</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
