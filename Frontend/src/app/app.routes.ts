@@ -71,6 +71,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'examen/:id',
+    loadComponent: () =>
+      import('./examen-component/examen-component').then((m) => m.ExamenComponent),
+  },
+  {
     path: '',
     loadComponent: () =>
       import('./formulario-inicial-component/formulario-inicial-component').then(
