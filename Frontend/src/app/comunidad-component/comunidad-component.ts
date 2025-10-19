@@ -2,36 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
-
-export interface Publicacion {
-  id: number;
-  usuario: string;
-  avatar: string;
-  nivel: string;
-  fecha: string;
-  contenido: string;
-  imagen?: string;
-  likes: number;
-  comentarios: { usuario: string; texto: string; avatar: string }[];
-  liked: boolean;
-}
-
-export interface MiembroDestacado {
-  id: number;
-  nombre: string;
-  avatar: string;
-  nivel: string;
-  puntos: number;
-  insignia: string;
-  online: boolean;
-}
-
-export interface Tendencia {
-  id: number;
-  tag: string;
-  publicaciones: number;
-  trending: boolean;
-}
+import { Post } from '../models/Post';
+import { FeaturedUser } from '../models/FeaturedUser';
+import { Trend } from '../models/Trend';
 
 @Component({
   selector: 'app-comunidad',
@@ -54,175 +27,206 @@ export class ComunidadComponent implements OnInit {
   publicando: boolean = false;
 
   // Lista de publicaciones
-  publicaciones: Publicacion[] = [
+  publicaciones: Post[] = [
     {
       id: 1,
-      usuario: 'Ana García',
+      user: 'Ana García',
       avatar: '👩‍💻',
-      nivel: 'Avanzado',
-      fecha: 'Hace 2 horas',
-      contenido:
+      level: 'Avanzado',
+      date: 'Hace 2 horas',
+      content:
         '¡Acabo de completar el curso de Angular! 🎉 La inyección de dependencias y los servicios son increíbles. ¿Alguien más está aprendiendo Angular?',
-      imagen: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=600&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=600&h=400&fit=crop',
       likes: 24,
       liked: false,
-      comentarios: [
-        { usuario: 'Carlos López', texto: '¡Felicidades Ana! Angular es genial 🚀', avatar: '👨‍🎓' },
+      comments: [
         {
-          usuario: 'María Fernández',
-          texto: 'Estoy empezando con Angular, algún consejo?',
+          id: 1,
+          user: 'Carlos López',
+          text: '¡Felicidades Ana! Angular es genial 🚀',
+          avatar: '👨‍🎓',
+          timestamp: new Date(),
+          likes: 3,
+        },
+        {
+          id: 2,
+          user: 'María Fernández',
+          text: 'Estoy empezando con Angular, algún consejo?',
           avatar: '👩‍🎨',
+          timestamp: new Date(),
+          likes: 1,
         },
       ],
     },
     {
       id: 2,
-      usuario: 'David Chen',
+      user: 'David Chen',
       avatar: '👨‍🔬',
-      nivel: 'Experto',
-      fecha: 'Hace 5 horas',
-      contenido:
+      level: 'Experto',
+      date: 'Hace 5 horas',
+      content:
         'Comparto mi último proyecto: una aplicación de gestión de tareas con React y TypeScript. Incluye drag & drop y sincronización en tiempo real!',
-      imagen: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=600&h=400&fit=crop',
+      image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=600&h=400&fit=crop',
       likes: 42,
       liked: true,
-      comentarios: [
+      comments: [
         {
-          usuario: 'Laura Martínez',
-          texto: 'Increíble trabajo David! El código está muy limpio 👏',
+          id: 1,
+          user: 'Laura Martínez',
+          text: 'Increíble trabajo David! El código está muy limpio 👏',
           avatar: '👩‍💼',
+          timestamp: new Date(),
+          likes: 4,
         },
       ],
     },
     {
       id: 3,
-      usuario: 'Sofia Rodríguez',
+      user: 'Sofia Rodríguez',
       avatar: '👩‍🔧',
-      nivel: 'Intermedio',
-      fecha: 'Hace 1 día',
-      contenido:
-        'Alguien tiene experiencia con WebSockets en Node.js? Estoy implementando un chat en tiempo real y tengo dudas sobre la escalabilidad.',
+      level: 'Intermedio',
+      date: 'Hace 1 día',
+      content:
+        '¿Alguien tiene experiencia con WebSockets en Node.js? Estoy implementando un chat en tiempo real y tengo dudas sobre la escalabilidad.',
       likes: 15,
       liked: false,
-      comentarios: [
+      comments: [
         {
-          usuario: 'Pedro González',
-          texto: 'Te recomiendo usar Socket.IO, maneja reconexiones automáticamente',
+          id: 1,
+          user: 'Pedro González',
+          text: 'Te recomiendo usar Socket.IO, maneja reconexiones automáticamente',
           avatar: '👨‍🏫',
+          timestamp: new Date(),
+          likes: 2,
         },
         {
-          usuario: 'David Chen',
-          texto: 'Para escalar, considera usar Redis con Socket.IO 👍',
+          id: 2,
+          user: 'David Chen',
+          text: 'Para escalar, considera usar Redis con Socket.IO 👍',
           avatar: '👨‍🔬',
+          timestamp: new Date(),
+          likes: 1,
         },
       ],
     },
     {
       id: 4,
-      usuario: 'Miguel Torres',
+      user: 'Miguel Torres',
       avatar: '👨‍🚀',
-      nivel: 'Principiante',
-      fecha: 'Hace 1 día',
-      contenido:
-        'Mi primer "Hello World" en Python! 🐍 Estoy emocionado por comenzar este viaje en la programación. ¿Qué me recomiendan aprender después?',
+      level: 'Principiante',
+      date: 'Hace 1 día',
+      content:
+        '¡Mi primer "Hello World" en Python! 🐍 Estoy emocionado por comenzar este viaje en la programación. ¿Qué me recomiendan aprender después?',
       likes: 38,
       liked: false,
-      comentarios: [
+      comments: [
         {
-          usuario: 'Ana García',
-          texto: '¡Bienvenido Miguel! Te recomiendo empezar con los fundamentos de programación',
+          id: 1,
+          user: 'Ana García',
+          text: '¡Bienvenido Miguel! Te recomiendo empezar con los fundamentos de programación',
           avatar: '👩‍💻',
+          timestamp: new Date(),
+          likes: 2,
         },
         {
-          usuario: 'Elena Vargas',
-          texto: 'Felicidades! Python es un gran lenguaje para empezar 🎯',
+          id: 2,
+          user: 'Elena Vargas',
+          text: 'Felicidades! Python es un gran lenguaje para empezar 🎯',
           avatar: '👩‍🔬',
+          timestamp: new Date(),
+          likes: 1,
         },
       ],
     },
     {
       id: 5,
-      usuario: 'Laura Martínez',
+      user: 'Laura Martínez',
       avatar: '👩‍💼',
-      nivel: 'Avanzado',
-      fecha: 'Hace 2 días',
-      contenido:
-        'Acabo de publicar mi primer paquete en NPM! 🎊 Es una librería de utilidades para fechas en JavaScript. Link en comentarios.',
-      imagen: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=400&fit=crop',
+      level: 'Avanzado',
+      date: 'Hace 2 días',
+      content:
+        '¡Acabo de publicar mi primer paquete en NPM! 🎊 Es una librería de utilidades para fechas en JavaScript. Link en comentarios.',
+      image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&h=400&fit=crop',
       likes: 57,
       liked: true,
-      comentarios: [
+      comments: [
         {
-          usuario: 'Carlos López',
-          texto: '¡Impresionante Laura! Voy a probarlo en mi proyecto',
+          id: 1,
+          user: 'Carlos López',
+          text: '¡Impresionante Laura! Voy a probarlo en mi proyecto',
           avatar: '👨‍🎓',
+          timestamp: new Date(),
+          likes: 5,
         },
         {
-          usuario: 'Sofia Rodríguez',
-          texto: 'Muy útil la librería, buena documentación 👌',
+          id: 2,
+          user: 'Sofia Rodríguez',
+          text: 'Muy útil la librería, buena documentación 👌',
           avatar: '👩‍🔧',
+          timestamp: new Date(),
+          likes: 3,
         },
       ],
     },
   ];
 
   // Miembros destacados
-  miembrosDestacados: MiembroDestacado[] = [
+  miembrosDestacados: FeaturedUser[] = [
     {
       id: 1,
-      nombre: 'David Chen',
+      name: 'David Chen',
       avatar: '👨‍🔬',
-      nivel: 'Experto',
-      puntos: 2840,
-      insignia: '🏆',
+      level: 'Experto',
+      points: 2840,
+      badges: '🏆',
       online: true,
     },
     {
       id: 2,
-      nombre: 'Ana García',
+      name: 'Ana García',
       avatar: '👩‍💻',
-      nivel: 'Avanzado',
-      puntos: 2150,
-      insignia: '⭐',
+      level: 'Avanzado',
+      points: 2150,
+      badges: '⭐',
       online: true,
     },
     {
       id: 3,
-      nombre: 'Carlos López',
+      name: 'Carlos López',
       avatar: '👨‍🎓',
-      nivel: 'Avanzado',
-      puntos: 1980,
-      insignia: '🚀',
+      level: 'Avanzado',
+      points: 1980,
+      badges: '🚀',
       online: false,
     },
     {
       id: 4,
-      nombre: 'Elena Vargas',
+      name: 'Elena Vargas',
       avatar: '👩‍🔬',
-      nivel: 'Experto',
-      puntos: 2650,
-      insignia: '🎯',
+      level: 'Experto',
+      points: 2650,
+      badges: '🎯',
       online: true,
     },
     {
       id: 5,
-      nombre: 'Pedro González',
+      name: 'Pedro González',
       avatar: '👨‍🏫',
-      nivel: 'Intermedio',
-      puntos: 1420,
-      insignia: '💡',
+      level: 'Intermedio',
+      points: 1420,
+      badges: '💡',
       online: false,
     },
   ];
 
   // Tendencias
-  tendencias: Tendencia[] = [
-    { id: 1, tag: '#Angular', publicaciones: 142, trending: true },
-    { id: 2, tag: '#TypeScript', publicaciones: 98, trending: true },
-    { id: 3, tag: '#WebDevelopment', publicaciones: 87, trending: false },
-    { id: 4, tag: '#AIProgramming', publicaciones: 76, trending: true },
-    { id: 5, tag: '#ReactJS', publicaciones: 203, trending: false },
-    { id: 6, tag: '#Python', publicaciones: 165, trending: true },
+  tendencias: Trend[] = [
+    { id: 1, tag: '#Angular', posts: 142, trending: true },
+    { id: 2, tag: '#TypeScript', posts: 98, trending: true },
+    { id: 3, tag: '#WebDevelopment', posts: 87, trending: false },
+    { id: 4, tag: '#AIProgramming', posts: 76, trending: true },
+    { id: 5, tag: '#ReactJS', posts: 203, trending: false },
+    { id: 6, tag: '#Python', posts: 165, trending: true },
   ];
 
   // Comentario temporal
@@ -268,10 +272,13 @@ export class ComunidadComponent implements OnInit {
 
     const publicacion = this.publicaciones.find((p) => p.id === publicacionId);
     if (publicacion) {
-      publicacion.comentarios.push({
-        usuario: this.usuarioActual.nombre,
-        texto: this.nuevoComentario,
+      publicacion.comments.push({
+        user: this.usuarioActual.nombre,
+        text: this.nuevoComentario,
         avatar: this.usuarioActual.avatar,
+        id: 0,
+        timestamp: new Date(),
+        likes: 0,
       });
       this.nuevoComentario = '';
       this.comentarioActivo = null;
@@ -284,17 +291,17 @@ export class ComunidadComponent implements OnInit {
     this.publicando = true;
 
     setTimeout(() => {
-      const nuevaPublicacion: Publicacion = {
+      const nuevaPublicacion: Post = {
         id: this.publicaciones.length + 1,
-        usuario: this.usuarioActual.nombre,
+        user: this.usuarioActual.nombre,
         avatar: this.usuarioActual.avatar,
-        nivel: this.usuarioActual.nivel,
-        fecha: 'Ahora mismo',
-        contenido: this.nuevoContenido,
-        imagen: this.nuevaImagen || undefined,
+        level: this.usuarioActual.nivel,
+        date: 'Ahora mismo',
+        content: this.nuevoContenido,
+        image: this.nuevaImagen || undefined,
         likes: 0,
         liked: false,
-        comentarios: [],
+        comments: [],
       };
 
       this.publicaciones.unshift(nuevaPublicacion);

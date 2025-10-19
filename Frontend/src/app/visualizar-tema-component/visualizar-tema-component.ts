@@ -13,6 +13,12 @@ import { environment } from '../../../environment';
 // Pipe para sanitizar URLs de recursos
 import { Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModuleModel } from '../models/ModuleModel';
+import { LearningMethod } from '../models/LearningMethod';
+import { CommentModel } from '../models/Comment';
+import { Topic } from '../models/Topic';
+import { Lesson } from '../models/Lesson';
+import { CodeExplanation } from '../models/CodeExplanation';
 
 @Pipe({
   name: 'safeResourceUrl',
@@ -38,64 +44,6 @@ export class SafeUrlPipe implements PipeTransform {
   }
 }
 
-interface LearningMethod {
-  id: string;
-  name: string;
-  icon: string;
-  color: string;
-  description: string;
-}
-
-interface CodeExplanation {
-  line: number;
-  code: string;
-  explanation: string;
-}
-
-interface Lesson {
-  id: number;
-  title: string;
-  duration: string;
-  content: {
-    video?: string;
-    audio?: string;
-    document?: string;
-    code?: string;
-    mindmap?: string;
-    interactive?: string;
-    codeExplanations?: CodeExplanation[];
-  };
-  completed: boolean;
-  isPreview: boolean;
-}
-
-interface Topic {
-  id: number;
-  title: string;
-  description: string;
-  lessons: Lesson[];
-  completed: boolean;
-}
-
-interface Module {
-  id: number;
-  title: string;
-  description: string;
-  progress: number;
-  topics: Topic[];
-  completed: boolean;
-}
-
-interface Comment {
-  id: number;
-  user: string;
-  avatar: string;
-  text: string;
-  timestamp: Date;
-  likes: number;
-  image?: string;
-}
-
 @Component({
   selector: 'app-visualizar-tema',
   standalone: true,
@@ -113,7 +61,7 @@ export class VisualizarTemaComponent implements OnInit {
 
   constructor(private sanitizer: DomSanitizer, private http: HttpClient, private router: Router) {}
   // Datos de ejemplo actualizados con explicaciones de código
-  modules: Module[] = [
+  modules: ModuleModel[] = [
     {
       id: 1,
       title: 'Fundamentos de C++',
@@ -368,7 +316,7 @@ int main() {
     },
   ];
 
-  comments: Comment[] = [
+  comments: CommentModel[] = [
     {
       id: 1,
       user: 'Ana Martínez',
@@ -381,7 +329,7 @@ int main() {
   ];
 
   // Estado del componente
-  selectedModule: Module = this.modules[0];
+  selectedModule: ModuleModel = this.modules[0];
   selectedTopic: Topic = this.modules[0].topics[0];
   selectedLesson: Lesson = this.modules[0].topics[0].lessons[0];
   selectedMethod: LearningMethod = this.learningMethods[0];
@@ -410,12 +358,12 @@ int main() {
     }
 
     // Inicializar el código del usuario con el código de ejemplo
-    if (this.selectedLesson.content.code) {
-      this.userCode = this.selectedLesson.content.code;
+    if (this.selectedLesson.content!.code) {
+      this.userCode = this.selectedLesson.content!.code;
     }
   }
 
-  selectModule(module: Module): void {
+  selectModule(module: ModuleModel): void {
     this.selectedModule = module;
     if (module.topics.length > 0) {
       this.selectTopic(module.topics[0]);
@@ -432,8 +380,8 @@ int main() {
   selectLesson(lesson: Lesson): void {
     this.selectedLesson = lesson;
     // Actualizar el código del usuario cuando cambia la lección
-    if (lesson.content.code) {
-      this.userCode = lesson.content.code;
+    if (lesson.content!.code) {
+      this.userCode = lesson.content!.code;
     } else {
       this.userCode = '';
     }
@@ -631,7 +579,7 @@ int main() {
 
   addComment(): void {
     if (this.newComment.trim()) {
-      const comment: Comment = {
+      const comment: CommentModel = {
         id: this.comments.length + 1,
         user: 'Tú',
         avatar:
@@ -659,7 +607,7 @@ int main() {
     this.selectedFile = null;
   }
 
-  likeComment(comment: Comment): void {
+  likeComment(comment: CommentModel): void {
     comment.likes++;
   }
 
@@ -668,16 +616,16 @@ int main() {
 
     switch (this.selectedMethod.id) {
       case 'visual':
-        return content.video || content.mindmap;
+        return content!.video || content!.mindmap;
       case 'auditivo':
-        return content.audio;
+        return content!.audio;
       case 'lectura':
-        return content.document;
+        return content!.document;
       case 'kinestesico':
-        return content.code;
+        return content!.code;
       case 'mixto':
       default:
-        return content.video;
+        return content!.video;
     }
   }
 
@@ -700,13 +648,13 @@ int main() {
 
     switch (method.id) {
       case 'visual':
-        return !!(content.video || content.mindmap);
+        return !!(content!.video || content!.mindmap);
       case 'auditivo':
-        return !!content.audio;
+        return !!content!.audio;
       case 'lectura':
-        return !!content.document;
+        return !!content!.document;
       case 'kinestesico':
-        return !!content.code;
+        return !!content!.code;
       case 'mixto':
         return true;
       default:
@@ -736,7 +684,7 @@ int main() {
 
   // Obtener explicaciones de código si existen
   getCodeExplanations(): CodeExplanation[] {
-    return this.selectedLesson.content.codeExplanations || [];
+    return this.selectedLesson.content!.codeExplanations || [];
   }
 
   closeSidebar(): void {

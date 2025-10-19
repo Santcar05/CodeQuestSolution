@@ -3,89 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
-
-interface Project {
-  id: number;
-  title: string;
-  subtitle: string;
-  description: string;
-  type: 'guiado' | 'libre' | 'colaborativo' | 'desafio-ia';
-  difficulty: 'principiante' | 'intermedio' | 'avanzado' | 'experto';
-  duration: string;
-  totalXP: number;
-  baseXP: number;
-  bonusXP: number;
-  iaEvaluation: boolean;
-  progress: number;
-  status: 'no-iniciado' | 'en-progreso' | 'completado';
-}
-
-interface Technology {
-  name: string;
-  icon: string;
-  category: string;
-  required: boolean;
-}
-
-interface Requirement {
-  id: number;
-  description: string;
-  type: 'conocimiento' | 'curso' | 'habilidad';
-  status: 'completado' | 'pendiente' | 'en-progreso';
-  courseId?: number;
-}
-
-interface RoadmapPhase {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-  status: 'completado' | 'activo' | 'pendiente';
-  objectives: string[];
-  xp: number;
-  duration: string;
-  resources: string[];
-}
-
-interface Skill {
-  name: string;
-  level: number;
-  category: 'tecnica' | 'blanda';
-}
-
-interface ChatMessage {
-  id: number;
-  text: string;
-  isUser: boolean;
-  timestamp: Date;
-  type: 'sugerencia' | 'feedback' | 'pista' | 'evaluacion';
-}
-
-interface TestCase {
-  id: number;
-  title: string;
-  description: string;
-  status: 'pasado' | 'fallado' | 'no-ejecutado';
-  type: 'automatico' | 'personalizado';
-}
-
-interface Badge {
-  id: number;
-  name: string;
-  description: string;
-  icon: string;
-  earned: boolean;
-  xp: number;
-}
-
-interface Resource {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-  type: 'documento' | 'video' | 'repositorio' | 'articulo';
-  url: string;
-}
+import { Project } from '../models/Project';
+import { Technology } from '../models/Technology';
+import { Requirement } from '../models/Requirement';
+import { RoadmapPhase } from '../models/RoadMapPhase';
+import { Skill } from '../models/Skill';
+import { ChatMessage } from '../models/ChatMessage';
+import { TestCase } from '../models/TestCase';
+import { Badge } from '../models/Badge';
+import { ResourceModel } from '../models/Resource';
 
 @Component({
   selector: 'app-detalle-proyecto',
@@ -110,6 +36,8 @@ export class DetalleProyectoComponent implements OnInit {
     iaEvaluation: true,
     progress: 35,
     status: 'en-progreso',
+    technologies: [],
+    roadmap: [],
   };
 
   technologies: Technology[] = [
@@ -340,7 +268,7 @@ export class DetalleProyectoComponent implements OnInit {
     },
   ];
 
-  resources: Resource[] = [
+  resources: ResourceModel[] = [
     {
       id: 1,
       title: 'Guía de Arquitectura',

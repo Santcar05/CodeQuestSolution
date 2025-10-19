@@ -2,80 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
-
-interface RoadmapItem {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-  status: 'completed' | 'current' | 'upcoming';
-  courses: number;
-  xp: number;
-  duration: string;
-}
-
-interface Course {
-  id: number;
-  title: string;
-  description: string;
-  status: 'completed' | 'in-progress' | 'not-started';
-  duration: string;
-  difficulty: 'Principiante' | 'Intermedio' | 'Avanzado';
-  xp: number;
-  prerequisites: string[];
-}
-
-interface Challenge {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-  xp: number;
-  type: 'weekly' | 'special' | 'consistency' | 'wisdom' | 'hidden';
-  completed: boolean;
-}
-
-interface Skill {
-  name: string;
-  level: number;
-  target: number;
-  category: 'technical' | 'soft';
-}
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  status: 'completed' | 'in-progress' | 'planned';
-  type: 'guided' | 'free' | 'collaborative';
-  xp: number;
-  technologies: string[];
-}
-
-interface Badge {
-  id: number;
-  name: string;
-  description: string;
-  icon: string;
-  earned: boolean;
-  xp: number;
-  category: string;
-}
-
-interface CareerPath {
-  id: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  role: string;
-  level: string;
-  totalXP: number;
-  currentXP: number;
-  requiredXP: number;
-  salaryRange: string;
-  opportunities: string[];
-  technologies: string[];
-}
+import { CareerPath } from '../models/CarrerPath';
+import { RoadmapItem } from '../models/RoadMapItem';
+import { Course } from '../models/Course';
+import { Challenge } from '../models/Challenge';
+import { Skill } from '../models/Skill';
+import { Project } from '../models/Project';
+import { Badge } from '../models/Badge';
 
 @Component({
   selector: 'app-ruta-profesional',
@@ -86,7 +19,7 @@ interface CareerPath {
 })
 export class RutaProfesionalComponent implements OnInit {
   careerPath: CareerPath = {
-    id: 'web-developer',
+    id: 1,
     title: 'Desarrollador Web Full Stack',
     subtitle: 'Construye aplicaciones web completas desde el frontend hasta el backend',
     description:
@@ -173,7 +106,27 @@ export class RutaProfesionalComponent implements OnInit {
       duration: '15h',
       difficulty: 'Intermedio',
       xp: 500,
-      prerequisites: ['HTML Básico', 'CSS Básico'],
+      preRequisites: [
+        {
+          title: 'JavaScript Basico',
+          description: 'Conoce los fundamentos de JavaScript',
+          id: 0,
+          category: '',
+          level: '',
+          totalPoints: 0,
+        },
+        {
+          title: 'HTML y CSS',
+          description: 'Conoce los fundamentos de HTML y CSS',
+          id: 1,
+          category: '',
+          level: '',
+          totalPoints: 0,
+        },
+      ],
+      category: '',
+      level: '',
+      totalPoints: 1000,
     },
     {
       id: 2,
@@ -183,27 +136,19 @@ export class RutaProfesionalComponent implements OnInit {
       duration: '20h',
       difficulty: 'Intermedio',
       xp: 750,
-      prerequisites: ['JavaScript Moderno'],
-    },
-    {
-      id: 3,
-      title: 'Node.js y Express',
-      description: 'Construye APIs RESTful con Node.js',
-      status: 'in-progress',
-      duration: '25h',
-      difficulty: 'Intermedio',
-      xp: 800,
-      prerequisites: ['JavaScript Moderno'],
-    },
-    {
-      id: 4,
-      title: 'MongoDB y Mongoose',
-      description: 'Bases de datos NoSQL para aplicaciones modernas',
-      status: 'not-started',
-      duration: '18h',
-      difficulty: 'Intermedio',
-      xp: 600,
-      prerequisites: ['Node.js y Express'],
+      preRequisites: [
+        {
+          title: 'JavaScript Moderno ES6+',
+          description: 'Domina las nuevas características de JavaScript',
+          id: 1,
+          category: '',
+          level: '',
+          totalPoints: 0,
+        },
+      ],
+      category: '',
+      level: '',
+      totalPoints: 0,
     },
   ];
 
@@ -260,78 +205,69 @@ export class RutaProfesionalComponent implements OnInit {
   projects: Project[] = [
     {
       id: 1,
-      title: 'E-commerce React',
-      description: 'Tienda online con carrito de compras y pasarela de pago',
-      status: 'completed',
-      type: 'guided',
-      xp: 1000,
-      technologies: ['React', 'Node.js', 'MongoDB'],
+      title: 'Proyecto 1',
+      subtitle: 'Subtítulo del Proyecto 1',
+      description: 'Descripción del Proyecto 1',
+      type: 'guiado',
+      difficulty: 'principiante',
+      duration: '2 semanas',
+      totalXP: 1000,
+      baseXP: 500,
+      bonusXP: 500,
+      iaEvaluation: true,
+      progress: 50,
+      status: 'en-progreso',
+      technologies: [],
+      roadmap: [],
+      requirements: [],
+      testCases: [],
+      badges: [],
+      resources: [],
     },
     {
       id: 2,
-      title: 'API REST Social Media',
-      description: 'Backend completo para red social con autenticación JWT',
-      status: 'in-progress',
-      type: 'free',
-      xp: 1500,
-      technologies: ['Node.js', 'Express', 'MongoDB', 'JWT'],
-    },
-    {
-      id: 3,
-      title: 'Dashboard Analytics',
-      description: 'Panel de administración con gráficos y estadísticas',
-      status: 'planned',
-      type: 'guided',
-      xp: 1200,
-      technologies: ['React', 'D3.js', 'Node.js'],
+      title: 'Proyecto 2',
+      subtitle: 'Subtítulo del Proyecto 2',
+      description: 'Descripción del Proyecto 2',
+      type: 'libre',
+      difficulty: 'intermedio',
+      duration: '3 semanas',
+      totalXP: 1500,
+      baseXP: 750,
+      bonusXP: 750,
+      iaEvaluation: false,
+      progress: 75,
+      status: 'completado',
+      technologies: [],
+      roadmap: [],
+      requirements: [],
+      testCases: [],
+      badges: [],
+      resources: [],
     },
   ];
 
   badges: Badge[] = [
     {
       id: 1,
-      name: 'Maestro del Frontend',
-      description: 'Completa todos los cursos de frontend',
-      icon: '🎨',
+      name: 'Badge 1',
+      description: 'Descripción del Badge 1',
       earned: true,
-      xp: 500,
-      category: 'frontend',
+      icon: '',
     },
     {
       id: 2,
-      name: 'Arquitecto Backend',
-      description: 'Domina el desarrollo del lado del servidor',
-      icon: '⚙️',
+      name: 'Badge 2',
+      description: 'Descripción del Badge 2',
       earned: false,
-      xp: 750,
-      category: 'backend',
+      icon: '',
     },
     {
       id: 3,
-      name: 'Rey de las APIs',
-      description: 'Crea 5 APIs REST diferentes',
-      icon: '🔗',
-      earned: false,
-      xp: 600,
-      category: 'backend',
-    },
-    {
-      id: 4,
-      name: 'Git Master',
-      description: 'Domina el control de versiones',
-      icon: '📚',
+      name: 'Badge 3',
+      description: 'Descripción del Badge 3',
       earned: true,
-      xp: 300,
-      category: 'tools',
-    },
-    {
-      id: 5,
-      name: 'Full Stack Pro',
-      description: 'Completa toda la ruta profesional',
-      icon: '🏆',
-      earned: false,
-      xp: 2000,
-      category: 'completion',
+      icon: '',
     },
   ];
 
@@ -350,11 +286,11 @@ export class RutaProfesionalComponent implements OnInit {
   }
 
   get progressPercentage(): number {
-    return (this.careerPath.currentXP / this.careerPath.requiredXP) * 100;
+    return (this.careerPath.currentXP! / this.careerPath.requiredXP!) * 100;
   }
 
   get remainingXP(): number {
-    return this.careerPath.requiredXP - this.careerPath.currentXP;
+    return this.careerPath.requiredXP! - this.careerPath.currentXP!;
   }
 
   getRingRotation(): number {
@@ -379,8 +315,8 @@ export class RutaProfesionalComponent implements OnInit {
   simulateProgress() {
     // Simular progreso adicional (para demo)
     this.careerPath.currentXP = Math.min(
-      this.careerPath.currentXP + 500,
-      this.careerPath.requiredXP
+      this.careerPath.currentXP! + 500,
+      this.careerPath.requiredXP!
     );
   }
 
