@@ -2,57 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
 import { Router } from '@angular/router';
-interface Power {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  duration: string;
-  uses: number;
-  owned: boolean;
-  isFeatured: boolean;
-  color: string;
-  icon: string;
-  iconSize: number;
-}
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  type: string;
-  rarity: string;
-  owned: boolean;
-  isFeatured: boolean;
-  image: string;
-  color: string;
-  icon: string;
-  iconSize: number;
-}
-
-interface PremiumPlan {
-  id: number;
-  name: string;
-  description: string;
-  price: string;
-  period: string;
-  savings: string;
-  recommended: boolean;
-  features: string[];
-}
-
-interface Course {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  level: string;
-  duration: string;
-  students: number;
-  price: string;
-  originalPrice?: string;
-}
+import { Power } from '../models/Power';
+import { Product } from '../models/Product';
+import { PremiumPlan } from '../models/PremiumPlan';
+import { Course } from '../models/Course';
 
 @Component({
   selector: 'app-tienda-codequest',
@@ -287,6 +240,8 @@ export class TiendaCodequestComponent implements OnInit {
       students: 15420,
       price: '$10.99',
       originalPrice: '$5.99',
+      category: '',
+      totalPoints: 0,
     },
     {
       id: 2,
@@ -297,6 +252,8 @@ export class TiendaCodequestComponent implements OnInit {
       duration: '18 horas',
       students: 23150,
       price: '$24.99',
+      category: '',
+      totalPoints: 0,
     },
     {
       id: 3,
@@ -308,6 +265,8 @@ export class TiendaCodequestComponent implements OnInit {
       students: 18790,
       price: '$27.99',
       originalPrice: '$39.99',
+      category: '',
+      totalPoints: 0,
     },
     {
       id: 4,
@@ -318,6 +277,8 @@ export class TiendaCodequestComponent implements OnInit {
       duration: '20 horas',
       students: 32450,
       price: '$22.99',
+      category: '',
+      totalPoints: 0,
     },
   ];
 

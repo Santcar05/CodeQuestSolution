@@ -3,33 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
-
-interface Question {
-  id: number;
-  type: 'teorica' | 'practica';
-  text: string;
-  options?: string[];
-  correctAnswer: number | string;
-  userAnswer?: number | string;
-  codeTemplate?: string;
-  explanation?: string;
-  flagged: boolean;
-}
-
-interface ExamResults {
-  score: number;
-  totalQuestions: number;
-  correctAnswers: number;
-  timeSpent: string;
-  passed: boolean;
-  details: {
-    questionId: number;
-    correct: boolean;
-    userAnswer: string;
-    correctAnswer: string;
-    explanation: string;
-  }[];
-}
+import { Question } from '../models/Question';
+import { ExamResults } from '../models/ExamResults';
 
 @Component({
   selector: 'app-examen',

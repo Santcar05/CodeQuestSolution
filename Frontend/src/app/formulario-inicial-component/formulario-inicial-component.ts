@@ -3,21 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
 
-interface Question {
-  id: number;
-  title: string;
-  options: Option[];
-  selectedOption: number | null;
-}
+import { QuestionForm } from '../models/QuestionForm';
+import { OptionForm } from '../models/OptionForm';
 
-interface Option {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-  learningStyle: string;
-}
-
+// Definir la interfaz LearningStyle localmente ya que no está importada
 interface LearningStyle {
   name: string;
   description: string;
@@ -33,7 +22,7 @@ interface LearningStyle {
 })
 export class FormularioInicialComponent implements OnInit {
   currentQuestionIndex: number = 0;
-  questions: Question[] = [];
+  questions: QuestionForm[] = [];
   isCompleted: boolean = false;
   userLearningStyle: LearningStyle | null = null;
 
@@ -47,7 +36,8 @@ export class FormularioInicialComponent implements OnInit {
     this.questions = [
       {
         id: 1,
-        title: 'Cuando aprendes algo nuevo, ¿qué método prefieres?',
+        question: 'Cuando aprendes algo nuevo, ¿qué método prefieres?',
+        answer: '', // Propiedad requerida añadida
         options: [
           {
             id: 1,
@@ -82,7 +72,8 @@ export class FormularioInicialComponent implements OnInit {
       },
       {
         id: 2,
-        title: '¿Cómo organizas tu tiempo de estudio?',
+        question: '¿Cómo organizas tu tiempo de estudio?', // Corregido: usar 'question' en lugar de 'title'
+        answer: '',
         options: [
           {
             id: 1,
@@ -117,7 +108,8 @@ export class FormularioInicialComponent implements OnInit {
       },
       {
         id: 3,
-        title: '¿Qué tipo de material te resulta más útil?',
+        question: '¿Qué tipo de material te resulta más útil?', // Corregido: usar 'question'
+        answer: '',
         options: [
           {
             id: 1,
@@ -152,7 +144,8 @@ export class FormularioInicialComponent implements OnInit {
       },
       {
         id: 4,
-        title: '¿Cómo prefieres recibir feedback?',
+        question: '¿Cómo prefieres recibir feedback?', // Corregido: usar 'question'
+        answer: '',
         options: [
           {
             id: 1,
@@ -187,7 +180,8 @@ export class FormularioInicialComponent implements OnInit {
       },
       {
         id: 5,
-        title: '¿Qué ambiente te ayuda más a concentrarte?',
+        question: '¿Qué ambiente te ayuda más a concentrarte?', // Corregido: usar 'question'
+        answer: '',
         options: [
           {
             id: 1,
@@ -222,7 +216,8 @@ export class FormularioInicialComponent implements OnInit {
       },
       {
         id: 6,
-        title: '¿Cómo abordas un tema complejo?',
+        question: '¿Cómo abordas un tema complejo?', // Corregido: usar 'question'
+        answer: '',
         options: [
           {
             id: 1,
@@ -257,7 +252,8 @@ export class FormularioInicialComponent implements OnInit {
       },
       {
         id: 7,
-        title: '¿Qué tipo de proyectos disfrutas más?',
+        question: '¿Qué tipo de proyectos disfrutas más?', // Corregido: usar 'question'
+        answer: '',
         options: [
           {
             id: 1,
@@ -292,7 +288,8 @@ export class FormularioInicialComponent implements OnInit {
       },
       {
         id: 8,
-        title: '¿Cómo tomas apuntes?',
+        question: '¿Cómo tomas apuntes?', // Corregido: usar 'question'
+        answer: '',
         options: [
           {
             id: 1,
@@ -327,7 +324,8 @@ export class FormularioInicialComponent implements OnInit {
       },
       {
         id: 9,
-        title: '¿Cómo manejas los errores al aprender?',
+        question: '¿Cómo manejas los errores al aprender?', // Corregido: usar 'question'
+        answer: '',
         options: [
           {
             id: 1,
@@ -362,7 +360,8 @@ export class FormularioInicialComponent implements OnInit {
       },
       {
         id: 10,
-        title: '¿Qué te motiva a seguir aprendiendo?',
+        question: '¿Qué te motiva a seguir aprendiendo?', // Corregido: usar 'question'
+        answer: '',
         options: [
           {
             id: 1,
@@ -398,7 +397,7 @@ export class FormularioInicialComponent implements OnInit {
     ];
   }
 
-  get currentQuestion(): Question {
+  get currentQuestion(): QuestionForm {
     return this.questions[this.currentQuestionIndex];
   }
 
@@ -411,7 +410,14 @@ export class FormularioInicialComponent implements OnInit {
   }
 
   selectOption(questionIndex: number, optionId: number) {
-    this.questions[questionIndex].selectedOption = optionId;
+    const question = this.questions[questionIndex];
+    question.selectedOption = optionId;
+
+    // Actualizar también la propiedad 'answer' con el título de la opción seleccionada
+    const selectedOption = question.options.find((opt) => opt.id === optionId);
+    if (selectedOption) {
+      question.answer = selectedOption.title;
+    }
   }
 
   nextQuestion() {
@@ -512,9 +518,39 @@ export class FormularioInicialComponent implements OnInit {
           'Expresas mejor tus ideas por escrito',
         ],
       },
+      // Agregar estilos adicionales que aparecen en las opciones
+      Estructurado: {
+        name: 'Aprendiz Estructurado',
+        description: 'Prefieres un enfoque organizado y sistemático para el aprendizaje.',
+        characteristics: [
+          'Te beneficias de horarios fijos',
+          'Prefieres rutinas de estudio establecidas',
+          'Organizas tu tiempo de manera metódica',
+        ],
+      },
+      Flexible: {
+        name: 'Aprendiz Flexible',
+        description: 'Aprendes mejor cuando puedes adaptarte a tu ritmo y momentos de inspiración.',
+        characteristics: [
+          'Prefieres estudiar cuando te sientes motivado',
+          'Te adaptas fácilmente a diferentes horarios',
+          'Aprovechas tus momentos de mayor concentración',
+        ],
+      },
     };
 
-    return styles[style] || styles['Visual'];
+    return (
+      styles[style] || {
+        name: 'Aprendiz Multimodal',
+        description:
+          'Tienes características de varios estilos de aprendizaje y te adaptas bien a diferentes métodos.',
+        characteristics: [
+          'Puedes aprender mediante diferentes métodos',
+          'Te adaptas bien a distintas situaciones de aprendizaje',
+          'Eres versátil en tu enfoque de estudio',
+        ],
+      }
+    );
   }
 
   goToCourses() {

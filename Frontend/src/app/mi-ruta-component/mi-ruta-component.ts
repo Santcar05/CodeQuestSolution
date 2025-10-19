@@ -3,43 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
 import { Router } from '@angular/router';
-
-interface Skill {
-  name: string;
-  level: number;
-  target: number;
-}
-
-interface RoadmapItem {
-  id: number;
-  title: string;
-  description: string;
-  status: 'completed' | 'current' | 'upcoming';
-  icon: string;
-}
-
-interface CareerPath {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-  selected: boolean;
-}
-
-interface Badge {
-  id: number;
-  name: string;
-  icon: string;
-  earned: boolean;
-  description: string;
-}
-
-interface ChatMessage {
-  id: number;
-  text: string;
-  isUser: boolean;
-  timestamp: Date;
-}
+import { Skill } from '../models/Skill';
+import { RoadmapItem } from '../models/RoadMapItem';
+import { CareerPath } from '../models/CarrerPath';
+import { Badge } from '../models/Badge';
+import { ChatMessage } from '../models/ChatMessage';
 
 @Component({
   selector: 'app-mi-ruta',

@@ -76,12 +76,18 @@
             >
               <div class="course-content">
                 <div class="course-icon-wrapper">
-                  <span class="course-icon">{{ course.icon }}</span>
+                  <span class="course-icon">{{ getCourseIcon(course) }}</span>
                 </div>
                 <div class="course-info">
                   <div class="course-header">
-                    <h3>{{ course.name }}</h3>
+                    <h3>{{ course.title }}</h3>
                     <span class="category-badge">{{ course.category }}</span>
+                  </div>
+                  <div class="course-meta">
+                    <span class="level-badge">{{ course.level }}</span>
+                    <span class="rating">
+                      ⭐ {{ course.rating }} ({{ course.students?.toLocaleString() }})
+                    </span>
                   </div>
                   <div class="course-lessons">
                     {{ course.completedLessons }} de {{ course.lessons }} lecciones completadas
@@ -99,13 +105,16 @@
                     </svg>
                     Siguiente: {{ course.nextLesson }}
                   </div>
+                  <div class="instructor-info">
+                    <small>Instructor: {{ course.instructor?.name }}</small>
+                  </div>
                 </div>
               </div>
 
               <div class="progress-bar-container">
-                <div class="progress-bar" [style.width.%]="course.progress"></div>
+                <div class="progress-bar" [style.width.%]="getCourseProgress(course)"></div>
               </div>
-              <div class="progress-text">{{ course.progress }}%</div>
+              <div class="progress-text">{{ getCourseProgress(course) }}%</div>
             </div>
           </div>
         </div>

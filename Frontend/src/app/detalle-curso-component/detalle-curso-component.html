@@ -63,7 +63,6 @@
                   />
                 </svg>
                 <span class="stat-value">{{ course.rating }}</span>
-                <span class="stat-label">({{ course.reviews }} reseñas)</span>
               </div>
               <div class="stat-item">
                 <svg
@@ -79,7 +78,7 @@
                   <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
-                <span class="stat-value">{{ course.students.toLocaleString() }}</span>
+                <span class="stat-value">{{ course.students!.toLocaleString() }}</span>
                 <span class="stat-label">estudiantes</span>
               </div>
               <div class="stat-item">
@@ -115,13 +114,13 @@
 
             <div class="instructor-info">
               <img
-                [src]="course.instructor.avatar"
-                [alt]="course.instructor.name"
+                [src]="course.instructor!.avatar"
+                [alt]="course.instructor!.name"
                 class="instructor-avatar"
               />
               <div class="instructor-details">
                 <span class="instructor-label">Instructor</span>
-                <span class="instructor-name">{{ course.instructor.name }}</span>
+                <span class="instructor-name">{{ course.instructor!.name }}</span>
               </div>
             </div>
 
@@ -258,7 +257,7 @@
             Contenido del Curso
           </h2>
           <div class="modules-summary">
-            <span>{{ course.modules.length }} módulos</span>
+            <span>{{ course.modules!.length }} módulos</span>
             <span>•</span>
             <span>{{ getTotalLessons() }} clases</span>
             <span>•</span>
@@ -421,14 +420,14 @@
 
         <div class="reviews-summary">
           <div class="rating-overview">
-            <div class="rating-big">{{ course.rating }}</div>
+            <div class="rating-big">{{ course!.rating }}</div>
             <div class="stars-display">
               <svg
                 *ngFor="let star of [1, 2, 3, 4, 5]"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
-                [attr.fill]="star <= course.rating ? '#fbbf24' : 'none'"
+                [attr.fill]="star <= course.rating! ? '#fbbf24' : 'none'"
                 stroke="#fbbf24"
                 stroke-width="2"
               >
@@ -437,7 +436,6 @@
                 />
               </svg>
             </div>
-            <div class="rating-count">{{ course.reviews }} reseñas</div>
           </div>
 
           <div class="rating-bars">
@@ -549,11 +547,11 @@
                     <span>{{ relatedCourse.rating }}</span>
                   </div>
                   <span class="related-students"
-                    >{{ relatedCourse.students.toLocaleString() }} estudiantes</span
+                    >{{ relatedCourse.students!.toLocaleString() }} estudiantes</span
                   >
                 </div>
                 <div class="related-course-price">
-                  <span class="related-points">{{ relatedCourse.points }} CodeCoins</span>
+                  <span class="related-points">{{ relatedCourse!.totalPoints }} CodeCoins</span>
                 </div>
               </div>
             </div>

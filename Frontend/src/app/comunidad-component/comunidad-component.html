@@ -30,21 +30,21 @@
               *ngFor="let miembro of miembrosDestacados"
               [class.online]="miembro.online"
             >
-              <div class="miembro-avatar" [style.background]="getNivelGradient(miembro.nivel)">
+              <div class="miembro-avatar" [style.background]="getNivelGradient(miembro.level)">
                 {{ miembro.avatar }}
                 <div class="online-indicator" *ngIf="miembro.online"></div>
               </div>
               <div class="miembro-info">
-                <h4 class="miembro-nombre">{{ miembro.nombre }}</h4>
+                <h4 class="miembro-nombre">{{ miembro.name }}</h4>
                 <div class="miembro-details">
-                  <span class="miembro-nivel" [style.color]="getNivelColor(miembro.nivel)">
-                    {{ miembro.nivel }}
+                  <span class="miembro-nivel" [style.color]="getNivelColor(miembro.level)">
+                    {{ miembro.level }}
                   </span>
-                  <span class="miembro-puntos">{{ miembro.puntos }} pts</span>
+                  <span class="miembro-puntos">{{ miembro.points }} pts</span>
                 </div>
               </div>
               <div class="miembro-insignia">
-                {{ miembro.insignia }}
+                {{ miembro.badges }}
               </div>
             </div>
           </div>
@@ -115,23 +115,23 @@
           <div
             class="publicacion-card"
             *ngFor="let publicacion of publicaciones"
-            [class.con-imagen]="publicacion.imagen"
+            [class.con-imagen]="publicacion.image"
           >
             <!-- Header Publicación -->
             <div class="publicacion-header">
               <div class="usuario-info">
                 <div
                   class="usuario-avatar"
-                  [style.background]="getNivelGradient(publicacion.nivel)"
+                  [style.background]="getNivelGradient(publicacion.level)"
                 >
                   {{ publicacion.avatar }}
                 </div>
                 <div class="usuario-details">
-                  <h4 class="usuario-nombre">{{ publicacion.usuario }}</h4>
+                  <h4 class="usuario-nombre">{{ publicacion.user }}</h4>
                   <div class="publicacion-meta">
-                    <span class="publicacion-fecha">{{ publicacion.fecha }}</span>
-                    <span class="usuario-nivel" [style.color]="getNivelColor(publicacion.nivel)">
-                      • {{ publicacion.nivel }}
+                    <span class="publicacion-fecha">{{ publicacion.date }}</span>
+                    <span class="usuario-nivel" [style.color]="getNivelColor(publicacion.level)">
+                      • {{ publicacion.level }}
                     </span>
                   </div>
                 </div>
@@ -140,11 +140,11 @@
 
             <!-- Contenido Publicación -->
             <div class="publicacion-contenido">
-              <p class="publicacion-texto">{{ publicacion.contenido }}</p>
+              <p class="publicacion-texto">{{ publicacion.content }}</p>
               <img
-                *ngIf="publicacion.imagen"
-                [src]="publicacion.imagen"
-                [alt]="'Imagen de ' + publicacion.usuario"
+                *ngIf="publicacion.image"
+                [src]="publicacion.image"
+                [alt]="'Imagen de ' + publicacion.user"
                 class="publicacion-imagen"
                 (load)="onImageLoad($event)"
               />
@@ -157,7 +157,7 @@
                 <span class="stat-label">me gusta</span>
               </div>
               <div class="stat">
-                <span class="stat-number">{{ publicacion.comentarios.length }}</span>
+                <span class="stat-number">{{ publicacion.comments.length }}</span>
                 <span class="stat-label">comentarios</span>
               </div>
             </div>
@@ -169,47 +169,25 @@
                 (click)="darLike(publicacion.id)"
                 [attr.data-publicacion]="publicacion.id"
               >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                  />
-                </svg>
-                Me gusta
+                ❤️ Me gusta
               </button>
               <button class="action-btn comment-btn" (click)="toggleComentario(publicacion.id)">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
-                Comentar
+                💬 Comentar
               </button>
             </div>
 
             <!-- Comentarios -->
             <div class="comentarios-section" *ngIf="comentarioActivo === publicacion.id">
               <div class="comentarios-lista">
-                <div class="comentario-card" *ngFor="let comentario of publicacion.comentarios">
+                <div class="comentario-card" *ngFor="let comentario of publicacion.comments">
                   <div class="comentario-avatar">
                     {{ comentario.avatar }}
                   </div>
                   <div class="comentario-content">
                     <div class="comentario-header">
-                      <span class="comentario-usuario">{{ comentario.usuario }}</span>
+                      <span class="comentario-usuario">{{ comentario.user }}</span>
                     </div>
-                    <p class="comentario-texto">{{ comentario.texto }}</p>
+                    <p class="comentario-texto">{{ comentario.text }}</p>
                   </div>
                 </div>
               </div>
@@ -235,17 +213,7 @@
                     (click)="agregarComentario(publicacion.id)"
                     [disabled]="!nuevoComentario.trim()"
                   >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <line x1="22" y1="2" x2="11" y2="13" />
-                      <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                    </svg>
+                    ➤
                   </button>
                 </div>
               </div>
@@ -266,21 +234,9 @@
             >
               <div class="tendencia-info">
                 <span class="tendencia-tag">{{ tendencia.tag }}</span>
-                <span class="tendencia-count">{{ tendencia.publicaciones }} publicaciones</span>
+                <span class="tendencia-count">{{ tendencia.posts }} publicaciones</span>
               </div>
-              <div class="tendencia-indicator" *ngIf="tendencia.trending">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-                  <polyline points="17 6 23 6 23 12" />
-                </svg>
-              </div>
+              <div class="tendencia-indicator" *ngIf="tendencia.trending">⬆️</div>
             </div>
           </div>
         </div>

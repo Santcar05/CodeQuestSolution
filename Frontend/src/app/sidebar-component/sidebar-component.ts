@@ -2,24 +2,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-interface MenuItem {
-  id: string;
-  label: string;
-  icon: string;
-  path: string;
-  badge?: number;
-  isNew?: boolean;
-}
-
-interface UserProfile {
-  name: string;
-  level: number;
-  xp: number;
-  maxXp: number;
-  avatar: string;
-  rank: string;
-}
+import { UserProfile } from '../models/UserProfile';
+import { MenuItem } from '../models/MenuItem';
 
 @Component({
   selector: 'app-sidebar-component',
@@ -35,6 +19,7 @@ export class SidebarComponent implements OnInit {
   activeItem = 'inicio';
 
   userProfile: UserProfile = {
+    id: 0,
     name: 'Santiago Castro',
     level: 24,
     xp: 3250,

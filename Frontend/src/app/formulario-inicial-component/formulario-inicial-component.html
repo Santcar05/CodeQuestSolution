@@ -21,7 +21,7 @@
     <!-- Questions Section -->
     <div *ngIf="!isCompleted" class="question-container">
       <span class="question-number">Pregunta {{ currentQuestionIndex + 1 }}</span>
-      <h2 class="question-title">{{ currentQuestion.title }}</h2>
+      <h2 class="question-title">{{ currentQuestion.question }}</h2>
 
       <div class="options-grid">
         <div
@@ -126,6 +126,165 @@
       <div class="learning-style-result" *ngIf="userLearningStyle">
         <h2 class="learning-style-title">{{ userLearningStyle.name }}</h2>
         <p class="learning-style-description">{{ userLearningStyle.description }}</p>
+      </div>
+
+      <button class="completion-btn" (click)="goToCourses()">
+        Explorar Cursos Recomendados
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="5" y1="12" x2="19" y2="12" />
+          <polyline points="12 5 19 12 12 19" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="super-container">
+  <div class="formulario-container">
+    <!-- Header Section -->
+    <div class="formulario-header">
+      <div class="header-content">
+        <h1 class="page-title">Descubre tu Estilo</h1>
+        <p class="page-subtitle">
+          Completa este formulario para personalizar tu experiencia de aprendizaje
+        </p>
+      </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-section">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress"></div>
+      </div>
+      <span class="progress-text">{{ progressText }}</span>
+    </div>
+
+    <!-- Questions Section -->
+    <div *ngIf="!isCompleted" class="question-container">
+      <span class="question-number">Pregunta {{ currentQuestionIndex + 1 }}</span>
+      <!-- CORREGIDO: usar currentQuestion.question en lugar de currentQuestion.title -->
+      <h2 class="question-title">{{ currentQuestion.question }}</h2>
+
+      <div class="options-grid">
+        <div
+          *ngFor="let option of currentQuestion.options"
+          class="option-card"
+          [class.selected]="currentQuestion.selectedOption === option.id"
+          (click)="selectOption(currentQuestionIndex, option.id)"
+        >
+          <div class="option-icon">
+            <span style="font-size: 1.5rem">{{ option.icon }}</span>
+          </div>
+          <h3 class="option-title">{{ option.title }}</h3>
+          <p class="option-description">{{ option.description }}</p>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="navigation-buttons">
+        <button
+          class="nav-btn btn-prev"
+          (click)="previousQuestion()"
+          [disabled]="currentQuestionIndex === 0"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="19" y1="12" x2="5" y2="12" />
+            <polyline points="12 19 5 12 12 5" />
+          </svg>
+          Anterior
+        </button>
+
+        <button
+          *ngIf="!isLastQuestion()"
+          class="nav-btn btn-next"
+          (click)="nextQuestion()"
+          [disabled]="!canProceed()"
+        >
+          Siguiente
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </button>
+
+        <button
+          *ngIf="isLastQuestion()"
+          class="nav-btn btn-submit"
+          (click)="submitForm()"
+          [disabled]="!canProceed()"
+        >
+          Completar
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Completion Screen -->
+    <div *ngIf="isCompleted" class="completion-screen">
+      <div class="completion-icon">
+        <svg
+          width="120"
+          height="120"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#10b981"
+          stroke-width="2"
+        >
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+      </div>
+
+      <h1 class="completion-title">¡Formulario Completado!</h1>
+      <p class="completion-text">
+        Hemos analizado tus respuestas y hemos identificado tu estilo de aprendizaje preferido.
+        Utilizaremos esta información para recomendarte los cursos y métodos de estudio más
+        efectivos para ti.
+      </p>
+
+      <div class="learning-style-result" *ngIf="userLearningStyle">
+        <h2 class="learning-style-title">{{ userLearningStyle.name }}</h2>
+        <p class="learning-style-description">{{ userLearningStyle.description }}</p>
+
+        <!-- Mostrar características si están disponibles -->
+        <div
+          *ngIf="userLearningStyle.characteristics && userLearningStyle.characteristics.length > 0"
+          class="characteristics-list"
+        >
+          <h3>Características principales:</h3>
+          <ul>
+            <li *ngFor="let char of userLearningStyle.characteristics">{{ char }}</li>
+          </ul>
+        </div>
       </div>
 
       <button class="completion-btn" (click)="goToCourses()">

@@ -3,68 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
 import { Router } from '@angular/router';
-
-interface Instructor {
-  name: string;
-  avatar: string;
-}
-
-interface Lesson {
-  title: string;
-  duration: string;
-  isPreview: boolean;
-}
-
-interface Topic {
-  title: string;
-  lessons: Lesson[];
-}
-
-interface Module {
-  title: string;
-  duration: string;
-  points: number;
-  topics: Topic[];
-}
-
-interface Review {
-  userName: string;
-  userAvatar: string;
-  rating: number;
-  date: string;
-  comment: string;
-  helpful: number;
-}
-
-interface RelatedCourse {
-  id: number;
-  title: string;
-  image: string;
-  rating: number;
-  students: number;
-  points: number;
-}
-
-interface Course {
-  id: number;
-  title: string;
-  description: string;
-  thumbnail: string;
-  level: string;
-  rating: number;
-  reviews: number;
-  students: number;
-  duration: string;
-  totalPoints: number;
-  category: string;
-  isNew: boolean;
-  isTrending: boolean;
-  instructor: Instructor;
-  learningPoints: string[];
-  modules: Module[];
-  requirements: string[];
-  reviewsList: Review[];
-}
+import { Course } from '../models/Course';
 
 @Component({
   selector: 'app-detalle-curso',
@@ -82,7 +21,6 @@ export class DetalleCursoComponent implements OnInit {
     thumbnail: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=600&h=400&fit=crop',
     level: 'Avanzado',
     rating: 4.8,
-    reviews: 3247,
     students: 15420,
     duration: '22 horas',
     totalPoints: 1500,
@@ -113,21 +51,59 @@ export class DetalleCursoComponent implements OnInit {
           {
             title: 'Arquitectura y Patrones',
             lessons: [
-              { title: 'Introducción a la arquitectura MVVM', duration: '25 min', isPreview: true },
-              { title: 'Patrón Container-Presenter', duration: '30 min', isPreview: false },
-              { title: 'Smart vs Dumb Components', duration: '35 min', isPreview: false },
-              { title: 'Arquitectura basada en módulos', duration: '40 min', isPreview: false },
+              {
+                title: 'Introducción a la arquitectura MVVM',
+                duration: '25 min',
+                isPreview: true,
+                id: 0,
+              },
+              {
+                title: 'Patrón Container-Presenter',
+                duration: '30 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Smart vs Dumb Components',
+                duration: '35 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Arquitectura basada en módulos',
+                duration: '40 min',
+                isPreview: false,
+                id: 0,
+              },
             ],
+            id: 0,
           },
           {
             title: 'RxJS Avanzado',
             lessons: [
-              { title: 'Operadores avanzados de RxJS', duration: '45 min', isPreview: false },
-              { title: 'Gestión de estado con Subjects', duration: '35 min', isPreview: false },
-              { title: 'Patrones de cancelación', duration: '30 min', isPreview: true },
+              {
+                title: 'Operadores avanzados de RxJS',
+                duration: '45 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Gestión de estado con Subjects',
+                duration: '35 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Patrones de cancelación',
+                duration: '30 min',
+                isPreview: true,
+                id: 0,
+              },
             ],
+            id: 0,
           },
         ],
+        id: 0,
       },
       {
         title: 'Gestión de Estado Profesional',
@@ -137,21 +113,59 @@ export class DetalleCursoComponent implements OnInit {
           {
             title: 'NgRx Completo',
             lessons: [
-              { title: 'Introducción a NgRx', duration: '40 min', isPreview: false },
-              { title: 'Actions y Reducers', duration: '35 min', isPreview: false },
-              { title: 'Selectors y Effects', duration: '45 min', isPreview: false },
-              { title: 'Entity Adapter', duration: '50 min', isPreview: false },
+              {
+                title: 'Introducción a NgRx',
+                duration: '40 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Actions y Reducers',
+                duration: '35 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Selectors y Effects',
+                duration: '45 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Entity Adapter',
+                duration: '50 min',
+                isPreview: false,
+                id: 0,
+              },
             ],
+            id: 0,
           },
           {
             title: 'Alternativas de Estado',
             lessons: [
-              { title: 'Gestión con Services', duration: '30 min', isPreview: false },
-              { title: 'Akita vs NgRx', duration: '40 min', isPreview: true },
-              { title: 'Estado local vs global', duration: '35 min', isPreview: false },
+              {
+                title: 'Gestión con Services',
+                duration: '30 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Akita vs NgRx',
+                duration: '40 min',
+                isPreview: true,
+                id: 0,
+              },
+              {
+                title: 'Estado local vs global',
+                duration: '35 min',
+                isPreview: false,
+                id: 0,
+              },
             ],
+            id: 0,
           },
         ],
+        id: 0,
       },
       {
         title: 'Rendimiento y Optimización',
@@ -161,20 +175,53 @@ export class DetalleCursoComponent implements OnInit {
           {
             title: 'Optimización Avanzada',
             lessons: [
-              { title: 'Change Detection Strategy', duration: '35 min', isPreview: false },
-              { title: 'Lazy Loading avanzado', duration: '40 min', isPreview: false },
-              { title: 'Preloading strategies', duration: '30 min', isPreview: true },
+              {
+                title: 'Change Detection Strategy',
+                duration: '35 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Lazy Loading avanzado',
+                duration: '40 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Preloading strategies',
+                duration: '30 min',
+                isPreview: true,
+                id: 0,
+              },
             ],
+            id: 0,
           },
           {
             title: 'Bundle Analysis',
             lessons: [
-              { title: 'Webpack Bundle Analyzer', duration: '45 min', isPreview: false },
-              { title: 'Tree shaking y dead code', duration: '35 min', isPreview: false },
-              { title: 'Optimización de imports', duration: '25 min', isPreview: false },
+              {
+                title: 'Webpack Bundle Analyzer',
+                duration: '45 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Tree shaking y dead code',
+                duration: '35 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Optimización de imports',
+                duration: '25 min',
+                isPreview: false,
+                id: 0,
+              },
             ],
+            id: 0,
           },
         ],
+        id: 0,
       },
       {
         title: 'Testing Integral',
@@ -184,20 +231,53 @@ export class DetalleCursoComponent implements OnInit {
           {
             title: 'Unit Testing Avanzado',
             lessons: [
-              { title: 'Testing de componentes', duration: '40 min', isPreview: false },
-              { title: 'Testing de servicios', duration: '35 min', isPreview: false },
-              { title: 'Testing asíncrono', duration: '30 min', isPreview: false },
+              {
+                title: 'Testing de componentes',
+                duration: '40 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Testing de servicios',
+                duration: '35 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Testing asíncrono',
+                duration: '30 min',
+                isPreview: false,
+                id: 0,
+              },
             ],
+            id: 0,
           },
           {
             title: 'E2E Testing',
             lessons: [
-              { title: 'Cypress básico', duration: '45 min', isPreview: true },
-              { title: 'Testing de flujos completos', duration: '50 min', isPreview: false },
-              { title: 'Best practices E2E', duration: '35 min', isPreview: false },
+              {
+                title: 'Cypress básico',
+                duration: '45 min',
+                isPreview: true,
+                id: 0,
+              },
+              {
+                title: 'Testing de flujos completos',
+                duration: '50 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Best practices E2E',
+                duration: '35 min',
+                isPreview: false,
+                id: 0,
+              },
             ],
+            id: 0,
           },
         ],
+        id: 0,
       },
       {
         title: 'Deploy y Producción',
@@ -207,20 +287,53 @@ export class DetalleCursoComponent implements OnInit {
           {
             title: 'CI/CD Pipeline',
             lessons: [
-              { title: 'Configuración de entornos', duration: '30 min', isPreview: false },
-              { title: 'GitHub Actions', duration: '40 min', isPreview: false },
-              { title: 'Dockerización', duration: '35 min', isPreview: true },
+              {
+                title: 'Configuración de entornos',
+                duration: '30 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'GitHub Actions',
+                duration: '40 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Dockerización',
+                duration: '35 min',
+                isPreview: true,
+                id: 0,
+              },
             ],
+            id: 0,
           },
           {
             title: 'Performance en Producción',
             lessons: [
-              { title: 'Monitoring y logs', duration: '25 min', isPreview: false },
-              { title: 'Error tracking', duration: '30 min', isPreview: false },
-              { title: 'A/B testing', duration: '35 min', isPreview: false },
+              {
+                title: 'Monitoring y logs',
+                duration: '25 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'Error tracking',
+                duration: '30 min',
+                isPreview: false,
+                id: 0,
+              },
+              {
+                title: 'A/B testing',
+                duration: '35 min',
+                isPreview: false,
+                id: 0,
+              },
             ],
+            id: 0,
           },
         ],
+        id: 0,
       },
     ],
     requirements: [
@@ -274,14 +387,18 @@ export class DetalleCursoComponent implements OnInit {
     { stars: 1, percentage: 1 },
   ];
 
-  relatedCourses: RelatedCourse[] = [
+  relatedCourses: Course[] = [
     {
       id: 2,
       title: 'React Pro - Hooks y Patrones Avanzados',
       image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=250&fit=crop',
       rating: 4.9,
       students: 23150,
-      points: 1400,
+      totalPoints: 1400,
+      description:
+        'Aprende React de cero a experto con Hooks y patrones avanzados. Desarrolla aplicaciones modernas y escalables.',
+      category: 'Desarrollo Web',
+      level: 'Avanzado',
     },
     {
       id: 3,
@@ -289,7 +406,11 @@ export class DetalleCursoComponent implements OnInit {
       image: 'https://images.unsplash.com/photo-1619410283995-43d9134e7656?w=400&h=250&fit=crop',
       rating: 4.8,
       students: 18790,
-      points: 1200,
+      totalPoints: 1200,
+      description:
+        'Aprende TypeScript desde cero y domina los tipos avanzados. Desarrolla aplicaciones robustas y escalables con TypeScript.',
+      category: 'Desarrollo Web',
+      level: 'Avanzado',
     },
     {
       id: 4,
@@ -297,7 +418,11 @@ export class DetalleCursoComponent implements OnInit {
       image: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400&h=250&fit=crop',
       rating: 4.7,
       students: 15430,
-      points: 1600,
+      totalPoints: 1300,
+      description:
+        'Aprende Node.js desde cero y domina la arquitectura escalable. Desarrolla aplicaciones robustas y escalables con Node.js.',
+      category: 'Desarrollo Web',
+      level: 'Avanzado',
     },
     {
       id: 5,
@@ -305,15 +430,19 @@ export class DetalleCursoComponent implements OnInit {
       image: 'https://images.unsplash.com/photo-1593720213428-28a5b9e94613?w=400&h=250&fit=crop',
       rating: 4.6,
       students: 13240,
-      points: 1100,
+      totalPoints: 1100,
+      description:
+        'Aprende Vue.js desde cero y domina la Composition API. Desarrolla aplicaciones modernas y escalables con Vue.js.',
+      category: 'Desarrollo Web',
+      level: 'Avanzado',
     },
   ];
 
   constructor(private router: Router) {}
   ngOnInit() {
     // Initialize expanded states
-    this.expandedModules = new Array(this.course.modules.length).fill(false);
-    this.expandedTopics = this.course.modules.map((module) =>
+    this.expandedModules = new Array(this.course.modules?.length).fill(false);
+    this.expandedTopics = this.course.modules!.map((module) =>
       new Array(module.topics.length).fill(false)
     );
 
@@ -332,7 +461,7 @@ export class DetalleCursoComponent implements OnInit {
   }
 
   getTotalLessons(): number {
-    return this.course.modules.reduce((total, module) => {
+    return this.course.modules!.reduce((total, module) => {
       return (
         total +
         module.topics.reduce((topicTotal, topic) => {
@@ -343,7 +472,7 @@ export class DetalleCursoComponent implements OnInit {
   }
 
   getTotalPoints(): number {
-    return this.course.modules.reduce((total, module) => total + module.points, 0);
+    return this.course.modules!.reduce((total, module) => total + module.points!, 0);
   }
 
   enrollInCourse(): void {

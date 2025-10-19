@@ -4,19 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
 import { Router } from '@angular/router';
-
-interface Course {
-  id: number;
-  title: string;
-  image: string;
-  level: string;
-  rating: number;
-  tags: string[];
-  duration: string;
-  students: number;
-  category: string;
-  isNew: boolean;
-}
+import { Course } from '../models/Course';
 
 @Component({
   selector: 'app-ver-cursos',
@@ -74,6 +62,8 @@ export class VerCursosComponent implements OnInit {
       students: 15420,
       category: 'Frontend',
       isNew: false,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 2,
@@ -86,6 +76,8 @@ export class VerCursosComponent implements OnInit {
       students: 23150,
       category: 'Frontend',
       isNew: true,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 3,
@@ -98,6 +90,8 @@ export class VerCursosComponent implements OnInit {
       students: 18790,
       category: 'Backend',
       isNew: false,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 4,
@@ -110,6 +104,8 @@ export class VerCursosComponent implements OnInit {
       students: 32450,
       category: 'Data Science',
       isNew: false,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 5,
@@ -122,6 +118,8 @@ export class VerCursosComponent implements OnInit {
       students: 12890,
       category: 'Frontend',
       isNew: true,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 6,
@@ -134,6 +132,8 @@ export class VerCursosComponent implements OnInit {
       students: 9870,
       category: 'Frontend',
       isNew: false,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 7,
@@ -146,6 +146,8 @@ export class VerCursosComponent implements OnInit {
       students: 14560,
       category: 'DevOps',
       isNew: true,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 8,
@@ -158,6 +160,8 @@ export class VerCursosComponent implements OnInit {
       students: 11230,
       category: 'IA & ML',
       isNew: true,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 9,
@@ -170,6 +174,8 @@ export class VerCursosComponent implements OnInit {
       students: 16780,
       category: 'Mobile',
       isNew: false,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 10,
@@ -182,6 +188,8 @@ export class VerCursosComponent implements OnInit {
       students: 19450,
       category: 'Full Stack',
       isNew: true,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 11,
@@ -194,6 +202,8 @@ export class VerCursosComponent implements OnInit {
       students: 13240,
       category: 'Frontend',
       isNew: false,
+      description: '',
+      totalPoints: 0,
     },
     {
       id: 12,
@@ -206,6 +216,8 @@ export class VerCursosComponent implements OnInit {
       students: 10890,
       category: 'DevOps',
       isNew: true,
+      description: '',
+      totalPoints: 0,
     },
   ];
 
@@ -221,7 +233,7 @@ export class VerCursosComponent implements OnInit {
 
   calculateStats() {
     this.totalCourses = this.allCourses.length;
-    const total = this.allCourses.reduce((sum, course) => sum + course.students, 0);
+    const total = this.allCourses.reduce((sum, course) => sum + course.students!, 0);
     this.totalStudents = this.formatNumber(total);
   }
 
@@ -303,7 +315,7 @@ export class VerCursosComponent implements OnInit {
       const matchesSearch =
         !this.searchTerm ||
         course.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        course.tags.some((tag) => tag.toLowerCase().includes(this.searchTerm.toLowerCase()));
+        course.tags!.some((tag) => tag.toLowerCase().includes(this.searchTerm.toLowerCase()));
 
       // Level filter
       const matchesLevel =
@@ -316,7 +328,7 @@ export class VerCursosComponent implements OnInit {
       // Duration filter
       const matchesDuration =
         this.selectedDurations.length === 0 ||
-        this.selectedDurations.some((duration) => this.matchDuration(course.duration, duration));
+        this.selectedDurations.some((duration) => this.matchDuration(course.duration!, duration));
 
       return matchesSearch && matchesLevel && matchesCategory && matchesDuration;
     });
@@ -343,10 +355,10 @@ export class VerCursosComponent implements OnInit {
   sortCourses() {
     switch (this.selectedSort) {
       case 'popular':
-        this.filteredCourses.sort((a, b) => b.students - a.students);
+        this.filteredCourses.sort((a, b) => b.students! - a.students!);
         break;
       case 'rating':
-        this.filteredCourses.sort((a, b) => b.rating - a.rating);
+        this.filteredCourses.sort((a, b) => b.rating! - a.rating!);
         break;
       case 'recent':
         this.filteredCourses.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
