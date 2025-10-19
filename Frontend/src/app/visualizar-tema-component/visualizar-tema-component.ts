@@ -739,7 +739,9 @@ int main() {
     return this.selectedLesson.content.codeExplanations || [];
   }
 
-  closeSidebar(): void {}
+  closeSidebar(): void {
+    this.router.navigate(['/detalle-curso', this.selectedTopic.id]);
+  }
 
   openQuiz(): void {
     this.router.navigate(['/examen', this.selectedLesson.id]);
