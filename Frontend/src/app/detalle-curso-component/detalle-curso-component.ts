@@ -2,8 +2,75 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
+
 import { Router } from '@angular/router';
+<<<<<<< HEAD
 import { Course } from '../models/Course';
+=======
+
+
+interface Instructor {
+  name: string;
+  avatar: string;
+}
+
+interface Lesson {
+  title: string;
+  duration: string;
+  isPreview: boolean;
+}
+
+interface Topic {
+  title: string;
+  lessons: Lesson[];
+}
+
+interface Module {
+  title: string;
+  duration: string;
+  points: number;
+  topics: Topic[];
+}
+
+interface Review {
+  userName: string;
+  userAvatar: string;
+  rating: number;
+  date: string;
+  comment: string;
+  helpful: number;
+}
+
+interface RelatedCourse {
+  id: number;
+  title: string;
+  image: string;
+  rating: number;
+  students: number;
+  points: number;
+}
+
+interface Course {
+  id: number;
+  title: string;
+  description: string;
+  thumbnail: string;
+  level: string;
+  rating: number;
+  reviews: number;
+  students: number;
+  duration: string;
+  totalPoints: number;
+  category: string;
+  isNew: boolean;
+  isTrending: boolean;
+  instructor: Instructor;
+  learningPoints: string[];
+  modules: Module[];
+  requirements: string[];
+  reviewsList: Review[];
+}
+>>>>>>> 6fe2a282baa5c49cd6bafa2af509a9495908b979
 
 @Component({
   selector: 'app-detalle-curso',
@@ -438,7 +505,9 @@ export class DetalleCursoComponent implements OnInit {
     },
   ];
 
+
   constructor(private router: Router) {}
+
   ngOnInit() {
     // Initialize expanded states
     this.expandedModules = new Array(this.course.modules?.length).fill(false);
@@ -475,10 +544,12 @@ export class DetalleCursoComponent implements OnInit {
     return this.course.modules!.reduce((total, module) => total + module.points!, 0);
   }
 
+
   enrollInCourse(): void {
     // Lógica para inscribirse en el curso
 
     // Ingresar a la página de curso
     this.router.navigate(['/visualizar-tema', this.course.id]);
   }
+
 }

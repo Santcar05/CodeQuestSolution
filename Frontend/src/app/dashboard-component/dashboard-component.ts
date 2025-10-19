@@ -1,11 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
+
 import { PaymentComponent } from '../payment-component/payment-component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+<<<<<<< HEAD
 import { Course } from '../models/Course';
 import { Instructor } from '../models/Instructor';
 import { Review } from '../models/Review';
+=======
+
+interface Course {
+  id: number;
+  name: string;
+  progress: number;
+  icon: string;
+  lessons: number;
+  completedLessons: number;
+  nextLesson: string;
+  category: string;
+}
+>>>>>>> 6fe2a282baa5c49cd6bafa2af509a9495908b979
 
 interface WishlistCourse {
   id: number;
@@ -40,7 +55,9 @@ interface WeeklyActivity {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
+
   imports: [CommonModule, SidebarComponent, PaymentComponent, HttpClientModule],
+
   templateUrl: './dashboard-component.html',
   styleUrls: ['./dashboard-component.css'],
 })

@@ -1,11 +1,67 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
+
 import { Router } from '@angular/router';
+<<<<<<< HEAD
 import { Power } from '../models/Power';
 import { Product } from '../models/Product';
 import { PremiumPlan } from '../models/PremiumPlan';
 import { Course } from '../models/Course';
+=======
+
+interface Power {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  duration: string;
+  uses: number;
+  owned: boolean;
+  isFeatured: boolean;
+  color: string;
+  icon: string;
+  iconSize: number;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  type: string;
+  rarity: string;
+  owned: boolean;
+  isFeatured: boolean;
+  image: string;
+  color: string;
+  icon: string;
+  iconSize: number;
+}
+
+interface PremiumPlan {
+  id: number;
+  name: string;
+  description: string;
+  price: string;
+  period: string;
+  savings: string;
+  recommended: boolean;
+  features: string[];
+}
+
+interface Course {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  level: string;
+  duration: string;
+  students: number;
+  price: string;
+  originalPrice?: string;
+}
+>>>>>>> 6fe2a282baa5c49cd6bafa2af509a9495908b979
 
 @Component({
   selector: 'app-tienda-codequest',
@@ -15,7 +71,9 @@ import { Course } from '../models/Course';
   styleUrls: ['./tienda-codequest-component.css'],
 })
 export class TiendaCodequestComponent implements OnInit {
+
   constructor(private router: Router) {}
+
 
   activeTab: string = 'poderes';
   userBalance: number = 12500;
@@ -332,4 +390,5 @@ export class TiendaCodequestComponent implements OnInit {
   buyPremiumPlan(): void {
     this.router.navigate(['/pago']);
   }
+
 }
