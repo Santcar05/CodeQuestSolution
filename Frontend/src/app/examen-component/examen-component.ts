@@ -347,4 +347,8 @@ export class ExamenComponent implements OnInit {
       clearInterval(this.timerInterval);
     }
   }
+
+  getBackCourses() {
+    this.router.navigate(['/catalogo-cursos']);
+  }
 }

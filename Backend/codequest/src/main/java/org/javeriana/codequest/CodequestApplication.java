@@ -16,3 +16,12 @@ public class CodequestApplication {
 //el backend solo devuelve clientSecret. Nunca envíar sk_... al frontend.
 
 
+/*
+ Colocar antes de ejecutar la api key de stripe:
+ $env:STRIPE_API_KEY="código de la api key"
+ Verificar 
+ echo $env:STRIPE_API_KEY
+
+ ejecutar
+ */
+
