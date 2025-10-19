@@ -2,7 +2,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
+
 import { Router } from '@angular/router';
+
 
 interface Instructor {
   name: string;
@@ -309,7 +311,9 @@ export class DetalleCursoComponent implements OnInit {
     },
   ];
 
+
   constructor(private router: Router) {}
+
   ngOnInit() {
     // Initialize expanded states
     this.expandedModules = new Array(this.course.modules.length).fill(false);
@@ -346,10 +350,12 @@ export class DetalleCursoComponent implements OnInit {
     return this.course.modules.reduce((total, module) => total + module.points, 0);
   }
 
+
   enrollInCourse(): void {
     // Lógica para inscribirse en el curso
 
     // Ingresar a la página de curso
     this.router.navigate(['/visualizar-tema', this.course.id]);
   }
+
 }
