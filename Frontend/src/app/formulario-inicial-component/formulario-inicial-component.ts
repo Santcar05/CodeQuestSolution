@@ -24,12 +24,9 @@ export class FormularioInicialComponent implements OnInit {
   questions: QuestionForm[] = [];
   isCompleted: boolean = false;
   userLearningStyle: LearningStyle | null = null;
-  loading: boolean = true; // 👈 indicador de carga
+  loading: boolean = true;
 
-  constructor(
-    private router: Router,
-    private questionFormService: QuestionFormService // 👈 inyectamos servicio
-  ) {}
+  constructor(private router: Router, private questionFormService: QuestionFormService) {}
 
   ngOnInit() {
     this.loadQuestions();
