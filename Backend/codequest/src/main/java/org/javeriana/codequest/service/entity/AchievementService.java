@@ -1,5 +1,7 @@
 package org.javeriana.codequest.service.entity;
 
+import java.util.List;
+
 import org.javeriana.codequest.entity.Achievement;
 import org.javeriana.codequest.repository.AchievementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,4 +29,11 @@ public class AchievementService {
         return achievementRepository.findById(id).orElse(null);
     }
 
+    public List<Achievement> findAll() {
+        return achievementRepository.findAll();
+    }
+
+    public void update(Achievement achievement) {
+        achievementRepository.save(achievement);
+    }
 }
