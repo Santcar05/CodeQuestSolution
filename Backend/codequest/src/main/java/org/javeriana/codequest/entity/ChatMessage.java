@@ -30,7 +30,7 @@ public class ChatMessage {
     @Column(name = "is_user", nullable = false)
     private Boolean isUser;
 
-    @Column(nullable = false)
+    @Column(name = "message_time", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime timestamp;
 

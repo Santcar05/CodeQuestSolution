@@ -1,22 +1,9 @@
 package org.javeriana.codequest.entity;
 
-import java.util.List;
+import lombok.*;
+import jakarta.persistence.*;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -31,7 +18,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "user_name", nullable = false) // Cambiado de "user" a "user_name"
     private String user;
 
     @Column(nullable = false)
@@ -40,7 +27,7 @@ public class Post {
     @Column(nullable = false)
     private String level;
 
-    @Column(nullable = false)
+    @Column(name = "post_date", nullable = false) // Cambiado de "date" a "post_date"
     private String date;
 
     @Column(nullable = false, length = 4000)
@@ -54,7 +41,6 @@ public class Post {
     @Column(nullable = false)
     private Boolean liked;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CommentModel> comments;
 }

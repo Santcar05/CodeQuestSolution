@@ -2,10 +2,13 @@ package org.javeriana.codequest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
+@EntityScan("org.javeriana.codequest.entity") // Escanea las entidades
+@EnableJpaRepositories("org.javeriana.codequest.repository") // Escanea los repositorio
 public class CodequestApplication {
-
 
     public static void main(String[] args) {
         SpringApplication.run(CodequestApplication.class, args);
@@ -14,8 +17,6 @@ public class CodequestApplication {
 }
 
 //el backend solo devuelve clientSecret. Nunca envíar sk_... al frontend.
-
-
 /*
  Colocar antes de ejecutar la api key de stripe:
  $env:STRIPE_API_KEY="código de la api key"
@@ -24,4 +25,3 @@ public class CodequestApplication {
 
  ejecutar
  */
-
