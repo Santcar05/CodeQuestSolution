@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TrendService {
 
+    @Autowired
     private TrendRepository trendRepository;
 
     public void save(Trend trend) {

@@ -3,7 +3,7 @@ export interface Achievement {
   name: string;
   description?: string;
   category: string;
-  rarity: 'Común' | 'Raro' | 'Épico' | 'Legendario' | 'Mítico';
+  rarity: 'COMÚN' | 'RARO' | 'ÉPICO' | 'LEGENDARIO' | 'MÍTICO';
   points: number;
   image: string;
   unlocked: boolean;

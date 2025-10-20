@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
-
 import { PaymentComponent } from '../payment-component/payment-component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+
 import { Course } from '../models/Course';
-import { Instructor } from '../models/Instructor';
-import { Review } from '../models/Review';
+import { Achievement } from '../models/Achievement';
+import { AchievementService } from '../service/achievement/achievement-service';
 
 interface WishlistCourse {
   id: number;
@@ -15,14 +15,6 @@ interface WishlistCourse {
   level: string;
   duration: string;
   students: number;
-}
-
-interface Achievement {
-  id: number;
-  name: string;
-  icon: string;
-  date: string;
-  rarity: string;
 }
 
 interface UpcomingAchievement {
@@ -41,9 +33,7 @@ interface WeeklyActivity {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-
   imports: [CommonModule, SidebarComponent, PaymentComponent, HttpClientModule],
-
   templateUrl: './dashboard-component.html',
   styleUrls: ['./dashboard-component.css'],
 })
@@ -52,7 +42,6 @@ export class DashboardComponent implements OnInit {
   coins = 2450;
   animateStats = false;
 
-  // Cursos quemados que cumplen con la interfaz Course
   courses: Course[] = [
     {
       id: 1,
@@ -203,43 +192,11 @@ export class DashboardComponent implements OnInit {
       duration: '18h',
       students: 18790,
     },
-    {
-      id: 4,
-      name: 'React Native para Android',
-      image: 'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=400&h=300&fit=crop',
-      level: 'Intermedio',
-      duration: '14h',
-      students: 15420,
-    },
-    {
-      id: 5,
-      name: 'React Native para iOS',
-      image: 'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=400&h=300&fit=crop',
-      level: 'Intermedio',
-      duration: '14h',
-      students: 15420,
-    },
-    {
-      id: 6,
-      name: 'React Native para Web',
-      image: 'https://images.unsplash.com/photo-1605745341112-85968b19335b?w=400&h=300&fit=crop',
-      level: 'Intermedio',
-      duration: '14h',
-      students: 15420,
-    },
   ];
 
-  recentAchievements: Achievement[] = [
-    { id: 1, name: 'Racha de 15 días', icon: '🔥', date: 'Hoy', rarity: 'rare' },
-    { id: 2, name: 'Primer Proyecto', icon: '🎯', date: 'Hace 2 días', rarity: 'common' },
-    { id: 3, name: 'Code Master', icon: '👑', date: 'Hace 5 días', rarity: 'epic' },
-  ];
-
-  upcomingAchievements: UpcomingAchievement[] = [
-    { id: 1, name: 'Racha de 30 días', icon: '🔥', progress: 50, required: 30 },
-    { id: 2, name: 'Completar 5 cursos', icon: '📚', progress: 60, required: 5 },
-    { id: 3, name: '100 Desafíos', icon: '⚡', progress: 75, required: 100 },
-  ];
+  // Achievements desde la base de datos
+  recentAchievements: Achievement[] = [];
+  upcomingAchievements: UpcomingAchievement[] = [];
 
   weeklyActivity: WeeklyActivity[] = [
     { day: 'L', value: 3 },
@@ -251,13 +208,39 @@ export class DashboardComponent implements OnInit {
     { day: 'D', value: 4 },
   ];
 
-  // Función para calcular el progreso basado en lecciones completadas
+  constructor(private achievementService: AchievementService) {}
+
+  ngOnInit() {
+    // Cargar logros desde el backend
+    this.achievementService.findAll().subscribe({
+      next: (data) => {
+        // Filtrar los desbloqueados y los bloqueados
+        this.recentAchievements = data.filter((a) => a.unlocked);
+        const lockedAchievements = data.filter((a) => !a.unlocked);
+
+        // Mapear los bloqueados como próximos logros
+        this.upcomingAchievements = lockedAchievements.map((a) => ({
+          id: a.id,
+          name: a.name,
+          icon: a.image || '🏆',
+          progress: Math.floor(Math.random() * 80), // simular progreso (puedes usar otro criterio)
+          required: a.points || 100,
+        }));
+      },
+      error: (err) => console.error('Error al cargar logros desde la BD', err),
+    });
+
+    // Animar estadísticas
+    setTimeout(() => {
+      this.animateStats = true;
+    }, 100);
+  }
+
   getCourseProgress(course: Course): number {
     if (!course.lessons || !course.completedLessons) return 0;
     return Math.round((course.completedLessons / course.lessons) * 100);
   }
 
-  // Función para obtener icono basado en categoría
   getCourseIcon(course: Course): string {
     const icons: { [key: string]: string } = {
       Frontend: '🚀',
@@ -267,11 +250,5 @@ export class DashboardComponent implements OnInit {
       DevOps: '⚙️',
     };
     return icons[course.category] || '📚';
-  }
-
-  ngOnInit() {
-    setTimeout(() => {
-      this.animateStats = true;
-    }, 100);
   }
 }
