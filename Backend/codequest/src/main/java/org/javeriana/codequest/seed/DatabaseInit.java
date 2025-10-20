@@ -16,6 +16,7 @@ import org.javeriana.codequest.entity.FeaturedUser;
 import org.javeriana.codequest.entity.Instructor;
 import org.javeriana.codequest.entity.LearningMethod;
 import org.javeriana.codequest.entity.MenuItem;
+import org.javeriana.codequest.entity.OptionForm;
 import org.javeriana.codequest.entity.Post;
 import org.javeriana.codequest.entity.Power;
 import org.javeriana.codequest.entity.PremiumPlan;
@@ -42,6 +43,7 @@ import org.javeriana.codequest.service.entity.FeaturedUserService;
 import org.javeriana.codequest.service.entity.InstructorService;
 import org.javeriana.codequest.service.entity.LearningMethodService;
 import org.javeriana.codequest.service.entity.MenuItemService;
+import org.javeriana.codequest.service.entity.OptionFormService;
 import org.javeriana.codequest.service.entity.PostService;
 import org.javeriana.codequest.service.entity.PowerService;
 import org.javeriana.codequest.service.entity.PremiumPlanService;
@@ -110,8 +112,8 @@ public class DatabaseInit {
 
     //@Autowired
     //private ModuleModelService moduleService;
-    //@Autowired
-    //private OptionFormService optionFormService;
+    @Autowired
+    private OptionFormService optionFormService;
     @Autowired
     private PostService postService;
 
@@ -611,6 +613,15 @@ public class DatabaseInit {
         return mi;
     }
 
+    private OptionForm createOptionForm(String title, String description, String icon, String learningStyle) {
+        OptionForm of = new OptionForm();
+        of.setTitle(title);
+        of.setDescription(description);
+        of.setIcon(icon);
+        of.setLearningStyle(learningStyle);
+        return of;
+    }
+
     private void initPowers() {
         List<Power> powers = Arrays.asList(
                 createPower("Doble XP", "Duplica los puntos de experiencia ganados", 4.99, "24 horas", 1, false, true, "#FFD700", "⚡", 24),
@@ -804,23 +815,81 @@ public class DatabaseInit {
 
     private void initQuestionForms() {
         List<QuestionForm> forms = Arrays.asList(
-                createQuestionForm("¿Cuál es tu nivel actual de programación?", "Ayúdanos a personalizar tu experiencia", null),
-                createQuestionForm("¿Qué lenguaje te gustaría aprender primero?", "Podemos recomendarte un camino de aprendizaje", null),
-                createQuestionForm("¿Cuánto tiempo puedes dedicar al día?", "Para crear un plan realista", null),
-                createQuestionForm("¿Cuál es tu objetivo principal?", "Entender tu meta nos ayuda a guiarte mejor", null),
-                createQuestionForm("¿Prefieres aprender viendo videos o leyendo?", "Adaptaremos el contenido a tu estilo", null),
-                createQuestionForm("¿Tienes experiencia previa en programación?", "Esto nos ayuda a no repetir conceptos que ya conoces", null),
-                createQuestionForm("¿Qué área te interesa más?", "Selecciona el campo que más te llame la atención", null),
-                createQuestionForm("¿Trabajas actualmente en tecnología?", "Para ofrecerte contenido relevante a tu situación", null)
+                createQuestionForm("Cuando aprendes algo nuevo, ¿qué método prefieres?", null, Arrays.asList(
+                        createOptionForm("Ver demostraciones", "Prefiero ver cómo se hace antes de intentarlo yo mismo", "👀", "Visual"),
+                        createOptionForm("Leer instrucciones", "Me gusta leer y entender la teoría primero", "📖", "Lectura"),
+                        createOptionForm("Practicar directamente", "Aprendo mejor haciendo y experimentando", "🔧", "Kinestésico"),
+                        createOptionForm("Escuchar explicaciones", "Prefiero que me expliquen verbalmente", "🎧", "Auditivo")
+                )),
+                createQuestionForm("¿Cómo organizas tu tiempo de estudio?", null, Arrays.asList(
+                        createOptionForm("Horarios fijos", "Prefiero estudiar a la misma hora todos los días", "⏰", "Estructurado"),
+                        createOptionForm("Cuando tengo inspiración", "Estudio cuando me siento motivado y concentrado", "💡", "Flexible"),
+                        createOptionForm("Por objetivos", "Planifico en base a metas específicas a alcanzar", "🎯", "Orientado a metas"),
+                        createOptionForm("Intensivo", "Prefiero sesiones largas y profundas", "⚡", "Inmersivo")
+                )),
+                createQuestionForm("¿Qué tipo de material te resulta más útil?", null, Arrays.asList(
+                        createOptionForm("Diagramas y mapas mentales", "Me ayudan a ver las conexiones entre conceptos", "🗺️", "Visual"),
+                        createOptionForm("Textos y apuntes", "Prefiero material escrito detallado", "📝", "Lectura"),
+                        createOptionForm("Ejercicios prácticos", "Aprendo resolviendo problemas reales", "🧩", "Kinestésico"),
+                        createOptionForm("Podcasts y audios", "Puedo aprender mientras hago otras actividades", "🎙️", "Auditivo")
+                )),
+                createQuestionForm("¿Cómo prefieres recibir feedback?", null, Arrays.asList(
+                        createOptionForm("Ver ejemplos corregidos", "Comparar mi trabajo con soluciones modelo", "👁️", "Visual"),
+                        createOptionForm("Comentarios escritos", "Prefiero feedback detallado por escrito", "✍️", "Lectura"),
+                        createOptionForm("Práctica guiada", "Que me muestren cómo mejorar en el momento", "🤝", "Kinestésico"),
+                        createOptionForm("Conversaciones", "Discutir mis progresos verbalmente", "💬", "Auditivo")
+                )),
+                createQuestionForm("¿Qué ambiente te ayuda más a concentrarte?", null, Arrays.asList(
+                        createOptionForm("Espacio ordenado y visual", "Me concentro mejor en ambientes organizados", "🧹", "Visual"),
+                        createOptionForm("Silencio absoluto", "Necesito eliminar distracciones auditivas", "🤫", "Lectura"),
+                        createOptionForm("Poder moverme", "Me ayuda cambiar de postura o lugar", "🚶", "Kinestésico"),
+                        createOptionForm("Música de fondo", "El sonido ambiental me ayuda a concentrarme", "🎵", "Auditivo")
+                )),
+                createQuestionForm("¿Cómo abordas un tema complejo?", null, Arrays.asList(
+                        createOptionForm("Dividiendo en partes", "Desgloso el problema en componentes más pequeños", "🧩", "Analítico"),
+                        createOptionForm("Buscando el panorama general", "Primero entiendo el concepto global", "🌅", "Global"),
+                        createOptionForm("Probando con ejemplos", "Experimentando con casos prácticos", "🔍", "Experimental"),
+                        createOptionForm("Preguntando a otros", "Discutiendo el tema con compañeros", "👥", "Social")
+                )),
+                createQuestionForm("¿Qué tipo de proyectos disfrutas más?", null, Arrays.asList(
+                        createOptionForm("Diseño visual", "Crear interfaces y experiencias visuales", "🎨", "Visual"),
+                        createOptionForm("Investigación teórica", "Profundizar en conceptos y teorías", "🔬", "Lectura"),
+                        createOptionForm("Construcción manual", "Armar cosas con las manos o código", "🛠️", "Kinestésico"),
+                        createOptionForm("Presentaciones orales", "Explicar ideas verbalmente", "🎤", "Auditivo")
+                )),
+                createQuestionForm("¿Cómo tomas apuntes?", null, Arrays.asList(
+                        createOptionForm("Con colores y dibujos", "Uso elementos visuales para organizar ideas", "🖍️", "Visual"),
+                        createOptionForm("Texto estructurado", "Listas y párrafos organizados", "📑", "Lectura"),
+                        createOptionForm("Notas breves", "Apunto solo lo esencial y práctico", "📌", "Kinestésico"),
+                        createOptionForm("Grabaciones", "Prefiero grabar y escuchar después", "🎙️", "Auditivo")
+                )),
+                createQuestionForm("¿Cómo manejas los errores al aprender?", null, Arrays.asList(
+                        createOptionForm("Analizando visualmente", "Reviso dónde me equivoqué paso a paso", "🔎", "Visual"),
+                        createOptionForm("Buscando en documentación", "Consulto fuentes escritas para entender", "📚", "Lectura"),
+                        createOptionForm("Intentando de nuevo", "Práctico hasta que sale bien", "🔄", "Kinestésico"),
+                        createOptionForm("Pidiendo explicación", "Pregunto a alguien que me lo explique", "❓", "Auditivo")
+                )),
+                createQuestionForm("¿Qué te motiva a seguir aprendiendo?", null, Arrays.asList(
+                        createOptionForm("Ver progreso visual", "Gráficos y métricas de mi avance", "📊", "Visual"),
+                        createOptionForm("Lograr certificaciones", "Obtener reconocimientos formales", "🏆", "Lectura"),
+                        createOptionForm("Resolver problemas reales", "Aplicar lo aprendido en proyectos", "💼", "Kinestésico"),
+                        createOptionForm("Compartir conocimiento", "Enseñar a otros lo que he aprendido", "🗣️", "Auditivo")
+                ))
         );
+
         forms.forEach(questionFormService::save);
     }
 
-    private QuestionForm createQuestionForm(String question, String answer, Integer selectedOption) {
+    private QuestionForm createQuestionForm(String question, String subtitle, List<OptionForm> options) {
         QuestionForm qf = new QuestionForm();
+        qf.setAnswer("");
         qf.setQuestion(question);
-        qf.setAnswer(answer);
-        qf.setSelectedOption(selectedOption);
+        options.forEach(o -> o.setQuestionForm(qf));
+
+        if (options != null) {
+            qf.setOptions(options);
+        }
+
         return qf;
     }
 
