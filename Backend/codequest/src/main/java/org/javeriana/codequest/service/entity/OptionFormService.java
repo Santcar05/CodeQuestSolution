@@ -25,6 +25,10 @@ public class OptionFormService {
         return optionformRepository.findById(id).orElse(null);
     }
 
+    public List<OptionForm> findByQuestionFormId(Long id) {
+        return optionformRepository.findByQuestionForm_Id(id);
+    }
+
     public List<OptionForm> findAll() {
         return optionformRepository.findAll();
     }
