@@ -24,7 +24,7 @@ public class OptionFormController {
         return optionFormService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("question/{id}")
     public List<OptionForm> findById(@PathVariable Long id) {
         return optionFormService.findByQuestionFormId(id);
     }
