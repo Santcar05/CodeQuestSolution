@@ -80,6 +80,7 @@ export class LogrosComponent implements OnInit {
         this.calculateStats();
         this.sortLogros();
         this.loading = false;
+        this.filterLogros();
       },
       error: (err) => {
         console.error('Error al cargar los logros', err);
