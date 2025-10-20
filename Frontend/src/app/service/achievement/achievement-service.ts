@@ -22,23 +22,23 @@ export class AchievementService {
    * Guarda un nuevo logro
    * @param achievement logro a guardar
    */
-  save(achievement: Achievement): Observable<void> {
-    return this.http.post<void>(this.apiUrl, achievement);
+  save(achievement: Achievement): Observable<Achievement> {
+    return this.http.post<Achievement>(this.apiUrl, achievement);
   }
 
   /**
    * Actualiza un logro existente
    * @param achievement logro con los datos actualizados
    */
-  update(achievement: Achievement): Observable<void> {
-    return this.http.put<void>(this.apiUrl, achievement);
+  update(achievement: Achievement): Observable<Achievement> {
+    return this.http.put<Achievement>(this.apiUrl, achievement);
   }
 
   /**
    * Elimina un logro
    * @param achievement logro a eliminar
    */
-  delete(achievement: Achievement): Observable<void> {
-    return this.http.delete<void>(this.apiUrl, { body: achievement });
+  delete(achievement: Achievement): Observable<Achievement> {
+    return this.http.delete<Achievement>(this.apiUrl, { body: achievement });
   }
 }
