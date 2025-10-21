@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "org.javeriana.codequest")
 @EntityScan("org.javeriana.codequest.entity") // Escanea las entidades
 @EnableJpaRepositories("org.javeriana.codequest.repository") // Escanea los repositorio
 @ComponentScan("org.javeriana.codequest") // Escanea todos los componentes
