@@ -1,5 +1,7 @@
 package org.javeriana.codequest.service.entity;
 
+import java.util.List;
+
 import org.javeriana.codequest.entity.ChatMessage;
 import org.javeriana.codequest.repository.ChatMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,10 @@ public class ChatMessageService {
 
     public ChatMessage findById(Long id) {
         return chatMessageRepository.findById(id).orElse(null);
+    }
+
+    public List<ChatMessage> findAll() {
+        return chatMessageRepository.findAll();
     }
 
 }
