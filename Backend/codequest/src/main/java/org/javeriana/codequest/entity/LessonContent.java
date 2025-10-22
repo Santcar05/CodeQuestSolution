@@ -47,4 +47,5 @@ public class LessonContent {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_content_id")
     private List<CodeExplanation> codeExplanations;
+
 }

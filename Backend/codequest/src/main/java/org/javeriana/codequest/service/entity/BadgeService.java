@@ -1,5 +1,7 @@
 package org.javeriana.codequest.service.entity;
 
+import java.util.List;
+
 import org.javeriana.codequest.entity.Badge;
 import org.javeriana.codequest.repository.BadgeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +27,9 @@ public class BadgeService {
 
     public Badge findById(Long id) {
         return badgeRepository.findById(id).orElse(null);
+    }
+
+    public List<Badge> findAll() {
+        return badgeRepository.findAll();
     }
 }
