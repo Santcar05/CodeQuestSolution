@@ -9,7 +9,7 @@ export class ProductService {
   private apiUrl = 'http://localhost:8080/api/product';
   constructor(private http: HttpClient) {}
   findAll(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.apiUrl);
+    return this.http.get<Product[]>(`${this.apiUrl}/all`);
   }
 
   findById(id: number): Observable<Product> {

@@ -9,7 +9,7 @@ export class PremiumPlanService {
   private apiUrl = 'http://localhost:8080/api/premiumPlan';
   constructor(private http: HttpClient) {}
   findAll(): Observable<PremiumPlan[]> {
-    return this.http.get<PremiumPlan[]>(this.apiUrl);
+    return this.http.get<PremiumPlan[]>(`${this.apiUrl}/all`);
   }
   findById(id: number): Observable<PremiumPlan> {
     return this.http.get<PremiumPlan>(`${this.apiUrl}/${id}`);
