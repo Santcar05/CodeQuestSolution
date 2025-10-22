@@ -219,7 +219,7 @@
               [style.animation-delay.s]="i * 0.1"
             >
               <div class="wishlist-image-container">
-                <img [src]="course.image" [alt]="course.name" class="wishlist-image" />
+                <img [src]="course.image" [alt]="course.title" class="wishlist-image" />
                 <div class="wishlist-overlay">
                   <svg
                     width="40"
@@ -234,7 +234,7 @@
                 </div>
               </div>
               <div class="wishlist-content">
-                <h4>{{ course.name }}</h4>
+                <h4>{{ course.title }}</h4>
                 <div class="wishlist-meta">
                   <span class="level-badge">{{ course.level }}</span>
                   <span class="duration">{{ course.duration }}</span>
@@ -253,7 +253,7 @@
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
-                  {{ course.students.toLocaleString() }} estudiantes
+                  {{ course.students!.toLocaleString() }} estudiantes
                 </div>
               </div>
             </div>

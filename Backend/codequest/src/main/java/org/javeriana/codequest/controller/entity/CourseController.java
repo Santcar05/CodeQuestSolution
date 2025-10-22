@@ -53,4 +53,5 @@ public class CourseController {
                 Map.of("day", "D", "value", 4)
         );
     }
+
 }
