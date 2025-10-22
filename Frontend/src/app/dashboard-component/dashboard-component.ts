@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Observable, Subject } from 'rxjs';
+import { tap, catchError, takeUntil } from 'rxjs/operators';
+import { of } from 'rxjs';
+
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
 import { PaymentComponent } from '../payment-component/payment-component';
 import { HttpClientModule } from '@angular/common/http';
@@ -29,25 +33,26 @@ interface WeeklyActivity {
   templateUrl: './dashboard-component.html',
   styleUrls: ['./dashboard-component.css'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   // 🪙 Datos generales
   streak = 15;
   coins = 2450;
   animateStats = false;
 
-  // 📚 Datos cargados desde el backend
-  courses: Course[] = [];
-  wishlistCourses: Course[] = [];
-  recentAchievements: Achievement[] = [];
-  upcomingAchievements: UpcomingAchievement[] = [];
-
-  // 📈 Actividad semanal (puede venir del backend si lo deseas)
-  weeklyActivity: WeeklyActivity[] = [];
+  // 📚 Observables para datos cargados desde el backend
+  courses$: Observable<Course[]> = of([]);
+  wishlistCourses$: Observable<Course[]> = of([]);
+  recentAchievements$: Observable<Achievement[]> = of([]);
+  upcomingAchievements$: Observable<UpcomingAchievement[]> = of([]);
+  weeklyActivity$: Observable<WeeklyActivity[]> = of([]);
 
   // 🔔 Notificación flotante
   mensaje: string = '';
   mostrarNotificacion: boolean = false;
   tipoNotificacion: 'exito' | 'error' = 'exito';
+
+  // 🛑 Subject para controlar desuscripciones
+  private destroy$ = new Subject<void>();
 
   constructor(
     private achievementService: AchievementService,
@@ -59,62 +64,90 @@ export class DashboardComponent implements OnInit {
     this.cargarWishlist();
     this.cargarLogros();
     this.cargarActividadSemanal();
+  }
 
-    // Animación inicial de estadísticas
-    setTimeout(() => {
-      this.animateStats = true;
-    }, 100);
+  ngOnDestroy(): void {
+    // 🛑 Desuscribirse de todos los observables
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // 📘 Cargar cursos del backend
   cargarCursos(): void {
-    this.courseService.findAll().subscribe({
-      next: (data) => {
-        this.courses = data;
+    this.courses$ = this.courseService.findAll().pipe(
+      tap((data) => {
         this.mostrarMensaje('Cursos cargados correctamente');
-      },
-      error: (err) => {
+      }),
+      catchError((err) => {
         console.error('Error al cargar cursos:', err);
         this.mostrarMensaje('Error al cargar cursos', 'error');
-      },
-    });
+        return of([]);
+      }),
+      takeUntil(this.destroy$)
+    );
   }
 
   // 🧡 Cargar wishlist (ejemplo: backend puede tener endpoint /wishlist)
   cargarWishlist(): void {
-    this.courseService.findWishlist().subscribe({
-      next: (data) => {
-        this.wishlistCourses = data;
-      },
-      error: () => this.mostrarMensaje('Error al cargar wishlist', 'error'),
-    });
+    this.wishlistCourses$ = this.courseService.findWishlist().pipe(
+      catchError((err) => {
+        console.error('Error al cargar wishlist:', err);
+        this.mostrarMensaje('Error al cargar wishlist', 'error');
+        return of([]);
+      }),
+      takeUntil(this.destroy$)
+    );
   }
 
   // 🏆 Cargar logros desde el backend
   cargarLogros(): void {
-    this.achievementService.findAll().subscribe({
-      next: (data) => {
-        this.recentAchievements = data.filter((a) => a.unlocked);
-        const locked = data.filter((a) => !a.unlocked);
+    this.courseService
+      .findAll()
+      .pipe(
+        tap((data) => {
+          this.recentAchievements$ = this.achievementService.findAll().pipe(
+            tap((achievements) => {
+              // Filtrar logros desbloqueados
+              const unlockedAchievements = achievements.filter((a) => a.unlocked);
+              this.recentAchievements$ = of(unlockedAchievements);
 
-        this.upcomingAchievements = locked.map((a) => ({
-          id: a.id,
-          name: a.name,
-          icon: a.image || '🏆',
-          progress: Math.floor(Math.random() * 80),
-          required: a.points || 100,
-        }));
-      },
-      error: () => this.mostrarMensaje('Error al cargar logros', 'error'),
-    });
+              // Mapear logros bloqueados
+              const locked = achievements.filter((a) => !a.unlocked);
+              const upcoming = locked.map((a) => ({
+                id: a.id,
+                name: a.name,
+                icon: a.image || '🏆',
+                progress: Math.floor(Math.random() * 80),
+                required: a.points || 100,
+              }));
+              this.upcomingAchievements$ = of(upcoming);
+            }),
+            catchError((err) => {
+              console.error('Error al cargar logros:', err);
+              this.mostrarMensaje('Error al cargar logros', 'error');
+              return of([]);
+            }),
+            takeUntil(this.destroy$)
+          );
+        }),
+        catchError((err) => {
+          console.error('Error al cargar logros:', err);
+          this.mostrarMensaje('Error al cargar logros', 'error');
+          return of([]);
+        })
+      )
+      .subscribe();
   }
 
   // 📈 Cargar actividad semanal
   cargarActividadSemanal(): void {
-    this.courseService.findWeeklyActivity().subscribe({
-      next: (data) => (this.weeklyActivity = data),
-      error: () => (this.weeklyActivity = []),
-    });
+    this.weeklyActivity$ = this.courseService.findWeeklyActivity().pipe(
+      catchError((err) => {
+        console.error('Error al cargar actividad semanal:', err);
+        return of([]);
+      }),
+      takeUntil(this.destroy$)
+    );
   }
 
   // 🔔 Mostrar notificaciones flotantes
@@ -138,7 +171,7 @@ export class DashboardComponent implements OnInit {
       Backend: '🟢',
       'Data Science': '📊',
       Mobile: '📱',
-      DevOps: '⚙️',
+      DevOps: '⚙',
     };
     return icons[course.category] || '📚';
   }

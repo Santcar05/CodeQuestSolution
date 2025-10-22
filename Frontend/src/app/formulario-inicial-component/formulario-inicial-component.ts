@@ -54,6 +54,7 @@ export class FormularioInicialComponent implements OnInit {
   }
 
   get progress(): number {
+    if (!this.questions || this.questions.length === 0) return 0;
     return ((this.currentQuestionIndex + 1) / this.questions.length) * 100;
   }
 

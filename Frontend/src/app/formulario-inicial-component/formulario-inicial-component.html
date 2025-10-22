@@ -25,7 +25,7 @@
 
       <div class="options-grid">
         <div
-          *ngFor="let option of currentQuestion.options"
+          *ngFor="let option of currentQuestion?.options"
           class="option-card"
           [class.selected]="currentQuestion.selectedOption === option.id"
           (click)="selectOption(currentQuestionIndex, option.id)"
