@@ -12,6 +12,7 @@ import { Course } from '../models/Course';
 import { Achievement } from '../models/Achievement';
 import { AchievementService } from '../service/achievement/achievement-service';
 import { CourseService } from '../service/Course/course-service';
+import { Router } from '@angular/router';
 
 interface UpcomingAchievement {
   id: number;
@@ -56,7 +57,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private achievementService: AchievementService,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -174,5 +176,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       DevOps: '⚙',
     };
     return icons[course.category] || '📚';
+  }
+
+  openCourse(courseId: number): void {
+    this.router.navigate(['/detalle-curso', courseId]);
   }
 }

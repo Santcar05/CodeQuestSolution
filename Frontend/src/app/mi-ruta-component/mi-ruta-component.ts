@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
@@ -8,6 +8,15 @@ import { RoadmapItem } from '../models/RoadMapItem';
 import { CareerPath } from '../models/CarrerPath';
 import { Badge } from '../models/Badge';
 import { ChatMessage } from '../models/ChatMessage';
+import { UserProfile } from '../models/UserProfile';
+
+// Servicios
+import { SkillService } from '../service/Skill/skill-service';
+import { RoadmapItemService } from '../service/RoadmapItem/roadmap-item-service';
+import { CareerPathService } from '../service/CareerPath/career-path-service';
+import { BadgeService } from '../service/Badge/badge-service';
+import { ChatMessageService } from '../service/ChatMessage/chat-message-service';
+import { UserProfileService } from '../service/UserProfile/user-profile-service';
 
 @Component({
   selector: 'app-mi-ruta',
@@ -18,165 +27,16 @@ import { ChatMessage } from '../models/ChatMessage';
 })
 export class MiRutaComponent implements OnInit {
   // User Progress Data
-  userLevel: number = 12;
-  userXP: number = 3450;
-  nextLevelXP: number = 4000;
-  totalCourses: number = 8;
-  completedCourses: number = 5;
-  currentStreak: number = 7;
+  userProfile: UserProfile | null = null;
 
-  // Skills Data
-  skills: Skill[] = [
-    { name: 'Fundamentos', level: 85, target: 100 },
-    { name: 'Algoritmos', level: 65, target: 100 },
-    { name: 'Estructuras', level: 45, target: 100 },
-    { name: 'Desarrollo Web', level: 75, target: 100 },
-    { name: 'Bases de Datos', level: 55, target: 100 },
-    { name: 'DevOps', level: 25, target: 100 },
-  ];
+  // Datos cargados desde servicios
+  skills: Skill[] = [];
+  roadmapItems: RoadmapItem[] = [];
+  careerPaths: CareerPath[] = [];
+  badges: Badge[] = [];
+  chatMessages: ChatMessage[] = [];
 
-  // Roadmap Data
-  roadmapItems: RoadmapItem[] = [
-    {
-      id: 1,
-      title: 'Fundamentos de Programación',
-      description: 'Variables, condicionales, bucles y funciones',
-      status: 'completed',
-      icon: '📚',
-    },
-    {
-      id: 2,
-      title: 'Estructuras de Datos Básicas',
-      description: 'Arrays, listas, pilas y colas',
-      status: 'completed',
-      icon: '🧩',
-    },
-    {
-      id: 3,
-      title: 'Algoritmos y Complejidad',
-      description: 'Análisis de algoritmos y notación Big O',
-      status: 'current',
-      icon: '⚡',
-    },
-    {
-      id: 4,
-      title: 'Desarrollo Web Frontend',
-      description: 'HTML, CSS, JavaScript y frameworks modernos',
-      status: 'upcoming',
-      icon: '🎨',
-    },
-    {
-      id: 5,
-      title: 'Backend y APIs',
-      description: 'Servidores, bases de datos y REST APIs',
-      status: 'upcoming',
-      icon: '🔧',
-    },
-  ];
-
-  // Career Paths
-  careerPaths: CareerPath[] = [
-    {
-      id: 1,
-      title: 'Desarrollador Web',
-      description: 'Full Stack Developer',
-      icon: '🕸️',
-      selected: true,
-    },
-    {
-      id: 2,
-      title: 'Ingeniero de IA',
-      description: 'Data Scientist & ML',
-      icon: '🤖',
-      selected: false,
-    },
-    {
-      id: 3,
-      title: 'DevOps Engineer',
-      description: 'Cloud & Infrastructure',
-      icon: '🧱',
-      selected: false,
-    },
-    {
-      id: 4,
-      title: 'Mobile Developer',
-      description: 'iOS & Android Apps',
-      icon: '📱',
-      selected: false,
-    },
-  ];
-
-  // Badges and Achievements
-  badges: Badge[] = [
-    {
-      id: 1,
-      name: 'Primer Programa',
-      icon: '🚀',
-      earned: true,
-      description: 'Completaste tu primer programa',
-    },
-    {
-      id: 2,
-      name: 'Estrella en Ascenso',
-      icon: '⭐',
-      earned: true,
-      description: 'Alcanzaste nivel 10',
-    },
-    {
-      id: 3,
-      name: 'Racha de 7 Días',
-      icon: '🔥',
-      earned: true,
-      description: '7 días consecutivos aprendiendo',
-    },
-    {
-      id: 4,
-      name: 'Algoritmos Maestro',
-      icon: '🧠',
-      earned: false,
-      description: 'Domina 50 algoritmos',
-    },
-    {
-      id: 5,
-      name: 'Proyecto Completo',
-      icon: '🏆',
-      earned: false,
-      description: 'Termina tu primer proyecto',
-    },
-    {
-      id: 6,
-      name: 'Comunidad Activa',
-      icon: '👥',
-      earned: false,
-      description: 'Ayuda a 10 compañeros',
-    },
-  ];
-
-  // AI Mentor Chat
-  chatMessages: ChatMessage[] = [
-    {
-      id: 1,
-      text: '¡Hola! Soy tu mentor de IA. Veo que estás progresando muy bien con los algoritmos. ¿En qué puedo ayudarte hoy?',
-      isUser: false,
-      timestamp: new Date(),
-    },
-    {
-      id: 2,
-      text: 'Hola, tengo dudas sobre complejidad temporal en algoritmos de ordenamiento.',
-      isUser: true,
-      timestamp: new Date(),
-    },
-    {
-      id: 3,
-      text: 'Excelente pregunta. Te recomiendo practicar con ejercicios de Bubble Sort vs Quick Sort. ¿Quieres que genere algunos ejercicios para ti?',
-      isUser: false,
-      timestamp: new Date(),
-    },
-  ];
-
-  newMessage: string = '';
-
-  // Practice Options
+  // Practice Options (estáticos ya que no hay interfaz específica)
   practiceOptions = [
     { icon: '💬', title: 'Playground', description: 'Practica cualquier lenguaje' },
     { icon: '🧠', title: 'Ejercicios IA', description: 'Generados para tu nivel' },
@@ -184,21 +44,152 @@ export class MiRutaComponent implements OnInit {
     { icon: '🎯', title: 'Entrevistas', description: 'Simulador técnico' },
   ];
 
-  constructor(private router: Router) {}
+  newMessage: string = '';
+  isLoading: boolean = true;
+  hasError: boolean = false;
+
+  constructor(
+    private router: Router,
+    private skillService: SkillService,
+    private roadmapItemService: RoadmapItemService,
+    private careerPathService: CareerPathService,
+    private badgeService: BadgeService,
+    private chatMessageService: ChatMessageService,
+    private userProfileService: UserProfileService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.loadUserProgress();
+    this.loadAllData();
   }
 
-  loadUserProgress() {
-    // Simular carga de datos del usuario
-    setTimeout(() => {
-      // Datos ya inicializados en las propiedades
-    }, 1000);
+  loadAllData() {
+    this.isLoading = true;
+    this.hasError = false;
+
+    let completedRequests = 0;
+    const totalRequests = 6; // Número total de servicios a llamar
+
+    const checkAllRequestsCompleted = () => {
+      completedRequests++;
+      if (completedRequests === totalRequests) {
+        this.isLoading = false;
+        this.cdRef.detectChanges();
+      }
+    };
+
+    // Cargar perfil de usuario
+    this.userProfileService.findById(3).subscribe({
+      next: (profile) => {
+        // Tomar el primer perfil (en una app real, usarías el perfil del usuario logueado)
+        this.userProfile = profile;
+        console.log('Perfil de usuario cargado:', this.userProfile);
+        checkAllRequestsCompleted();
+      },
+      error: (err) => {
+        console.error('Error cargando perfil de usuario:', err);
+        this.userProfile = null;
+        checkAllRequestsCompleted();
+      },
+    });
+
+    // Cargar habilidades
+    this.skillService.findAll().subscribe({
+      next: (skills) => {
+        this.skills = skills;
+        checkAllRequestsCompleted();
+      },
+      error: (err) => {
+        console.error('Error cargando habilidades:', err);
+        this.skills = [];
+        checkAllRequestsCompleted();
+      },
+    });
+
+    // Cargar items del roadmap
+    this.roadmapItemService.findAll().subscribe({
+      next: (items) => {
+        this.roadmapItems = items;
+        checkAllRequestsCompleted();
+      },
+      error: (err) => {
+        console.error('Error cargando roadmap:', err);
+        this.roadmapItems = [];
+        checkAllRequestsCompleted();
+      },
+    });
+
+    // Cargar rutas profesionales
+    this.careerPathService.findAll().subscribe({
+      next: (careers) => {
+        this.careerPaths = careers;
+        checkAllRequestsCompleted();
+      },
+      error: (err) => {
+        console.error('Error cargando rutas profesionales:', err);
+        this.careerPaths = [];
+        checkAllRequestsCompleted();
+      },
+    });
+
+    // Cargar insignias
+    this.badgeService.findAll().subscribe({
+      next: (badges) => {
+        this.badges = badges;
+        checkAllRequestsCompleted();
+      },
+      error: (err) => {
+        console.error('Error cargando insignias:', err);
+        this.badges = [];
+        checkAllRequestsCompleted();
+      },
+    });
+
+    // Cargar mensajes del chat
+    this.chatMessageService.findAll().subscribe({
+      next: (messages) => {
+        this.chatMessages = messages;
+        checkAllRequestsCompleted();
+      },
+      error: (err) => {
+        console.error('Error cargando mensajes del chat:', err);
+        this.chatMessages = [];
+        checkAllRequestsCompleted();
+      },
+    });
+  }
+
+  // Getters para mantener compatibilidad con el template
+  get userLevel(): number {
+    return this.userProfile?.level || 0;
+  }
+
+  get userXP(): number {
+    return this.userProfile?.xp || 0;
+  }
+
+  get nextLevelXP(): number {
+    return this.userProfile?.maxXp || 1000;
+  }
+
+  get totalCourses(): number {
+    // Esto debería venir de otro servicio, por ahora valor por defecto
+    return 8;
+  }
+
+  get completedCourses(): number {
+    // Esto debería venir de otro servicio, por ahora valor por defecto
+    return 5;
+  }
+
+  get currentStreak(): number {
+    // Esto debería venir del perfil de usuario, por ahora valor por defecto
+    return 7;
   }
 
   get progressPercentage(): number {
-    return (this.userXP / this.nextLevelXP) * 100;
+    if (!this.userProfile?.maxXp) return 0;
+    return (this.userProfile.xp / this.userProfile.maxXp) * 100;
   }
 
   get currentCareerPath(): CareerPath {
@@ -208,36 +199,36 @@ export class MiRutaComponent implements OnInit {
   selectCareerPath(pathId: number) {
     this.careerPaths.forEach((path) => {
       path.selected = path.id === pathId;
-      //Ir a la sección de la ruta profesional de la carrera seleccionada
-      this.loadCareerPath(path.id);
     });
+    this.loadCareerPath(pathId);
   }
 
   loadCareerPath(pathId: number) {
-    //Ir a la pantalla de la ruta profesional
     this.router.navigate(['/ruta-profesional', pathId]);
   }
 
   sendMessage() {
     if (this.newMessage.trim()) {
       // Agregar mensaje del usuario
-      this.chatMessages.push({
+      const userMessage: ChatMessage = {
         id: this.chatMessages.length + 1,
         text: this.newMessage,
         isUser: true,
         timestamp: new Date(),
-      });
+      };
+
+      this.chatMessages.push(userMessage);
 
       // Simular respuesta de la IA
       setTimeout(() => {
-        this.chatMessages.push({
+        const aiMessage: ChatMessage = {
           id: this.chatMessages.length + 1,
           text: this.generateAIResponse(this.newMessage),
           isUser: false,
           timestamp: new Date(),
-        });
-
-        // Scroll to bottom would be implemented in a real scenario
+        };
+        this.chatMessages.push(aiMessage);
+        this.cdRef.detectChanges();
       }, 1000);
 
       this.newMessage = '';
@@ -257,23 +248,19 @@ export class MiRutaComponent implements OnInit {
   }
 
   startPractice(type: string) {
-    // Navegar a la sección de práctica correspondiente
     console.log(`Iniciando práctica: ${type}`);
     // this.router.navigate(['/practice', type]);
   }
 
   generateNewExercises() {
-    // Lógica para generar nuevos ejercicios
     console.log('Generando nuevos ejercicios personalizados...');
   }
 
   adjustLearningPath() {
-    // Lógica para ajustar la ruta de aprendizaje
     console.log('Ajustando ruta de aprendizaje...');
   }
 
   exportProgress() {
-    // Lógica para exportar progreso
     console.log('Exportando progreso y CV técnico...');
   }
 }

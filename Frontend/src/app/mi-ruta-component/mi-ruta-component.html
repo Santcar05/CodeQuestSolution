@@ -1,218 +1,249 @@
 <div class="super-container">
   <app-sidebar-component></app-sidebar-component>
   <div class="ruta-container">
-    <!-- Header Section -->
-    <div class="ruta-header">
-      <div class="header-content">
-        <h1>Mi Ruta de Aprendizaje</h1>
-        <p>Experiencia personalizada y gamificada guiada por IA</p>
-      </div>
-      <div class="header-stats">
-        <div class="stat-badge">
-          <div class="stat-number">{{ userLevel }}</div>
-          <div class="stat-label">Nivel</div>
-        </div>
-        <div class="stat-badge">
-          <div class="stat-number">{{ currentStreak }}</div>
-          <div class="stat-label">Días Racha</div>
-        </div>
-        <div class="stat-badge">
-          <div class="stat-number">{{ completedCourses }}/{{ totalCourses }}</div>
-          <div class="stat-label">Cursos</div>
-        </div>
-      </div>
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando tu ruta de aprendizaje...</p>
     </div>
 
-    <!-- Main Grid Layout -->
-    <div class="ruta-grid">
-      <!-- 1. Resumen de Progreso -->
-      <div class="ruta-card">
-        <div class="card-header">
-          <div class="card-icon">🧠</div>
-          <div>
-            <h2 class="card-title">Resumen de Progreso</h2>
-            <p class="card-subtitle">Tu estado actual de aprendizaje</p>
-          </div>
+    <!-- Error State -->
+    <div *ngIf="!isLoading && hasError" class="error-container">
+      <p>Error al cargar los datos. Por favor, intenta nuevamente.</p>
+      <button (click)="loadAllData()">Reintentar</button>
+    </div>
+
+    <!-- Main Content -->
+    <div *ngIf="!isLoading && !hasError">
+      <!-- Header Section -->
+      <div class="ruta-header">
+        <div class="header-content">
+          <h1>Mi Ruta de Aprendizaje</h1>
+          <p>Experiencia personalizada y gamificada guiada por IA</p>
         </div>
-
-        <div class="progress-section">
-          <div class="level-display">
-            <div class="level-badge">{{ userLevel }}</div>
-            <div class="level-info">
-              <h3>Nivel {{ userLevel }} - Code Master</h3>
-              <p>{{ userXP }} / {{ nextLevelXP }} XP para el siguiente nivel</p>
-            </div>
+        <div class="header-stats">
+          <div class="stat-badge">
+            <div class="stat-number">{{ userLevel }}</div>
+            <div class="stat-label">Nivel</div>
           </div>
-
-          <div class="xp-bar">
-            <div class="xp-fill" [style.width.%]="progressPercentage"></div>
+          <div class="stat-badge">
+            <div class="stat-number">{{ currentStreak }}</div>
+            <div class="stat-label">Días Racha</div>
           </div>
-          <div class="xp-text">{{ progressPercentage | number : '1.0-0' }}% completado</div>
-        </div>
-
-        <div class="skills-radar">
-          <h4 style="color: #ffffff; margin-bottom: 1rem">Habilidades Técnicas</h4>
-          <div class="skill-item" *ngFor="let skill of skills">
-            <span class="skill-name">{{ skill.name }}</span>
-            <div class="skill-bar">
-              <div class="skill-fill" [style.width.%]="skill.level"></div>
-            </div>
-            <span class="skill-percent">{{ skill.level }}%</span>
+          <div class="stat-badge">
+            <div class="stat-number">{{ completedCourses }}/{{ totalCourses }}</div>
+            <div class="stat-label">Cursos</div>
           </div>
         </div>
       </div>
 
-      <!-- 2. IA Mentor -->
-      <div class="ruta-card">
-        <div class="card-header">
-          <div class="card-icon">🤖</div>
-          <div>
-            <h2 class="card-title">IA Mentor</h2>
-            <p class="card-subtitle">Tu asistente personal de aprendizaje</p>
-          </div>
-        </div>
-
-        <div class="chat-container">
-          <div
-            *ngFor="let message of chatMessages"
-            class="chat-message"
-            [class.user]="message.isUser"
-          >
-            <div class="message-avatar" [class.ai]="!message.isUser" [class.user]="message.isUser">
-              {{ message.isUser ? 'Tú' : 'IA' }}
-            </div>
-            <div class="message-content">
-              <p class="message-text">{{ message.text }}</p>
+      <!-- Main Grid Layout -->
+      <div class="ruta-grid">
+        <!-- 1. Resumen de Progreso -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">🧠</div>
+            <div>
+              <h2 class="card-title">Resumen de Progreso</h2>
+              <p class="card-subtitle">Tu estado actual de aprendizaje</p>
             </div>
           </div>
-        </div>
 
-        <div class="chat-input">
-          <input
-            type="text"
-            placeholder="Pregunta a tu mentor IA..."
-            [(ngModel)]="newMessage"
-            (keyup.enter)="sendMessage()"
-          />
-          <button (click)="sendMessage()">Enviar</button>
-        </div>
+          <div class="progress-section">
+            <div class="level-display">
+              <div class="level-badge">{{ userLevel }}</div>
+              <div class="level-info">
+                <h3>Nivel {{ userLevel }} - {{ userProfile?.rank || 'Code Master' }}</h3>
+                <p>{{ userXP }} / {{ nextLevelXP }} XP para el siguiente nivel</p>
+              </div>
+            </div>
 
-        <div class="action-buttons">
-          <button class="action-btn btn-primary" (click)="generateNewExercises()">
-            <span>🧠 Generar Ejercicios</span>
-          </button>
-          <button class="action-btn btn-secondary" (click)="adjustLearningPath()">
-            <span>🔄 Reajustar Ruta</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- 3. Mi Roadmap -->
-      <div class="ruta-card">
-        <div class="card-header">
-          <div class="card-icon">🗺️</div>
-          <div>
-            <h2 class="card-title">Mi Roadmap</h2>
-            <p class="card-subtitle">Tu camino hacia la maestría</p>
+            <div class="xp-bar">
+              <div class="xp-fill" [style.width.%]="progressPercentage"></div>
+            </div>
+            <div class="xp-text">{{ progressPercentage | number : '1.0-0' }}% completado</div>
           </div>
-        </div>
 
-        <div class="roadmap-container">
-          <div
-            *ngFor="let item of roadmapItems"
-            class="roadmap-item"
-            [class.completed]="item.status === 'completed'"
-            [class.current]="item.status === 'current'"
-          >
-            <div class="roadmap-icon">{{ item.icon }}</div>
-            <div class="roadmap-content">
-              <h4>{{ item.title }}</h4>
-              <p>{{ item.description }}</p>
+          <div class="skills-radar" *ngIf="skills.length > 0">
+            <h4 style="color: #ffffff; margin-bottom: 1rem">Habilidades Técnicas</h4>
+            <div class="skill-item" *ngFor="let skill of skills">
+              <span class="skill-name">{{ skill.name }}</span>
+              <div class="skill-bar">
+                <div class="skill-fill" [style.width.%]="skill.level"></div>
+              </div>
+              <span class="skill-percent">{{ skill.level }}%</span>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- 4. Rutas Profesionales -->
-      <div class="ruta-card">
-        <div class="card-header">
-          <div class="card-icon">💼</div>
-          <div>
-            <h2 class="card-title">Rutas Profesionales</h2>
-            <p class="card-subtitle">Elige tu especialización</p>
+          <div *ngIf="skills.length === 0" class="no-data">
+            <p>No hay habilidades cargadas</p>
           </div>
         </div>
 
-        <div class="career-grid">
-          <div
-            *ngFor="let career of careerPaths"
-            class="career-card"
-            [class.selected]="career.selected"
-            (click)="selectCareerPath(career.id)"
-          >
-            <div class="career-icon">{{ career.icon }}</div>
-            <h3 class="career-title">{{ career.title }}</h3>
-            <p class="career-desc">{{ career.description }}</p>
+        <!-- 2. IA Mentor -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">🤖</div>
+            <div>
+              <h2 class="card-title">IA Mentor</h2>
+              <p class="card-subtitle">Tu asistente personal de aprendizaje</p>
+            </div>
+          </div>
+
+          <div class="chat-container">
+            <div
+              *ngFor="let message of chatMessages"
+              class="chat-message"
+              [class.user]="message.isUser"
+            >
+              <div
+                class="message-avatar"
+                [class.ai]="!message.isUser"
+                [class.user]="message.isUser"
+              >
+                {{ message.isUser ? 'Tú' : 'IA' }}
+              </div>
+              <div class="message-content">
+                <p class="message-text">{{ message.text }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-input">
+            <input
+              type="text"
+              placeholder="Pregunta a tu mentor IA..."
+              [(ngModel)]="newMessage"
+              (keyup.enter)="sendMessage()"
+            />
+            <button (click)="sendMessage()">Enviar</button>
+          </div>
+
+          <div class="action-buttons">
+            <button class="action-btn btn-primary" (click)="generateNewExercises()">
+              <span>🧠 Generar Ejercicios</span>
+            </button>
+            <button class="action-btn btn-secondary" (click)="adjustLearningPath()">
+              <span>🔄 Reajustar Ruta</span>
+            </button>
           </div>
         </div>
 
-        <div class="action-buttons">
-          <button class="action-btn btn-primary" (click)="exportProgress()">
-            <span>📊 Exportar CV Técnico</span>
-          </button>
-        </div>
-      </div>
+        <!-- 3. Mi Roadmap -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">🗺️</div>
+            <div>
+              <h2 class="card-title">Mi Roadmap</h2>
+              <p class="card-subtitle">Tu camino hacia la maestría</p>
+            </div>
+          </div>
 
-      <!-- 5. Espacio de Práctica -->
-      <div class="ruta-card">
-        <div class="card-header">
-          <div class="card-icon">🧩</div>
-          <div>
-            <h2 class="card-title">Espacio de Práctica</h2>
-            <p class="card-subtitle">Laboratorio infinito para codificar</p>
+          <div class="roadmap-container" *ngIf="roadmapItems.length > 0">
+            <div
+              *ngFor="let item of roadmapItems"
+              class="roadmap-item"
+              [class.completed]="item.status === 'completed'"
+              [class.current]="item.status === 'current'"
+            >
+              <div class="roadmap-icon">{{ item.icon }}</div>
+              <div class="roadmap-content">
+                <h4>{{ item.title }}</h4>
+                <p>{{ item.description }}</p>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="roadmapItems.length === 0" class="no-data">
+            <p>No hay items del roadmap cargados</p>
           </div>
         </div>
 
-        <div class="practice-options">
-          <div
-            *ngFor="let option of practiceOptions"
-            class="practice-card"
-            (click)="startPractice(option.title)"
-          >
-            <div class="practice-icon">{{ option.icon }}</div>
-            <h3 class="practice-title">{{ option.title }}</h3>
-            <p class="career-desc">{{ option.description }}</p>
+        <!-- 4. Rutas Profesionales -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">💼</div>
+            <div>
+              <h2 class="card-title">Rutas Profesionales</h2>
+              <p class="card-subtitle">Elige tu especialización</p>
+            </div>
+          </div>
+
+          <div class="career-grid" *ngIf="careerPaths.length > 0">
+            <div
+              *ngFor="let career of careerPaths"
+              class="career-card"
+              [class.selected]="career.selected"
+              (click)="selectCareerPath(career.id)"
+            >
+              <div class="career-icon">{{ career.icon }}</div>
+              <h3 class="career-title">{{ career.title }}</h3>
+              <p class="career-desc">{{ career.description }}</p>
+            </div>
+          </div>
+          <div *ngIf="careerPaths.length === 0" class="no-data">
+            <p>No hay rutas profesionales cargadas</p>
+          </div>
+
+          <div class="action-buttons">
+            <button class="action-btn btn-primary" (click)="exportProgress()">
+              <span>📊 Exportar CV Técnico</span>
+            </button>
           </div>
         </div>
 
-        <div class="action-buttons">
-          <button class="action-btn btn-primary">
-            <span>🚀 Iniciar Práctica Libre</span>
-          </button>
-        </div>
-      </div>
+        <!-- 5. Espacio de Práctica -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">🧩</div>
+            <div>
+              <h2 class="card-title">Espacio de Práctica</h2>
+              <p class="card-subtitle">Laboratorio infinito para codificar</p>
+            </div>
+          </div>
 
-      <!-- 6. Logros y Medallas -->
-      <div class="ruta-card">
-        <div class="card-header">
-          <div class="card-icon">🏆</div>
-          <div>
-            <h2 class="card-title">Logros y Medallas</h2>
-            <p class="card-subtitle">Tu colección de reconocimientos</p>
+          <div class="practice-options">
+            <div
+              *ngFor="let option of practiceOptions"
+              class="practice-card"
+              (click)="startPractice(option.title)"
+            >
+              <div class="practice-icon">{{ option.icon }}</div>
+              <h3 class="practice-title">{{ option.title }}</h3>
+              <p class="career-desc">{{ option.description }}</p>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="action-btn btn-primary">
+              <span>🚀 Iniciar Práctica Libre</span>
+            </button>
           </div>
         </div>
 
-        <div class="badges-grid">
-          <div *ngFor="let badge of badges" class="badge-item" [class.earned]="badge.earned">
-            <div class="badge-icon">{{ badge.icon }}</div>
-            <h3 class="badge-name">{{ badge.name }}</h3>
+        <!-- 6. Logros y Medallas -->
+        <div class="ruta-card">
+          <div class="card-header">
+            <div class="card-icon">🏆</div>
+            <div>
+              <h2 class="card-title">Logros y Medallas</h2>
+              <p class="card-subtitle">Tu colección de reconocimientos</p>
+            </div>
           </div>
-        </div>
 
-        <div class="action-buttons">
-          <button class="action-btn btn-secondary">
-            <span>🌍 Ver Ranking Global</span>
-          </button>
+          <div class="badges-grid" *ngIf="badges.length > 0">
+            <div *ngFor="let badge of badges" class="badge-item" [class.earned]="badge.earned">
+              <div class="badge-icon">{{ badge.icon }}</div>
+              <h3 class="badge-name">{{ badge.name }}</h3>
+            </div>
+          </div>
+          <div *ngIf="badges.length === 0" class="no-data">
+            <p>No hay insignias cargadas</p>
+          </div>
+
+          <div class="action-buttons">
+            <button class="action-btn btn-secondary">
+              <span>🌍 Ver Ranking Global</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

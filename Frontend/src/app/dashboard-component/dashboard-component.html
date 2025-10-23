@@ -74,7 +74,7 @@
               class="course-card"
               [style.animation-delay.s]="i * 0.1"
             >
-              <div class="course-content">
+              <div class="course-content" (click)="openCourse(course.id)">
                 <div class="course-icon-wrapper">
                   <span class="course-icon">{{ getCourseIcon(course) }}</span>
                 </div>
@@ -221,7 +221,7 @@
               class="wishlist-card"
               [style.animation-delay.s]="i * 0.1"
             >
-              <div class="wishlist-image-container">
+              <div class="wishlist-image-container" (click)="openCourse(course!.id)">
                 <img [src]="course.image" [alt]="course.title" class="wishlist-image" />
                 <div class="wishlist-overlay">
                   <svg

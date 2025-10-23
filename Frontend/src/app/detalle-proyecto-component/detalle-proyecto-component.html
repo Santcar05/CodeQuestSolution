@@ -4,31 +4,31 @@
     <!-- Hero Section -->
     <div class="proyecto-hero">
       <div class="hero-content">
-        <h1 class="proyecto-title">{{ project.title }}</h1>
-        <p class="proyecto-subtitle">{{ project.subtitle }}</p>
-        <p class="ruta-description">{{ project.description }}</p>
+        <h1 class="proyecto-title">{{ project!.title }}</h1>
+        <p class="proyecto-subtitle">{{ project!.subtitle }}</p>
+        <p class="ruta-description">{{ project!.description }}</p>
 
         <div class="hero-meta">
           <div class="meta-badge">
             <span class="meta-icon">🎯</span>
-            <span class="meta-text">{{ project.type | titlecase }}</span>
+            <span class="meta-text">{{ project!.type | titlecase }}</span>
           </div>
           <div class="meta-badge">
             <span class="meta-icon">🔥</span>
-            <span class="meta-text">Dificultad: {{ project.difficulty | titlecase }}</span>
+            <span class="meta-text">Dificultad: {{ project!.difficulty | titlecase }}</span>
           </div>
           <div class="meta-badge">
             <span class="meta-icon">⏱️</span>
-            <span class="meta-text">{{ project.duration }}</span>
+            <span class="meta-text">{{ project!.duration }}</span>
           </div>
           <div class="meta-badge">
             <span class="meta-icon">⭐</span>
-            <span class="meta-text">{{ project.totalXP }} XP Total</span>
+            <span class="meta-text">{{ project!.totalXP }} XP Total</span>
           </div>
           <div class="meta-badge">
             <span class="meta-icon">🤖</span>
             <span class="meta-text"
-              >Evaluación IA: {{ project.iaEvaluation ? 'Activada' : 'Desactivada' }}</span
+              >Evaluación IA: {{ project!.iaEvaluation ? 'Activada' : 'Desactivada' }}</span
             >
           </div>
         </div>
@@ -37,21 +37,21 @@
           <button
             class="action-btn btn-primary"
             (click)="startProject()"
-            *ngIf="project.status === 'no-iniciado'"
+            *ngIf="project!.status === 'no-iniciado'"
           >
             <span>🚀 Iniciar Proyecto</span>
           </button>
           <button
             class="action-btn btn-success"
             (click)="submitForEvaluation()"
-            *ngIf="project.status === 'en-progreso'"
+            *ngIf="project!.status === 'en-progreso'"
           >
             <span>📤 Enviar para Evaluación</span>
           </button>
           <button
             class="action-btn btn-secondary"
             (click)="downloadCertificate()"
-            *ngIf="project.status === 'completado'"
+            *ngIf="project!.status === 'completado'"
           >
             <span>🏆 Descargar Certificado</span>
           </button>
@@ -80,21 +80,21 @@
             [style.transform]="'rotate(' + getRingRotation() + 'deg)'"
           ></div>
           <div class="ring-content">
-            <span class="ring-percent">{{ project.progress }}%</span>
+            <span class="ring-percent">{{ project!.progress }}%</span>
             <span class="ring-label">Completado</span>
           </div>
         </div>
 
         <div class="xp-display">
-          <div class="xp-total">+{{ project.totalXP }} XP</div>
+          <div class="xp-total">+{{ project!.totalXP }} XP</div>
           <div class="xp-label">Experiencia Total del Proyecto</div>
           <div class="xp-breakdown">
             <div class="xp-item">
-              <span class="xp-value">{{ project.baseXP }}</span>
+              <span class="xp-value">{{ project!.baseXP }}</span>
               <span class="xp-desc">XP Base</span>
             </div>
             <div class="xp-item">
-              <span class="xp-value">+{{ project.bonusXP }}</span>
+              <span class="xp-value">+{{ project!.bonusXP }}</span>
               <span class="xp-desc">Bonus Disponibles</span>
             </div>
             <div class="xp-item">

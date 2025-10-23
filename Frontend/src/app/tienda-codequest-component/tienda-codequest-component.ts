@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
 import { Router } from '@angular/router';
@@ -27,7 +27,8 @@ export class TiendaCodequestComponent implements OnInit {
     private powerService: PowerService,
     private productService: ProductService,
     private premiumPlanService: PremiumPlanService,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   activeTab: string = 'poderes';
@@ -58,6 +59,7 @@ export class TiendaCodequestComponent implements OnInit {
       next: (data) => {
         this.powers = data;
         console.log('Poderes cargados:', this.powers);
+        this.cdRef.detectChanges();
       },
       error: (err) => console.error('Error cargando poderes:', err),
     });
@@ -66,6 +68,7 @@ export class TiendaCodequestComponent implements OnInit {
       next: (data) => {
         this.products = data;
         console.log('Productos cargados:', this.products);
+        this.cdRef.detectChanges();
       },
       error: (err) => console.error('Error cargando productos:', err),
     });
@@ -74,6 +77,7 @@ export class TiendaCodequestComponent implements OnInit {
       next: (data) => {
         this.premiumPlans = data;
         console.log('Planes premium cargados:', this.premiumPlans);
+        this.cdRef.detectChanges();
       },
       error: (err) => console.error('Error cargando planes premium:', err),
     });
@@ -82,6 +86,7 @@ export class TiendaCodequestComponent implements OnInit {
       next: (data) => {
         this.individualCourses = data;
         console.log('Cursos cargados:', this.individualCourses);
+        this.cdRef.detectChanges();
       },
       error: (err) => console.error('Error cargando cursos:', err),
     });
