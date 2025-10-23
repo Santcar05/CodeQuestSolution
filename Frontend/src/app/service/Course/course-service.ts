@@ -14,4 +14,13 @@ export class CourseService {
   findById(id: number): Observable<Course> {
     return this.http.get<Course>(`${this.apiUrl}/${id}`);
   }
+
+  findWishlist(): Observable<Course[]> {
+    return this.http.get<Course[]>(`${this.apiUrl}/wishlist`);
+  }
+
+  //obtener actividad semanal
+  findWeeklyActivity(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/weekly-activity`);
+  }
 }

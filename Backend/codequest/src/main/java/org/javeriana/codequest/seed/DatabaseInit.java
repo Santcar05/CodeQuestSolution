@@ -439,47 +439,250 @@ public class DatabaseInit {
     }
 
     private void initCourses() {
+        // Obtener instructores recién guardados (attached)
+        List<Instructor> instructors = instructorService.findAll();
+
         List<Course> courses = Arrays.asList(
-                createCourse("Introducción a la Programación con C++", "Aprende C++ desde cero", "Programación", "Principiante",
-                        4.7, "45 horas", 8420, 90, 0, "Variables y Tipos de Datos", "cpp-intro.jpg", "Gratis", null, 550, true, false, Course.CourseStatus.NOT_STARTED,
-                        Arrays.asList("Sintaxis de C++", "POO", "Punteros", "STL"),
-                        Arrays.asList("Conocimientos básicos de computación"),
-                        Arrays.asList("C++", "Programming", "Beginner")),
-                createCourse("Desarrollo Web con React", "Construye aplicaciones web modernas", "Frontend", "Intermedio",
-                        4.9, "50 horas", 18650, 150, 45, "Hooks y Estado", "react-course.jpg", "$59.99", "$99.99", 750, true, true, Course.CourseStatus.IN_PROGRESS,
-                        Arrays.asList("Componentes y Props", "Hooks", "Context API", "React Router"),
-                        Arrays.asList("HTML, CSS, JavaScript básico"),
-                        Arrays.asList("React", "Frontend", "JavaScript")),
-                createCourse("Python para Ciencia de Datos", "Análisis de datos con Python", "Data Science", "Intermedio",
-                        4.8, "55 horas", 10340, 145, 58, "Pandas y NumPy", "python-datascience.jpg", "$64.99", "$109.99", 800, true, true, Course.CourseStatus.IN_PROGRESS,
-                        Arrays.asList("NumPy", "Pandas", "Matplotlib", "Análisis exploratorio"),
-                        Arrays.asList("Python básico"),
-                        Arrays.asList("Python", "DataScience", "Analytics")),
-                createCourse("Desarrollo de APIs REST con Node.js", "Backend profesional", "Backend", "Intermedio",
-                        4.6, "45 horas", 9870, 95, 0, "Creación de APIs", "nodejs-express.jpg", "$54.99", "$89.99", 700, false, false, Course.CourseStatus.NOT_STARTED,
-                        Arrays.asList("APIs RESTful", "Middleware", "Autenticación JWT", "Base de datos"),
-                        Arrays.asList("JavaScript intermedio"),
-                        Arrays.asList("NodeJS", "Backend", "API")),
-                createCourse("Introducción a Machine Learning", "Aprendizaje automático con Python", "AI/ML", "Avanzado",
-                        4.7, "70 horas", 7890, 210, 0, "Regresión Lineal", "ml-python.jpg", "$79.99", "$139.99", 1000, false, true, Course.CourseStatus.NOT_STARTED,
-                        Arrays.asList("Scikit-learn", "Regresión", "Clasificación", "Clustering"),
-                        Arrays.asList("Python, matemáticas básicas, estadística"),
-                        Arrays.asList("MachineLearning", "AI", "Python")),
-                createCourse("Desarrollo Móvil con Flutter", "Apps multiplataforma", "Mobile", "Principiante",
-                        4.9, "45 horas", 12450, 125, 0, "Widgets básicos", "flutter.jpg", "$54.99", "$89.99", 700, true, true, Course.CourseStatus.NOT_STARTED,
-                        Arrays.asList("Dart", "Widgets", "State Management", "Firebase"),
-                        Arrays.asList("Programación básica"),
-                        Arrays.asList("Flutter", "Dart", "Mobile")),
-                createCourse("Bases de Datos con PostgreSQL", "SQL avanzado y optimización", "Backend", "Intermedio",
-                        4.7, "35 horas", 11250, 78, 78, "Normalización", "postgresql.jpg", "Gratis", null, 500, false, false, Course.CourseStatus.COMPLETED,
-                        Arrays.asList("Consultas SQL", "Joins", "Índices", "Transacciones", "Stored Procedures"),
-                        Arrays.asList("Conocimientos básicos de SQL"),
-                        Arrays.asList("SQL", "Database", "PostgreSQL")),
-                createCourse("Ciberseguridad y Hacking Ético", "Protege aplicaciones web", "Seguridad", "Avanzado",
-                        4.9, "65 horas", 5430, 195, 0, "Pentesting Web", "cybersecurity.jpg", "$89.99", "$149.99", 950, true, false, Course.CourseStatus.NOT_STARTED,
-                        Arrays.asList("Pentesting", "OWASP Top 10", "Kali Linux", "Metasploit"),
-                        Arrays.asList("Redes, Linux, programación básica"),
-                        Arrays.asList("Security", "Hacking", "Pentesting"))
+                createCourse(
+                        "JavaScript Moderno: De Cero a Experto",
+                        "Domina JavaScript ES6+ con proyectos reales. Aprende desde fundamentos hasta conceptos avanzados como async/await, closures y programación funcional.",
+                        "Frontend", "Principiante", 4.8, "60 horas", 21500, 120, 0,
+                        "Variables y Tipos de Datos",
+                        "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$49.99", "$89.99", 850, true, true, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("ES6+ Features", "Async/Await", "Closures", "DOM Manipulation", "Event Loop"),
+                        Arrays.asList("Conocimientos básicos de programación", "HTML y CSS básico"),
+                        Arrays.asList("JavaScript", "Frontend", "ES6"),
+                        instructors.get(0) // Dr. Ana García
+                ),
+                createCourse(
+                        "Python para Análisis de Datos y Machine Learning",
+                        "Conviértete en Data Scientist con Python. Domina Pandas, NumPy, Scikit-learn y construye modelos predictivos.",
+                        "Data Science", "Intermedio", 4.9, "75 horas", 18700, 180, 45,
+                        "Introducción a Pandas",
+                        "https://images.unsplash.com/photo-1526379879527-8559ecfcaec0?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$79.99", "$129.99", 1200, true, true, Course.CourseStatus.IN_PROGRESS,
+                        Arrays.asList("Pandas avanzado", "NumPy", "Scikit-learn", "Visualización", "Modelado predictivo"),
+                        Arrays.asList("Python básico", "Matemáticas básicas", "Estadística fundamental"),
+                        Arrays.asList("Python", "MachineLearning", "DataScience"),
+                        instructors.get(1) // Carlos Mendoza
+                ),
+                createCourse(
+                        "React + Next.js: Desarrollo Web Profesional",
+                        "Crea aplicaciones web modernas con React 18 y Next.js 14. Incluye SSR, SSG y optimización de performance.",
+                        "Frontend", "Intermedio", 4.9, "55 horas", 23400, 145, 30,
+                        "Fundamentos de React",
+                        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$69.99", "$119.99", 950, true, true, Course.CourseStatus.IN_PROGRESS,
+                        Arrays.asList("React Hooks", "Next.js App Router", "Server Components", "Optimización", "Deployment"),
+                        Arrays.asList("JavaScript avanzado", "HTML/CSS", "Conceptos de React básico"),
+                        Arrays.asList("React", "NextJS", "Frontend"),
+                        instructors.get(2) // María López
+                ),
+                createCourse(
+                        "Node.js y Express: Backend con TypeScript",
+                        "Desarrolla APIs REST escalables con Node.js, Express y TypeScript. Incluye autenticación, bases de datos y testing.",
+                        "Backend", "Intermedio", 4.7, "50 horas", 15600, 110, 0,
+                        "Configuración de TypeScript",
+                        "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$59.99", "$99.99", 800, false, true, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("TypeScript", "Express.js", "APIs REST", "Autenticación JWT", "Testing"),
+                        Arrays.asList("JavaScript avanzado", "Conceptos de backend", "Conocimientos de HTTP"),
+                        Arrays.asList("NodeJS", "TypeScript", "Backend"),
+                        instructors.get(3) // Juan Pérez
+                ),
+                createCourse(
+                        "Flutter & Dart: Apps Móviles Multiplataforma",
+                        "Desarrolla aplicaciones móviles nativas para iOS y Android con un solo código base usando Flutter.",
+                        "Mobile", "Principiante", 4.8, "65 horas", 18900, 135, 0,
+                        "Introducción a Dart",
+                        "https://images.unsplash.com/photo-1551651339-5b4bd5c48de5?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$64.99", "$109.99", 900, true, false, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("Dart avanzado", "Widgets personalizados", "State Management", "Animaciones", "Firebase"),
+                        Arrays.asList("Programación básica", "Conceptos OOP"),
+                        Arrays.asList("Flutter", "Dart", "Mobile"),
+                        instructors.get(4) // Laura Martínez
+                ),
+                createCourse(
+                        "AWS Cloud Practitioner: Fundamentos de la Nube",
+                        "Prepárate para la certificación AWS Cloud Practitioner. Domina los servicios fundamentales de AWS.",
+                        "Cloud", "Principiante", 4.6, "40 horas", 12300, 85, 25,
+                        "Introducción a AWS",
+                        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$89.99", "$149.99", 700, false, true, Course.CourseStatus.IN_PROGRESS,
+                        Arrays.asList("EC2 y S3", "IAM y Security", "VPC", "RDS", "Cost Optimization"),
+                        Arrays.asList("Conocimientos básicos de TI", "Conceptos de redes"),
+                        Arrays.asList("AWS", "Cloud", "DevOps"),
+                        instructors.get(5) // Diego Rodríguez
+                ),
+                createCourse(
+                        "Docker & Kubernetes: Contenedores y Orquestación",
+                        "Master en contenedores Docker y orquestación con Kubernetes. Despliega aplicaciones escalables.",
+                        "DevOps", "Intermedio", 4.9, "45 horas", 14200, 95, 0,
+                        "Fundamentos de Docker",
+                        "https://images.unsplash.com/photo-1626721105368-a69248e93b32?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$74.99", "$124.99", 850, true, true, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("Docker avanzado", "Kubernetes clusters", "Helm charts", "CI/CD", "Monitoring"),
+                        Arrays.asList("Linux básico", "Conceptos de redes", "Experiencia en línea de comandos"),
+                        Arrays.asList("Docker", "Kubernetes", "DevOps"),
+                        instructors.get(6) // Sofia Chen
+                ),
+                createCourse(
+                        "Ciberseguridad Ofensiva: Hacking Ético",
+                        "Aprende técnicas de pentesting y seguridad ofensiva. Domina herramientas como Metasploit y Burp Suite.",
+                        "Security", "Avanzado", 4.8, "80 horas", 8900, 200, 0,
+                        "Reconocimiento y Footprinting",
+                        "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$99.99", "$169.99", 1500, false, false, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("Pentesting Web", "Explotación", "Post-explotación", "OWASP Top 10", "Forensics"),
+                        Arrays.asList("Redes avanzadas", "Linux", "Programación básica", "Conceptos de seguridad"),
+                        Arrays.asList("Security", "Hacking", "Pentesting"),
+                        instructors.get(7) // Roberto Silva
+                ),
+                createCourse(
+                        "Vue.js 3: Desarrollo Frontend con Composition API",
+                        "Domina Vue.js 3 con Composition API. Crea aplicaciones reactivas y de alto rendimiento.",
+                        "Frontend", "Intermedio", 4.7, "48 horas", 16700, 125, 60,
+                        "Vue.js Fundamentals",
+                        "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$54.99", "$94.99", 750, true, false, Course.CourseStatus.IN_PROGRESS,
+                        Arrays.asList("Composition API", "Vue Router", "Pinia State Management", "Testing", "Performance"),
+                        Arrays.asList("JavaScript avanzado", "HTML/CSS", "Conceptos de Vue.js básico"),
+                        Arrays.asList("VueJS", "Frontend", "JavaScript"),
+                        instructors.get(0) // Dr. Ana García
+                ),
+                createCourse(
+                        "SQL Avanzado y Optimización de Bases de Datos",
+                        "Domina SQL avanzado, optimización de queries y diseño de bases de datos escalables.",
+                        "Backend", "Intermedio", 4.8, "35 horas", 13400, 70, 70,
+                        "Fundamentos de SQL",
+                        "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "Gratis", null, 600, false, false, Course.CourseStatus.COMPLETED,
+                        Arrays.asList("Query Optimization", "Indexing", "Transactions", "Stored Procedures", "Normalization"),
+                        Arrays.asList("SQL básico", "Conceptos de bases de datos"),
+                        Arrays.asList("SQL", "Database", "PostgreSQL"),
+                        instructors.get(1) // Carlos Mendoza
+                ),
+                createCourse(
+                        "Go Programming: Sistemas Concurrentes y Escalables",
+                        "Aprende Go para desarrollar sistemas backend de alta concurrencia y alto rendimiento.",
+                        "Backend", "Intermedio", 4.7, "42 horas", 9800, 100, 0,
+                        "Sintaxis de Go",
+                        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$59.99", "$99.99", 800, false, true, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("Concurrencia", "Goroutines", "Channels", "Testing", "APIs REST"),
+                        Arrays.asList("Programación básica", "Conceptos de concurrencia"),
+                        Arrays.asList("Go", "Backend", "Concurrency"),
+                        instructors.get(2) // María López
+                ),
+                createCourse(
+                        "TensorFlow y Deep Learning: Redes Neuronales",
+                        "Domina el deep learning con TensorFlow. Crea redes neuronales para visión computacional y NLP.",
+                        "AI/ML", "Avanzado", 4.9, "70 horas", 11200, 165, 0,
+                        "Introducción a TensorFlow",
+                        "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$89.99", "$159.99", 1400, true, true, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("Redes Neuronales", "Computer Vision", "NLP", "Transfer Learning", "Model Deployment"),
+                        Arrays.asList("Python avanzado", "Matemáticas", "Machine Learning básico"),
+                        Arrays.asList("TensorFlow", "DeepLearning", "AI"),
+                        instructors.get(3) // Juan Pérez
+                ),
+                createCourse(
+                        "Angular 16: Desarrollo Enterprise con TypeScript",
+                        "Crea aplicaciones empresariales escalables con Angular 16, RxJS y mejores prácticas.",
+                        "Frontend", "Intermedio", 4.6, "58 horas", 14500, 140, 0,
+                        "TypeScript para Angular",
+                        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$69.99", "$119.99", 900, false, false, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("Components", "Services", "RxJS", "Routing", "Testing"),
+                        Arrays.asList("TypeScript", "JavaScript avanzado", "HTML/CSS"),
+                        Arrays.asList("Angular", "TypeScript", "Frontend"),
+                        instructors.get(4) // Laura Martínez
+                ),
+                createCourse(
+                        "Blockchain y Smart Contracts con Solidity",
+                        "Aprende desarrollo blockchain y crea smart contracts con Solidity para Ethereum.",
+                        "Blockchain", "Intermedio", 4.7, "52 horas", 7600, 120, 0,
+                        "Fundamentos de Blockchain",
+                        "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$79.99", "$139.99", 1100, true, false, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("Solidity", "Smart Contracts", "DeFi", "NFTs", "Web3.js"),
+                        Arrays.asList("JavaScript", "Programación básica", "Conceptos de criptografía"),
+                        Arrays.asList("Blockchain", "Solidity", "Web3"),
+                        instructors.get(5) // Diego Rodríguez
+                ),
+                createCourse(
+                        "Git Avanzado: Workflows y Colaboración Profesional",
+                        "Domina Git para trabajo en equipo. Aprende workflows profesionales y resolución de conflictos.",
+                        "Tools", "Principiante", 4.9, "25 horas", 19800, 50, 50,
+                        "Comandos Básicos de Git",
+                        "https://images.unsplash.com/photo-1566837942615-893b8c14c9e7?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "Gratis", null, 400, false, false, Course.CourseStatus.COMPLETED,
+                        Arrays.asList("Branching Strategies", "Git Flow", "Conflict Resolution", "Hooks", "CI/CD Integration"),
+                        Arrays.asList("Conocimientos básicos de Git"),
+                        Arrays.asList("Git", "DevOps", "Collaboration"),
+                        instructors.get(6) // Sofia Chen
+                ),
+                createCourse(
+                        "Spring Boot: Desarrollo Java Empresarial",
+                        "Crea aplicaciones empresariales con Spring Boot, Spring Security y microservicios.",
+                        "Backend", "Intermedio", 4.7, "65 horas", 12300, 150, 0,
+                        "Introducción a Spring Boot",
+                        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$74.99", "$129.99", 1000, false, true, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("Spring MVC", "Spring Security", "JPA/Hibernate", "Testing", "Microservices"),
+                        Arrays.asList("Java avanzado", "Conceptos OOP", "Bases de datos"),
+                        Arrays.asList("Spring", "Java", "Backend"),
+                        instructors.get(7) // Roberto Silva
+                ),
+                createCourse(
+                        "UI/UX Design para Desarrolladores",
+                        "Aprende principios de diseño UI/UX para crear interfaces atractivas y usables.",
+                        "Design", "Principiante", 4.8, "30 horas", 16700, 75, 25,
+                        "Principios de Diseño",
+                        "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$49.99", "$89.99", 550, true, false, Course.CourseStatus.IN_PROGRESS,
+                        Arrays.asList("Design Thinking", "Figma", "Prototyping", "User Research", "Accessibility"),
+                        Arrays.asList("Conocimientos básicos de diseño", "Interés en experiencia de usuario"),
+                        Arrays.asList("UI/UX", "Design", "Figma"),
+                        instructors.get(0) // Dr. Ana García
+                ),
+                createCourse(
+                        "Rust: Sistemas de Alto Rendimiento y Seguros",
+                        "Domina Rust para desarrollar sistemas de alto rendimiento con seguridad de memoria.",
+                        "Systems", "Avanzado", 4.8, "55 horas", 6800, 130, 0,
+                        "Sintaxis de Rust",
+                        "https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$69.99", "$119.99", 950, false, true, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("Ownership", "Concurrency", "Memory Safety", "WebAssembly", "Systems Programming"),
+                        Arrays.asList("Programación avanzada", "Conceptos de sistemas", "C/C++ experiencia útil"),
+                        Arrays.asList("Rust", "Systems", "Performance"),
+                        instructors.get(1) // Carlos Mendoza
+                ),
+                createCourse(
+                        "GraphQL: APIs Modernas con Apollo y React",
+                        "Crea APIs modernas con GraphQL. Integra con React usando Apollo Client.",
+                        "Backend", "Intermedio", 4.7, "38 horas", 11200, 90, 0,
+                        "Fundamentos de GraphQL",
+                        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$54.99", "$94.99", 700, true, false, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("GraphQL Schema", "Resolvers", "Apollo Server", "Apollo Client", "Caching"),
+                        Arrays.asList("JavaScript", "Node.js básico", "Conceptos de APIs"),
+                        Arrays.asList("GraphQL", "API", "Backend"),
+                        instructors.get(2) // María López
+                ),
+                createCourse(
+                        "DevOps con Azure: CI/CD y Infraestructura como Código",
+                        "Implementa pipelines CI/CD y gestiona infraestructura en Azure con Terraform.",
+                        "DevOps", "Intermedio", 4.6, "47 horas", 8900, 110, 0,
+                        "Introducción a Azure",
+                        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "$79.99", "$139.99", 850, false, true, Course.CourseStatus.NOT_STARTED,
+                        Arrays.asList("Azure Pipelines", "Terraform", "Kubernetes en Azure", "Monitoring", "Security"),
+                        Arrays.asList("Conceptos de cloud", "Linux", "Scripting básico"),
+                        Arrays.asList("Azure", "DevOps", "Cloud"),
+                        instructors.get(3) // Juan Pérez
+                )
         );
         courses.forEach(courseService::save);
     }
@@ -488,7 +691,9 @@ public class DatabaseInit {
             String duration, Integer students, Integer lessons, Integer completedLessons,
             String nextLesson, String thumbnail, String price, String originalPrice,
             Integer xp, Boolean isNew, Boolean isTrending, Course.CourseStatus status,
-            List<String> learningPoints, List<String> requirements, List<String> tags) {
+            List<String> learningPoints, List<String> requirements, List<String> tags,
+            Instructor instructor) {
+
         Course c = new Course();
         c.setTitle(title);
         c.setDescription(desc);
@@ -512,6 +717,10 @@ public class DatabaseInit {
         c.setTags(tags);
         c.setTotalPoints(xp);
         c.setDifficulty(level);
+
+        // Asignar el instructor directamente (ya está attached porque viene de la lista)
+        c.setInstructor(instructor);
+
         return c;
     }
 

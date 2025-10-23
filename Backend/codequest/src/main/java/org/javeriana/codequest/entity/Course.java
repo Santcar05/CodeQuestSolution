@@ -82,7 +82,7 @@ public class Course {
     @Enumerated(EnumType.STRING)
     private CourseStatus status;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id")
     private Instructor instructor;
 

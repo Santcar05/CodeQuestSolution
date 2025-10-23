@@ -70,7 +70,7 @@
 
           <div class="courses-grid">
             <div
-              *ngFor="let course of courses; let i = index"
+              *ngFor="let course of courses$ | async; let i = index"
               class="course-card"
               [style.animation-delay.s]="i * 0.1"
             >
@@ -141,7 +141,10 @@
             </div>
 
             <div class="activity-chart">
-              <div *ngFor="let day of weeklyActivity; let i = index" class="activity-bar-wrapper">
+              <div
+                *ngFor="let day of weeklyActivity$ | async; let i = index"
+                class="activity-bar-wrapper"
+              >
                 <div
                   class="activity-bar"
                   [style.height.px]="day.value * 20"
@@ -214,12 +217,12 @@
         <div class="horizontal-scroll-container">
           <div class="horizontal-scroll-content">
             <div
-              *ngFor="let course of wishlistCourses; let i = index"
+              *ngFor="let course of wishlistCourses$ | async; let i = index"
               class="wishlist-card"
               [style.animation-delay.s]="i * 0.1"
             >
               <div class="wishlist-image-container">
-                <img [src]="course.image" [alt]="course.name" class="wishlist-image" />
+                <img [src]="course.image" [alt]="course.title" class="wishlist-image" />
                 <div class="wishlist-overlay">
                   <svg
                     width="40"
@@ -234,7 +237,7 @@
                 </div>
               </div>
               <div class="wishlist-content">
-                <h4>{{ course.name }}</h4>
+                <h4>{{ course.title }}</h4>
                 <div class="wishlist-meta">
                   <span class="level-badge">{{ course.level }}</span>
                   <span class="duration">{{ course.duration }}</span>
@@ -253,7 +256,7 @@
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
-                  {{ course.students.toLocaleString() }} estudiantes
+                  {{ course.students!.toLocaleString() }} estudiantes
                 </div>
               </div>
             </div>
@@ -286,7 +289,7 @@
         <div class="horizontal-scroll-container">
           <div class="horizontal-scroll-content">
             <div
-              *ngFor="let achievement of recentAchievements; let i = index"
+              *ngFor="let achievement of recentAchievements$ | async; let i = index"
               class="achievement-card"
               [attr.data-rarity]="achievement.rarity"
               [style.animation-delay.s]="i * 0.1"
@@ -337,7 +340,7 @@
         <div class="horizontal-scroll-container">
           <div class="horizontal-scroll-content">
             <div
-              *ngFor="let achievement of upcomingAchievements; let i = index"
+              *ngFor="let achievement of upcomingAchievements$ | async; let i = index"
               class="upcoming-card"
               [style.animation-delay.s]="0.5 + i * 0.1"
             >
