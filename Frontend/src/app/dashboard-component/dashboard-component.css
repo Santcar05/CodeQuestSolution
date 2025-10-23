@@ -926,6 +926,32 @@ app-sidebar-component {
   font-size: 0.75rem;
   color: #94a3b8;
 }
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.pagination-controls button {
+  background-color: #3b82f6;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination-controls button:disabled {
+  background-color: #a5b4fc;
+  cursor: not-allowed;
+}
+
+.pagination-controls span {
+  font-weight: 600;
+}
 
 /* Animations */
 @keyframes slideDown {
