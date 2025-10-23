@@ -120,6 +120,10 @@ public class Course {
     @Column(name = "tag")
     private List<String> tags;
 
+    @ManyToOne
+    @JoinColumn(name = "user_profile_id")
+    private UserProfile userProfile;
+
     public enum CourseStatus {
         COMPLETED, IN_PROGRESS, NOT_STARTED
     }

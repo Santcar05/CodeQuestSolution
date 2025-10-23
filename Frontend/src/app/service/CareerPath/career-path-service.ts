@@ -7,7 +7,7 @@ import { CareerPath } from '../../models/CarrerPath';
   providedIn: 'root',
 })
 export class CareerPathService {
-  private apiUrl = 'http://localhost:8080/api/careerPath';
+  private apiUrl = 'http://localhost:8080/api/careerpath';
   constructor(private http: HttpClient) {}
 
   findAll(): Observable<CareerPath[]> {

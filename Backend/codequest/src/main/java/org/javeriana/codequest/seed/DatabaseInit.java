@@ -30,6 +30,7 @@ import org.javeriana.codequest.entity.Skill;
 import org.javeriana.codequest.entity.Technology;
 import org.javeriana.codequest.entity.TestCase;
 import org.javeriana.codequest.entity.Trend;
+import org.javeriana.codequest.entity.UserProfile;
 import org.javeriana.codequest.service.entity.AchievementService;
 import org.javeriana.codequest.service.entity.BadgeService;
 import org.javeriana.codequest.service.entity.CareerPathService;
@@ -57,6 +58,7 @@ import org.javeriana.codequest.service.entity.SkillService;
 import org.javeriana.codequest.service.entity.TechnologyService;
 import org.javeriana.codequest.service.entity.TestCaseService;
 import org.javeriana.codequest.service.entity.TrendService;
+import org.javeriana.codequest.service.entity.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -164,6 +166,9 @@ public class DatabaseInit {
     @Autowired
     private TrendService trendService;
 
+    @Autowired
+    private UserProfileService userProfileService;
+
     @PostConstruct
     public void init() {
         initAchievements();
@@ -191,6 +196,7 @@ public class DatabaseInit {
         initTestCases();
         initTrends();
         initPosts();
+        initProfileUsers();
     }
 
     private void initAchievements() {
@@ -449,6 +455,7 @@ public class DatabaseInit {
                         "Frontend", "Principiante", 4.8, "60 horas", 21500, 120, 0,
                         "Variables y Tipos de Datos",
                         "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$49.99", "$89.99", 850, true, true, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("ES6+ Features", "Async/Await", "Closures", "DOM Manipulation", "Event Loop"),
                         Arrays.asList("Conocimientos básicos de programación", "HTML y CSS básico"),
@@ -460,6 +467,7 @@ public class DatabaseInit {
                         "Conviértete en Data Scientist con Python. Domina Pandas, NumPy, Scikit-learn y construye modelos predictivos.",
                         "Data Science", "Intermedio", 4.9, "75 horas", 18700, 180, 45,
                         "Introducción a Pandas",
+                        "https://images.unsplash.com/photo-1526379879527-8559ecfcaec0?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1526379879527-8559ecfcaec0?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$79.99", "$129.99", 1200, true, true, Course.CourseStatus.IN_PROGRESS,
                         Arrays.asList("Pandas avanzado", "NumPy", "Scikit-learn", "Visualización", "Modelado predictivo"),
@@ -473,6 +481,7 @@ public class DatabaseInit {
                         "Frontend", "Intermedio", 4.9, "55 horas", 23400, 145, 30,
                         "Fundamentos de React",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$69.99", "$119.99", 950, true, true, Course.CourseStatus.IN_PROGRESS,
                         Arrays.asList("React Hooks", "Next.js App Router", "Server Components", "Optimización", "Deployment"),
                         Arrays.asList("JavaScript avanzado", "HTML/CSS", "Conceptos de React básico"),
@@ -485,6 +494,7 @@ public class DatabaseInit {
                         "Backend", "Intermedio", 4.7, "50 horas", 15600, 110, 0,
                         "Configuración de TypeScript",
                         "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$59.99", "$99.99", 800, false, true, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("TypeScript", "Express.js", "APIs REST", "Autenticación JWT", "Testing"),
                         Arrays.asList("JavaScript avanzado", "Conceptos de backend", "Conocimientos de HTTP"),
@@ -496,7 +506,8 @@ public class DatabaseInit {
                         "Desarrolla aplicaciones móviles nativas para iOS y Android con un solo código base usando Flutter.",
                         "Mobile", "Principiante", 4.8, "65 horas", 18900, 135, 0,
                         "Introducción a Dart",
-                        "https://images.unsplash.com/photo-1551651339-5b4bd5c48de5?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://es.fiverr.com/maisam_abbas_/develop-professional-a-mobile-app-using-flutter",
+                        "https://es.fiverr.com/maisam_abbas_/develop-professional-a-mobile-app-using-flutter",
                         "$64.99", "$109.99", 900, true, false, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("Dart avanzado", "Widgets personalizados", "State Management", "Animaciones", "Firebase"),
                         Arrays.asList("Programación básica", "Conceptos OOP"),
@@ -508,6 +519,7 @@ public class DatabaseInit {
                         "Prepárate para la certificación AWS Cloud Practitioner. Domina los servicios fundamentales de AWS.",
                         "Cloud", "Principiante", 4.6, "40 horas", 12300, 85, 25,
                         "Introducción a AWS",
+                        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$89.99", "$149.99", 700, false, true, Course.CourseStatus.IN_PROGRESS,
                         Arrays.asList("EC2 y S3", "IAM y Security", "VPC", "RDS", "Cost Optimization"),
@@ -521,6 +533,7 @@ public class DatabaseInit {
                         "DevOps", "Intermedio", 4.9, "45 horas", 14200, 95, 0,
                         "Fundamentos de Docker",
                         "https://images.unsplash.com/photo-1626721105368-a69248e93b32?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://images.unsplash.com/photo-1626721105368-a69248e93b32?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$74.99", "$124.99", 850, true, true, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("Docker avanzado", "Kubernetes clusters", "Helm charts", "CI/CD", "Monitoring"),
                         Arrays.asList("Linux básico", "Conceptos de redes", "Experiencia en línea de comandos"),
@@ -532,6 +545,7 @@ public class DatabaseInit {
                         "Aprende técnicas de pentesting y seguridad ofensiva. Domina herramientas como Metasploit y Burp Suite.",
                         "Security", "Avanzado", 4.8, "80 horas", 8900, 200, 0,
                         "Reconocimiento y Footprinting",
+                        "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$99.99", "$169.99", 1500, false, false, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("Pentesting Web", "Explotación", "Post-explotación", "OWASP Top 10", "Forensics"),
@@ -545,6 +559,7 @@ public class DatabaseInit {
                         "Frontend", "Intermedio", 4.7, "48 horas", 16700, 125, 60,
                         "Vue.js Fundamentals",
                         "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$54.99", "$94.99", 750, true, false, Course.CourseStatus.IN_PROGRESS,
                         Arrays.asList("Composition API", "Vue Router", "Pinia State Management", "Testing", "Performance"),
                         Arrays.asList("JavaScript avanzado", "HTML/CSS", "Conceptos de Vue.js básico"),
@@ -556,6 +571,7 @@ public class DatabaseInit {
                         "Domina SQL avanzado, optimización de queries y diseño de bases de datos escalables.",
                         "Backend", "Intermedio", 4.8, "35 horas", 13400, 70, 70,
                         "Fundamentos de SQL",
+                        "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "Gratis", null, 600, false, false, Course.CourseStatus.COMPLETED,
                         Arrays.asList("Query Optimization", "Indexing", "Transactions", "Stored Procedures", "Normalization"),
@@ -569,6 +585,7 @@ public class DatabaseInit {
                         "Backend", "Intermedio", 4.7, "42 horas", 9800, 100, 0,
                         "Sintaxis de Go",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$59.99", "$99.99", 800, false, true, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("Concurrencia", "Goroutines", "Channels", "Testing", "APIs REST"),
                         Arrays.asList("Programación básica", "Conceptos de concurrencia"),
@@ -580,6 +597,7 @@ public class DatabaseInit {
                         "Domina el deep learning con TensorFlow. Crea redes neuronales para visión computacional y NLP.",
                         "AI/ML", "Avanzado", 4.9, "70 horas", 11200, 165, 0,
                         "Introducción a TensorFlow",
+                        "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$89.99", "$159.99", 1400, true, true, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("Redes Neuronales", "Computer Vision", "NLP", "Transfer Learning", "Model Deployment"),
@@ -593,6 +611,7 @@ public class DatabaseInit {
                         "Frontend", "Intermedio", 4.6, "58 horas", 14500, 140, 0,
                         "TypeScript para Angular",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$69.99", "$119.99", 900, false, false, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("Components", "Services", "RxJS", "Routing", "Testing"),
                         Arrays.asList("TypeScript", "JavaScript avanzado", "HTML/CSS"),
@@ -605,6 +624,7 @@ public class DatabaseInit {
                         "Blockchain", "Intermedio", 4.7, "52 horas", 7600, 120, 0,
                         "Fundamentos de Blockchain",
                         "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$79.99", "$139.99", 1100, true, false, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("Solidity", "Smart Contracts", "DeFi", "NFTs", "Web3.js"),
                         Arrays.asList("JavaScript", "Programación básica", "Conceptos de criptografía"),
@@ -616,7 +636,8 @@ public class DatabaseInit {
                         "Domina Git para trabajo en equipo. Aprende workflows profesionales y resolución de conflictos.",
                         "Tools", "Principiante", 4.9, "25 horas", 19800, 50, 50,
                         "Comandos Básicos de Git",
-                        "https://images.unsplash.com/photo-1566837942615-893b8c14c9e7?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png", // Thumbnail
+                        "https://miro.medium.com/v2/resize:fit:1400/1*_6M2zk7d9wXp2T_7bVgn8w.png",
                         "Gratis", null, 400, false, false, Course.CourseStatus.COMPLETED,
                         Arrays.asList("Branching Strategies", "Git Flow", "Conflict Resolution", "Hooks", "CI/CD Integration"),
                         Arrays.asList("Conocimientos básicos de Git"),
@@ -628,6 +649,7 @@ public class DatabaseInit {
                         "Crea aplicaciones empresariales con Spring Boot, Spring Security y microservicios.",
                         "Backend", "Intermedio", 4.7, "65 horas", 12300, 150, 0,
                         "Introducción a Spring Boot",
+                        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$74.99", "$129.99", 1000, false, true, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("Spring MVC", "Spring Security", "JPA/Hibernate", "Testing", "Microservices"),
@@ -641,6 +663,7 @@ public class DatabaseInit {
                         "Design", "Principiante", 4.8, "30 horas", 16700, 75, 25,
                         "Principios de Diseño",
                         "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$49.99", "$89.99", 550, true, false, Course.CourseStatus.IN_PROGRESS,
                         Arrays.asList("Design Thinking", "Figma", "Prototyping", "User Research", "Accessibility"),
                         Arrays.asList("Conocimientos básicos de diseño", "Interés en experiencia de usuario"),
@@ -652,6 +675,7 @@ public class DatabaseInit {
                         "Domina Rust para desarrollar sistemas de alto rendimiento con seguridad de memoria.",
                         "Systems", "Avanzado", 4.8, "55 horas", 6800, 130, 0,
                         "Sintaxis de Rust",
+                        "https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$69.99", "$119.99", 950, false, true, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("Ownership", "Concurrency", "Memory Safety", "WebAssembly", "Systems Programming"),
@@ -665,6 +689,7 @@ public class DatabaseInit {
                         "Backend", "Intermedio", 4.7, "38 horas", 11200, 90, 0,
                         "Fundamentos de GraphQL",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
+                        "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$54.99", "$94.99", 700, true, false, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("GraphQL Schema", "Resolvers", "Apollo Server", "Apollo Client", "Caching"),
                         Arrays.asList("JavaScript", "Node.js básico", "Conceptos de APIs"),
@@ -676,6 +701,7 @@ public class DatabaseInit {
                         "Implementa pipelines CI/CD y gestiona infraestructura en Azure con Terraform.",
                         "DevOps", "Intermedio", 4.6, "47 horas", 8900, 110, 0,
                         "Introducción a Azure",
+                        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "$79.99", "$139.99", 850, false, true, Course.CourseStatus.NOT_STARTED,
                         Arrays.asList("Azure Pipelines", "Terraform", "Kubernetes en Azure", "Monitoring", "Security"),
@@ -689,12 +715,13 @@ public class DatabaseInit {
 
     private Course createCourse(String title, String desc, String cat, String level, Double rating,
             String duration, Integer students, Integer lessons, Integer completedLessons,
-            String nextLesson, String thumbnail, String price, String originalPrice,
+            String nextLesson, String thumbnail, String image, String price, String originalPrice,
             Integer xp, Boolean isNew, Boolean isTrending, Course.CourseStatus status,
             List<String> learningPoints, List<String> requirements, List<String> tags,
             Instructor instructor) {
 
         Course c = new Course();
+        c.setImage(image);
         c.setTitle(title);
         c.setDescription(desc);
         c.setCategory(cat);
@@ -1282,5 +1309,129 @@ public class DatabaseInit {
         p.setLikes(likes);
         p.setLiked(liked);
         return p;
+    }
+
+    private void initProfileUsers() {
+        List<UserProfile> users = Arrays.asList(
+                createUserProfile(
+                        "CodeMaster_92",
+                        "👨‍💻",
+                        15,
+                        15420,
+                        20000,
+                        "Diamante",
+                        // Proyectos realizados (deberían ser IDs de proyectos existentes)
+                        Arrays.asList(5L), // Dashboard Analítico completado
+                        // Proyectos en progreso
+                        Arrays.asList(1L, 3L, 4L, 8L), // Sistema de Reservas, API E-commerce, App Fitness, Plataforma Streaming
+                        // Cursos realizados
+                        Arrays.asList(10L, 15L), // SQL Avanzado, Git Avanzado
+                        // Cursos en progreso
+                        Arrays.asList(2L, 3L, 6L, 9L, 17L), // Python Data Science, React Next.js, AWS, Vue.js, UI/UX Design
+                        // Reviews (IDs de reviews existentes)
+                        Arrays.asList(1L, 3L, 5L),
+                        // Carreras realizadas
+                        Arrays.asList(1L), // Desarrollador Web Full Stack
+                        // Carreras en progreso
+                        Arrays.asList(3L, 6L), // Científico de Datos, Desarrollador Backend
+                        // Posts (IDs de posts existentes)
+                        Arrays.asList(1L, 4L, 7L),
+                        // Badges obtenidos
+                        Arrays.asList(1L, 2L, 4L, 7L), // Python Master, JavaScript Ninja, Web Developer, Cloud Expert
+                        // Powers obtenidos
+                        Arrays.asList(3L, 6L) // Pista del Mentor, Boost de Velocidad
+                ),
+                createUserProfile(
+                        "DevQueen",
+                        "👩‍💻",
+                        12,
+                        12350,
+                        15000,
+                        "Platino",
+                        Arrays.asList(5L), // Dashboard Analítico completado
+                        Arrays.asList(1L, 4L, 7L), // Sistema de Reservas, App Fitness, Sistema de Blog
+                        Arrays.asList(10L, 15L, 17L), // SQL Avanzado, Git Avanzado, UI/UX Design
+                        Arrays.asList(2L, 3L, 9L, 18L), // Python Data Science, React Next.js, Vue.js, Rust
+                        Arrays.asList(2L, 4L, 6L),
+                        Arrays.asList(2L), // Desarrollador Móvil
+                        Arrays.asList(1L, 7L), // Desarrollador Web Full Stack, Desarrollador Frontend
+                        Arrays.asList(2L, 5L, 8L),
+                        Arrays.asList(1L, 4L, 6L), // Python Master, Web Developer, Algorithm Master
+                        Arrays.asList(1L, 4L) // Doble XP, Revisión Instantánea
+                ),
+                createUserProfile(
+                        "PythonGuru",
+                        "🐍",
+                        10,
+                        9870,
+                        12000,
+                        "Oro",
+                        Arrays.asList(5L, 7L), // Dashboard Analítico, Sistema de Blog
+                        Arrays.asList(2L, 3L, 6L), // Red Social, API E-commerce, Chatbot IA
+                        Arrays.asList(2L, 10L, 12L, 15L), // Python Data Science, SQL Avanzado, Go Programming, Git Avanzado
+                        Arrays.asList(11L, 13L, 16L, 19L), // TensorFlow, Angular, Blockchain, GraphQL
+                        Arrays.asList(7L, 8L),
+                        Arrays.asList(3L), // Científico de Datos
+                        Arrays.asList(5L, 8L), // Especialista en Ciberseguridad, Ingeniero de Machine Learning
+                        Arrays.asList(3L, 6L),
+                        Arrays.asList(1L, 3L, 5L, 8L), // Python Master, Java Expert, Data Scientist, Algorithm Master
+                        Arrays.asList(2L, 5L, 7L) // Racha Congelada, Energía Infinita, Escudo de Protección
+                ),
+                createUserProfile(
+                        "ReactNinja",
+                        "⚛️",
+                        11,
+                        11240,
+                        14000,
+                        "Platino",
+                        Arrays.asList(5L), // Dashboard Analítico
+                        Arrays.asList(1L, 2L, 4L, 8L), // Sistema de Reservas, Red Social, App Fitness, Plataforma Streaming
+                        Arrays.asList(1L, 3L, 9L, 15L), // JavaScript Moderno, React Next.js, Vue.js, Git Avanzado
+                        Arrays.asList(14L, 17L, 18L, 20L), // Angular, UI/UX Design, Rust, DevOps Azure
+                        Arrays.asList(1L, 3L, 5L),
+                        Arrays.asList(7L), // Desarrollador Frontend
+                        Arrays.asList(1L, 2L, 4L), // Desarrollador Web Full Stack, Desarrollador Móvil, DevOps Engineer
+                        Arrays.asList(4L, 7L),
+                        Arrays.asList(2L, 4L, 7L), // JavaScript Ninja, Web Developer, Cloud Expert
+                        Arrays.asList(1L, 3L, 8L) // Doble XP, Pista del Mentor, Visión del Código
+                ),
+                createUserProfile(
+                        "CloudMaster",
+                        "☁️",
+                        14,
+                        13340,
+                        18000,
+                        "Diamante",
+                        Arrays.asList(5L, 7L), // Dashboard Analítico, Sistema de Blog
+                        Arrays.asList(3L, 6L, 8L), // API E-commerce, Chatbot IA, Plataforma Streaming
+                        Arrays.asList(6L, 7L, 10L, 15L, 20L), // AWS, Docker Kubernetes, SQL Avanzado, Git Avanzado, DevOps Azure
+                        Arrays.asList(11L, 13L, 16L, 19L), // TensorFlow, Angular, Blockchain, GraphQL
+                        Arrays.asList(2L, 4L, 6L, 8L),
+                        Arrays.asList(4L, 8L), // Ingeniero DevOps, Ingeniero de Machine Learning
+                        Arrays.asList(3L, 5L, 6L), // Científico de Datos, Especialista en Ciberseguridad, Desarrollador Backend
+                        Arrays.asList(5L, 8L),
+                        Arrays.asList(4L, 7L, 8L), // Web Developer, Cloud Expert, Algorithm Master
+                        Arrays.asList(1L, 4L, 5L, 7L) // Doble XP, Revisión Instantánea, Energía Infinita, Escudo de Protección
+                )
+        );
+        users.forEach(userProfileService::save);
+    }
+
+    private UserProfile createUserProfile(String name, String avatar, Integer level, Integer xp, Integer maxXp,
+            String rank, List<Long> projectsDone, List<Long> projectsInProgress,
+            List<Long> coursesDone, List<Long> coursesInProgress, List<Long> reviews,
+            List<Long> carrerPathsDone, List<Long> carrerPathsInProgress,
+            List<Long> posts, List<Long> badges, List<Long> powers) {
+        UserProfile user = new UserProfile();
+        user.setName(name);
+        user.setAvatar(avatar);
+        user.setLevel(level);
+        user.setXp(xp);
+        user.setMaxXp(maxXp);
+        user.setRank(rank);
+
+        // Nota: En una implementación real, estos serían objetos completos, no solo IDs
+        // Para el seed, asumimos que las relaciones se manejarán de otra forma
+        return user;
     }
 }

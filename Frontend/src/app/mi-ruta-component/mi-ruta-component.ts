@@ -79,10 +79,11 @@ export class MiRutaComponent implements OnInit {
     };
 
     // Cargar perfil de usuario
-    this.userProfileService.findAll().subscribe({
-      next: (profiles) => {
+    this.userProfileService.findById(0).subscribe({
+      next: (profile) => {
         // Tomar el primer perfil (en una app real, usarías el perfil del usuario logueado)
-        this.userProfile = profiles.length > 0 ? profiles[0] : null;
+        this.userProfile = profile;
+        console.log('Perfil de usuario cargado:', this.userProfile);
         checkAllRequestsCompleted();
       },
       error: (err) => {
