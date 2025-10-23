@@ -524,6 +524,7 @@
               class="related-course-card"
               *ngFor="let relatedCourse of relatedCourses; let i = index"
               [style.animation-delay.ms]="i * 80"
+              (click)="openCourse(relatedCourse!.id)"
             >
               <div class="related-course-image">
                 <img [src]="relatedCourse!.image" [alt]="relatedCourse!.title" />

@@ -145,4 +145,10 @@ export class DetalleCursoComponent implements OnInit {
     if (!this.course?.id) return;
     this.router.navigate(['/visualizar-tema', this.course.id]);
   }
+
+  openCourse(courseId: number): void {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/detalle-curso', courseId]);
+    });
+  }
 }
