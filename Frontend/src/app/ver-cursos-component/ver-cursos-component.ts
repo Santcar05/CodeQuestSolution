@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
@@ -14,7 +14,11 @@ import { CourseService } from '../service/Course/course-service';
   styleUrls: ['./ver-cursos-component.css'],
 })
 export class VerCursosComponent implements OnInit {
-  constructor(private router: Router, private courseService: CourseService) {}
+  constructor(
+    private router: Router,
+    private courseService: CourseService,
+    private cdRef: ChangeDetectorRef // Agregar ChangeDetectorRef
+  ) {}
 
   searchTerm: string = '';
 
@@ -58,6 +62,7 @@ export class VerCursosComponent implements OnInit {
         this.filteredCourses = [...this.allCourses];
         this.calculateStats();
         this.sortCourses();
+        this.cdRef.detectChanges();
       },
       error: (err) => console.error('Error cargando cursos:', err),
     });

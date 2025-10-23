@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
@@ -60,7 +60,10 @@ export class LogrosComponent implements OnInit {
   loading: boolean = false;
   error: string | null = null;
 
-  constructor(private achievementService: AchievementService) {}
+  constructor(
+    private achievementService: AchievementService,
+    private cdRef: ChangeDetectorRef // Agregar ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.cargarLogros();
@@ -81,6 +84,7 @@ export class LogrosComponent implements OnInit {
         this.sortLogros();
         this.loading = false;
         this.filterLogros();
+        this.cdRef.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar los logros', err);
