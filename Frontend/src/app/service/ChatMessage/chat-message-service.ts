@@ -7,7 +7,7 @@ import { ChatMessage } from '../../models/ChatMessage';
   providedIn: 'root',
 })
 export class ChatMessageService {
-  private apiUrl = 'http://localhost:8080/api/chatMessage';
+  private apiUrl = 'http://localhost:8080/api/chatMessages';
   constructor(private http: HttpClient) {}
 
   findAll(): Observable<ChatMessage[]> {

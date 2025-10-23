@@ -10,7 +10,7 @@ export class SkillService {
   private apiUrl = 'http://localhost:8080/api/skill';
   constructor(private http: HttpClient) {}
   findAll(): Observable<Skill[]> {
-    return this.http.get<Skill[]>(this.apiUrl);
+    return this.http.get<Skill[]>(`${this.apiUrl}/all`);
   }
   findById(id: number): Observable<Skill> {
     return this.http.get<Skill>(`${this.apiUrl}/${id}`);

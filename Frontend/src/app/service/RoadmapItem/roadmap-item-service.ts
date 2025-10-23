@@ -7,10 +7,10 @@ import { RoadmapItem } from '../../models/RoadMapItem';
   providedIn: 'root',
 })
 export class RoadmapItemService {
-  private apiUrl = 'http://localhost:8080/api/roadmapItem';
+  private apiUrl = 'http://localhost:8080/api/roadmapitem';
   constructor(private http: HttpClient) {}
   findAll(): Observable<RoadmapItem[]> {
-    return this.http.get<RoadmapItem[]>(this.apiUrl);
+    return this.http.get<RoadmapItem[]>(`${this.apiUrl}/all`);
   }
 
   findById(id: number): Observable<RoadmapItem> {
