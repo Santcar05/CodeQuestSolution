@@ -64,8 +64,8 @@ export class VerCursosComponent implements OnInit {
   }
 
   calculateStats() {
-    this.totalCourses = this.allCourses.length;
-    const total = this.allCourses.reduce((sum, course) => sum + (course.students || 0), 0);
+    this.totalCourses = this.filteredCourses.length; // Usar filteredCourses en lugar de allCourses
+    const total = this.filteredCourses.reduce((sum, course) => sum + (course.students || 0), 0);
     this.totalStudents = this.formatNumber(total);
   }
 
@@ -133,6 +133,12 @@ export class VerCursosComponent implements OnInit {
   }
 
   filterCourses() {
+    // Si no hay cursos, no hacer nada
+    if (!this.allCourses || this.allCourses.length === 0) {
+      this.filteredCourses = [];
+      return;
+    }
+
     this.filteredCourses = this.allCourses.filter((course) => {
       const matchesSearch =
         !this.searchTerm ||
@@ -141,19 +147,25 @@ export class VerCursosComponent implements OnInit {
           course.tags.some((tag) => tag.toLowerCase().includes(this.searchTerm.toLowerCase())));
 
       const matchesLevel =
-        this.selectedLevels.length === 0 || this.selectedLevels.includes(course.level);
+        this.selectedLevels.length === 0 ||
+        (course.level && this.selectedLevels.includes(course.level));
 
       const matchesCategory =
-        this.selectedCategories.length === 0 || this.selectedCategories.includes(course.category);
+        this.selectedCategories.length === 0 ||
+        (course.category && this.selectedCategories.includes(course.category));
 
       const matchesDuration =
         this.selectedDurations.length === 0 ||
-        this.selectedDurations.some((duration) => this.matchDuration(course.duration!, duration));
+        (course.duration &&
+          this.selectedDurations.some((duration) =>
+            this.matchDuration(course.duration!, duration)
+          ));
 
       return matchesSearch && matchesLevel && matchesCategory && matchesDuration;
     });
 
     this.sortCourses();
+    this.calculateStats(); // Actualizar estadísticas después de filtrar
   }
 
   matchDuration(courseDuration: string, filterDuration: string): boolean {
