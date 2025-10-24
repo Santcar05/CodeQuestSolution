@@ -1193,8 +1193,8 @@ public class DatabaseInit {
     private Skill createSkill(String name, Integer level, Integer target, Skill.SkillCategory category) {
         Skill s = new Skill();
         s.setName(name);
-        s.setLevel(level);
-        s.setTarget(target);
+        //s.setLevel(level);
+        //s.setTarget(target);
         s.setCategory(category);
         return s;
     }

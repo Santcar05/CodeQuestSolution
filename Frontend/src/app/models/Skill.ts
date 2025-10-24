@@ -3,5 +3,5 @@ export interface Skill {
   name: string;
   level: number;
   target?: number;
-  category?: 'tecnica' | 'blanda' | 'technical' | 'soft';
+  category?: string;
 }
