@@ -15,4 +15,16 @@ export class SkillService {
   findById(id: number): Observable<Skill> {
     return this.http.get<Skill>(`${this.apiUrl}/${id}`);
   }
+
+  save(skill: Skill): Observable<Skill> {
+    return this.http.post<Skill>(`${this.apiUrl}/save`, skill);
+  }
+
+  update(skill: Skill): Observable<Skill> {
+    return this.http.put<Skill>(`${this.apiUrl}/update`, skill);
+  }
+
+  delete(id: number): Observable<Skill> {
+    return this.http.delete<Skill>(`${this.apiUrl}/delete/${id}`);
+  }
 }

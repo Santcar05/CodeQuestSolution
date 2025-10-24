@@ -1,0 +1,292 @@
+<div class="admin-skill-container">
+  <!-- Header Hero -->
+  <div class="admin-header">
+    <div class="header-content">
+      <div class="header-title-section">
+        <div class="title-icon">🎯</div>
+        <div>
+          <h1 class="admin-title">Gestión de Habilidades</h1>
+          <p class="admin-subtitle">Administra y optimiza las skills del sistema</p>
+        </div>
+      </div>
+      <button class="btn-create-skill" (click)="openCreateModal()">
+        <span class="btn-icon">✨</span>
+        <span>Nueva Habilidad</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Dashboard -->
+  <div class="stats-grid">
+    <div class="stat-card stat-total">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ skills.length }}</div>
+        <div class="stat-label">Total Habilidades</div>
+      </div>
+    </div>
+    <!--
+    <div class="stat-card stat-average">
+      <div class="stat-icon">📈</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getAverageLevel() }}%</div>
+        <div class="stat-label">Nivel Promedio</div>
+      </div>
+    </div>
+    -->
+    <div class="stat-card stat-category" *ngFor="let cat of categories">
+      <div class="stat-icon">{{ cat.icon }}</div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getSkillsByCategory(cat.value) }}</div>
+        <div class="stat-label">{{ cat.label }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters & Search -->
+  <div class="filters-container">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar habilidades..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        class="search-input"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">Categoría:</label>
+      <select [(ngModel)]="filterCategory" (ngModelChange)="onFilterChange()" class="filter-select">
+        <option value="all">Todas</option>
+        <option *ngFor="let cat of categories" [value]="cat.value">
+          {{ cat.icon }} {{ cat.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label">Ordenar por:</label>
+      <select [(ngModel)]="sortBy" (ngModelChange)="onSortChange()" class="filter-select">
+        <option value="name">Nombre</option>
+        <!--<option value="level">Nivel</option>-->
+        <option value="category">Categoría</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-text">Cargando...</div>
+    </div>
+  </div>
+
+  <!-- Skills Grid -->
+  <div class="skills-grid" *ngIf="!isLoading && filteredSkills.length > 0">
+    <div
+      class="skill-card"
+      *ngFor="let skill of filteredSkills; let i = index"
+      [style.animation-delay.ms]="i * 50"
+    >
+      <div class="skill-card-header">
+        <div
+          class="skill-category-badge"
+          [style.background]="getCategoryInfo(skill.category).color"
+        >
+          {{ getCategoryInfo(skill.category).icon }}
+        </div>
+        <div class="skill-actions">
+          <button class="action-btn edit-btn" (click)="openEditModal(skill)" title="Editar">
+            ✏️
+          </button>
+          <button class="action-btn delete-btn" (click)="openDeleteModal(skill)" title="Eliminar">
+            🗑️
+          </button>
+        </div>
+      </div>
+
+      <div class="skill-card-body">
+        <h3 class="skill-name">{{ skill.name }}</h3>
+        <div class="skill-category-label">{{ getCategoryInfo(skill.category).label }}</div>
+        <!--
+        <div class="skill-progress-section">
+          <div class="progress-header">
+            <span class="progress-label">Nivel Actual</span>
+            <span class="progress-value">{{ skill.level }}%</span>
+          </div>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              [style.width.%]="skill.level"
+              [style.background]="getCategoryInfo(skill.category).color"
+            ></div>
+          </div>
+          
+          <div class="progress-header" *ngIf="skill.target">
+            <span class="progress-label">Objetivo</span>
+            <span class="progress-value">{{ skill.target }}%</span>
+          </div>
+          <div class="progress-bar" *ngIf="skill.target">
+            <div class="progress-fill progress-target" [style.width.%]="skill.target"></div>
+          </div>
+
+          <div class="skill-completion" *ngIf="skill.target">
+            <div class="completion-icon">
+              {{ getProgressPercentage(skill) >= 100 ? '✅' : '⏳' }}
+            </div>
+            <div class="completion-text">{{ getProgressPercentage(skill) }}% del objetivo</div>
+          </div>
+         
+        </div>
+         -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && filteredSkills.length === 0">
+    <div class="empty-icon">🔍</div>
+    <h3 class="empty-title">No se encontraron habilidades</h3>
+    <p class="empty-text">
+      {{
+        searchTerm
+          ? 'Intenta con otros términos de búsqueda'
+          : 'Comienza creando tu primera habilidad'
+      }}
+    </p>
+    <button class="btn-create-skill" (click)="openCreateModal()" *ngIf="!searchTerm">
+      <span class="btn-icon">✨</span>
+      <span>Crear Habilidad</span>
+    </button>
+  </div>
+
+  <!-- Create/Edit Modal -->
+  <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          {{ isEditMode ? '✏️ Editar Habilidad' : '✨ Nueva Habilidad' }}
+        </h2>
+        <button class="modal-close" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Nombre de la Habilidad</label>
+          <input
+            type="text"
+            class="form-input"
+            [(ngModel)]="newSkill.name"
+            placeholder="Ej: React, TypeScript, Liderazgo..."
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Categoría</label>
+          <div class="category-selector">
+            <div
+              *ngFor="let cat of categories"
+              class="category-option"
+              [class.selected]="newSkill.category === cat.value"
+              (click)="newSkill.category = cat.value"
+              [style.border-color]="cat.color"
+            >
+              <div class="category-icon">{{ cat.icon }}</div>
+              <div class="category-name">{{ cat.label }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!--
+          <div class="form-group">
+            <label class="form-label">Nivel Actual (%)</label>
+            <input
+              type="number"
+              class="form-input"
+              [(ngModel)]="newSkill.level"
+              min="0"
+              max="100"
+              placeholder="0-100"
+            />
+            <div class="range-preview">
+              <div
+                class="range-fill"
+                [style.width.%]="newSkill.level"
+                [style.background]="getCategoryInfo(newSkill.category).color"
+              ></div>
+            </div>
+          </div>
+          -->
+          <!--
+          <div class="form-group">
+            <label class="form-label">Objetivo (%)</label>
+            <input
+              type="number"
+              class="form-input"
+              [(ngModel)]="newSkill.target"
+              min="0"
+              max="100"
+              placeholder="0-100"
+            />
+            <div class="range-preview">
+              <div class="range-fill range-target" [style.width.%]="newSkill.target"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+-->
+          <div class="modal-footer">
+            <button class="btn-modal btn-cancel" (click)="closeModal()">Cancelar</button>
+            <button class="btn-modal btn-save" (click)="saveSkill()">
+              <span class="btn-icon">💾</span>
+              <span>{{ isEditMode ? 'Actualizar' : 'Crear' }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Confirmation Modal -->
+      <div class="modal-overlay" *ngIf="isDeleteModalOpen" (click)="closeDeleteModal()">
+        <div class="modal-content modal-delete" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2 class="modal-title">🗑️ Confirmar Eliminación</h2>
+            <button class="modal-close" (click)="closeDeleteModal()">✕</button>
+          </div>
+
+          <div class="modal-body">
+            <p class="delete-warning">
+              ¿Estás seguro de que deseas eliminar la habilidad
+              <strong>{{ skillToDelete?.name }}</strong
+              >?
+            </p>
+            <p class="delete-info">Esta acción no se puede deshacer.</p>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn-modal btn-cancel" (click)="closeDeleteModal()">Cancelar</button>
+            <button class="btn-modal btn-delete" (click)="confirmDelete()">
+              <span class="btn-icon">🗑️</span>
+              <span>Eliminar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success Toast -->
+      <div class="toast toast-success" *ngIf="showSuccessMessage">
+        <div class="toast-icon">✅</div>
+        <div class="toast-message">{{ successMessage }}</div>
+      </div>
+
+      <!-- Error Toast -->
+      <div class="toast toast-error" *ngIf="showErrorMessage">
+        <div class="toast-icon">❌</div>
+        <div class="toast-message">{{ errorMessage }}</div>
+      </div>
+    </div>
+  </div>
+</div>

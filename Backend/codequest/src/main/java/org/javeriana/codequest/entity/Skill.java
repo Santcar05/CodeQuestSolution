@@ -30,7 +30,7 @@ public class Skill {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer level;
 
     private Integer target;
@@ -39,6 +39,6 @@ public class Skill {
     private SkillCategory category;
 
     public enum SkillCategory {
-        TECNICA, BLANDA, TECHNICAL, SOFT
+        TECNICA, BLANDA//, TECHNICAL, SOFT
     }
 }
