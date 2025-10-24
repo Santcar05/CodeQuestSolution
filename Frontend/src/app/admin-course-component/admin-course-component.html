@@ -1,0 +1,591 @@
+<div class="admin-course-container">
+  <!-- Animated Header Hero -->
+  <div class="admin-header">
+    <div class="floating-particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="header-content">
+      <div class="header-title-section">
+        <div class="title-icon">📚</div>
+        <div>
+          <h1 class="admin-title">Gestión de Cursos</h1>
+          <p class="admin-subtitle">Administra tu catálogo completo de cursos</p>
+        </div>
+      </div>
+      <button class="btn-create-course" (click)="openCreateModal()">
+        <span class="btn-icon">✨</span>
+        <span>Nuevo Curso</span>
+        <span class="btn-glow"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Advanced Stats Dashboard -->
+  <div class="stats-grid">
+    <div class="stat-card stat-total pulse-animation">
+      <div class="stat-icon-wrapper">
+        <div class="stat-icon">📊</div>
+        <div class="icon-ring"></div>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ courses.length }}</div>
+        <div class="stat-label">Cursos Totales</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-students pulse-animation" style="animation-delay: 0.1s">
+      <div class="stat-icon-wrapper">
+        <div class="stat-icon">👥</div>
+        <div class="icon-ring"></div>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getTotalStudents() }}</div>
+        <div class="stat-label">Estudiantes</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-rating pulse-animation" style="animation-delay: 0.2s">
+      <div class="stat-icon-wrapper">
+        <div class="stat-icon">⭐</div>
+        <div class="icon-ring"></div>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getAverageRating() }}</div>
+        <div class="stat-label">Rating Promedio</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-xp pulse-animation" style="animation-delay: 0.3s">
+      <div class="stat-icon-wrapper">
+        <div class="stat-icon">🎯</div>
+        <div class="icon-ring"></div>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getTotalXP() }}</div>
+        <div class="stat-label">XP Total</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Pills -->
+  <div class="category-pills">
+    <div *ngFor="let cat of categories" class="category-pill" [style.--pill-color]="cat.color">
+      <span class="pill-icon">{{ cat.icon }}</span>
+      <span class="pill-label">{{ cat.label }}</span>
+      <span class="pill-count">{{ getCoursesByCategory(cat.value) }}</span>
+    </div>
+  </div>
+
+  <!-- Enhanced Filters & Search -->
+  <div class="filters-container">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar cursos por título o descripción..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        class="search-input"
+      />
+      <div class="search-line"></div>
+    </div>
+
+    <div class="filters-row">
+      <div class="filter-group">
+        <label class="filter-label">Categoría:</label>
+        <select
+          [(ngModel)]="filterCategory"
+          (ngModelChange)="onFilterChange()"
+          class="filter-select"
+        >
+          <option value="all">🎯 Todas</option>
+          <option *ngFor="let cat of categories" [value]="cat.value">
+            {{ cat.icon }} {{ cat.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Nivel:</label>
+        <select [(ngModel)]="filterLevel" (ngModelChange)="onFilterChange()" class="filter-select">
+          <option value="all">📚 Todos</option>
+          <option *ngFor="let level of levels" [value]="level.value">
+            {{ level.icon }} {{ level.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Estado:</label>
+        <select [(ngModel)]="filterStatus" (ngModelChange)="onFilterChange()" class="filter-select">
+          <option value="all">🔄 Todos</option>
+          <option *ngFor="let status of statusOptions" [value]="status.value">
+            {{ status.icon }} {{ status.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Ordenar:</label>
+        <select [(ngModel)]="sortBy" (ngModelChange)="onSortChange()" class="filter-select">
+          <option value="title">🔤 Título</option>
+          <option value="rating">⭐ Rating</option>
+          <option value="students">👥 Estudiantes</option>
+          <option value="xp">🎯 XP</option>
+        </select>
+      </div>
+
+      <button class="view-toggle-btn" (click)="toggleViewMode()">
+        <span class="btn-icon">{{ viewMode === 'grid' ? '📋' : '⊞' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring-2"></div>
+      <div class="spinner-text">Cargando cursos...</div>
+    </div>
+  </div>
+
+  <!-- Courses Grid -->
+  <div
+    class="courses-grid"
+    [class.list-view]="viewMode === 'list'"
+    *ngIf="!isLoading && filteredCourses.length > 0"
+  >
+    <div
+      class="course-card"
+      *ngFor="let course of filteredCourses; let i = index"
+      [style.animation-delay.ms]="i * 80"
+    >
+      <!-- Card Header with Image/Thumbnail -->
+      <div class="course-card-header">
+        <div
+          class="course-thumbnail"
+          [style.background-image]="
+            'url(' + (course.thumbnail || 'https://via.placeholder.com/400x200') + ')'
+          "
+        >
+          <div class="course-overlay">
+            <div class="course-badges">
+              <span class="badge badge-new" *ngIf="course.isNew">🆕 Nuevo</span>
+              <span class="badge badge-trending" *ngIf="course.isTrending">🔥 Trending</span>
+            </div>
+            <div class="quick-actions">
+              <button class="quick-action-btn" (click)="openEditModal(course)" title="Editar">
+                ✏️
+              </button>
+              <button class="quick-action-btn" (click)="openDeleteModal(course)" title="Eliminar">
+                🗑️
+              </button>
+              <button
+                class="quick-action-btn"
+                (click)="openRelationsModal(course)"
+                title="Relaciones"
+              >
+                🔗
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="course-card-body">
+        <div class="course-meta-top">
+          <div class="course-category" [style.background]="getCategoryInfo(course.category).color">
+            {{ getCategoryInfo(course.category).icon }} {{ getCategoryInfo(course.category).label }}
+          </div>
+          <div class="course-level" [style.color]="getLevelInfo(course.level).color">
+            {{ getLevelInfo(course.level).icon }} {{ getLevelInfo(course.level).label }}
+          </div>
+        </div>
+
+        <h3 class="course-title">{{ course.title }}</h3>
+        <p class="course-description">{{ course.description }}</p>
+
+        <div class="course-stats">
+          <div class="stat-item">
+            <span class="stat-icon">⭐</span>
+            <span class="stat-text">{{ course.rating || 0 }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">👥</span>
+            <span class="stat-text">{{ course.students || 0 }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">📖</span>
+            <span class="stat-text">{{ course.lessons || 0 }} lecciones</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">⏱️</span>
+            <span class="stat-text">{{ course.duration || 'N/A' }}</span>
+          </div>
+        </div>
+
+        <div class="course-progress" *ngIf="course.status === 'in-progress'">
+          <div class="progress-header">
+            <span class="progress-label">Progreso</span>
+            <span class="progress-value">{{ getProgressPercentage(course) }}%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getProgressPercentage(course)"></div>
+          </div>
+        </div>
+
+        <div class="course-footer">
+          <div class="course-price">
+            <span class="price-current">{{ course.price || '$0' }}</span>
+            <span
+              class="price-original"
+              *ngIf="course.originalPrice && course.originalPrice !== course.price"
+            >
+              {{ course.originalPrice }}
+            </span>
+            <span class="price-discount" *ngIf="getDiscountPercentage(course) > 0">
+              -{{ getDiscountPercentage(course) }}%
+            </span>
+          </div>
+          <div class="course-xp">
+            <span class="xp-icon">🎯</span>
+            <span class="xp-value">{{ course.xp || 0 }} XP</span>
+          </div>
+        </div>
+
+        <div class="course-status-badge" [style.background]="getStatusInfo(course.status).color">
+          {{ getStatusInfo(course.status).icon }} {{ getStatusInfo(course.status).label }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && filteredCourses.length === 0">
+    <div class="empty-icon">🔍</div>
+    <h3 class="empty-title">No se encontraron cursos</h3>
+    <p class="empty-text">
+      {{
+        searchTerm ? 'Intenta con otros términos de búsqueda' : 'Comienza creando tu primer curso'
+      }}
+    </p>
+    <button class="btn-create-course" (click)="openCreateModal()" *ngIf="!searchTerm">
+      <span class="btn-icon">✨</span>
+      <span>Crear Curso</span>
+    </button>
+  </div>
+
+  <!-- Create/Edit Modal -->
+  <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+    <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          {{ isEditMode ? '✏️ Editar Curso' : '✨ Nuevo Curso' }}
+        </h2>
+        <button class="modal-close" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label">Título del Curso *</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newCourse.title"
+              placeholder="Ej: Angular Avanzado 2024"
+            />
+          </div>
+
+          <div class="form-group form-full">
+            <label class="form-label">Descripción *</label>
+            <textarea
+              class="form-textarea"
+              [(ngModel)]="newCourse.description"
+              placeholder="Describe el contenido y objetivos del curso..."
+              rows="4"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Categoría *</label>
+            <div class="category-selector">
+              <div
+                *ngFor="let cat of categories"
+                class="category-option"
+                [class.selected]="newCourse.category === cat.value"
+                (click)="newCourse.category = cat.value"
+                [style.--cat-color]="cat.color"
+              >
+                <div class="category-icon">{{ cat.icon }}</div>
+                <div class="category-name">{{ cat.label }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nivel *</label>
+            <div class="level-selector">
+              <div
+                *ngFor="let level of levels"
+                class="level-option"
+                [class.selected]="newCourse.level === level.value"
+                (click)="newCourse.level = level.value"
+                [style.--level-color]="level.color"
+              >
+                <div class="level-icon">{{ level.icon }}</div>
+                <div class="level-name">{{ level.label }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Duración</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newCourse.duration"
+              placeholder="Ej: 40 horas"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Número de Lecciones</label>
+            <input
+              type="number"
+              class="form-input"
+              [(ngModel)]="newCourse.lessons"
+              min="0"
+              placeholder="0"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Precio</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newCourse.price"
+              placeholder="$99.99"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Precio Original</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newCourse.originalPrice"
+              placeholder="$199.99"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">XP del Curso</label>
+            <input
+              type="number"
+              class="form-input"
+              [(ngModel)]="newCourse.xp"
+              min="0"
+              placeholder="5000"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Puntos Totales *</label>
+            <input
+              type="number"
+              class="form-input"
+              [(ngModel)]="newCourse.totalPoints"
+              min="0"
+              placeholder="5000"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">URL de Imagen</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newCourse.image"
+              placeholder="https://example.com/image.jpg"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">URL Thumbnail</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newCourse.thumbnail"
+              placeholder="https://example.com/thumbnail.jpg"
+            />
+          </div>
+
+          <div class="form-group form-checkboxes">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="newCourse.isNew" class="checkbox-input" />
+              <span class="checkbox-text">🆕 Marcar como Nuevo</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="newCourse.isTrending" class="checkbox-input" />
+              <span class="checkbox-text">🔥 Marcar como Trending</span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Estado del Curso</label>
+            <select [(ngModel)]="newCourse.status" class="form-select">
+              <option *ngFor="let status of statusOptions" [value]="status.value">
+                {{ status.icon }} {{ status.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-modal btn-save" (click)="saveCourse()">
+          <span class="btn-icon">💾</span>
+          <span>{{ isEditMode ? 'Actualizar' : 'Crear' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="isDeleteModalOpen" (click)="closeDeleteModal()">
+    <div class="modal-content modal-delete" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">🗑️ Confirmar Eliminación</h2>
+        <button class="modal-close" (click)="closeDeleteModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="delete-icon-wrapper">
+          <div class="delete-icon">⚠️</div>
+        </div>
+        <p class="delete-warning">
+          ¿Estás seguro de que deseas eliminar el curso <strong>{{ courseToDelete?.title }}</strong
+          >?
+        </p>
+        <p class="delete-info">
+          Esta acción eliminará toda la información asociada y no se puede deshacer.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal btn-cancel" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="btn-modal btn-delete" (click)="confirmDelete()">
+          <span class="btn-icon">🗑️</span>
+          <span>Eliminar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Relations Modal -->
+  <div class="modal-overlay" *ngIf="isRelationsModalOpen" (click)="closeRelationsModal()">
+    <div class="modal-content modal-relations" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">🔗 Gestionar Relaciones</h2>
+        <button class="modal-close" (click)="closeRelationsModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="relations-header">
+          <h3 class="relations-course-title">{{ selectedCourse?.title }}</h3>
+          <p class="relations-course-desc">Gestiona todas las relaciones del curso</p>
+        </div>
+
+        <div class="relations-grid">
+          <button class="relation-card" (click)="manageInstructor(selectedCourse!)">
+            <div class="relation-icon">👨‍🏫</div>
+            <div class="relation-content">
+              <h4 class="relation-title">Instructor</h4>
+              <p class="relation-desc">Asignar o modificar instructor</p>
+            </div>
+            <div class="relation-arrow">→</div>
+          </button>
+
+          <button class="relation-card" (click)="manageModules(selectedCourse!)">
+            <div class="relation-icon">📚</div>
+            <div class="relation-content">
+              <h4 class="relation-title">Módulos</h4>
+              <p class="relation-desc">Gestionar módulos del curso</p>
+            </div>
+            <div class="relation-arrow">→</div>
+          </button>
+
+          <button class="relation-card" (click)="manageReviews(selectedCourse!)">
+            <div class="relation-icon">⭐</div>
+            <div class="relation-content">
+              <h4 class="relation-title">Reviews</h4>
+              <p class="relation-desc">Ver y gestionar reviews</p>
+            </div>
+            <div class="relation-arrow">→</div>
+          </button>
+
+          <button class="relation-card" (click)="manageLearningPoints(selectedCourse!)">
+            <div class="relation-icon">🎯</div>
+            <div class="relation-content">
+              <h4 class="relation-title">Puntos de Aprendizaje</h4>
+              <p class="relation-desc">Definir objetivos del curso</p>
+            </div>
+            <div class="relation-arrow">→</div>
+          </button>
+
+          <button class="relation-card" (click)="manageRequirements(selectedCourse!)">
+            <div class="relation-icon">📋</div>
+            <div class="relation-content">
+              <h4 class="relation-title">Requisitos</h4>
+              <p class="relation-desc">Configurar prerrequisitos</p>
+            </div>
+            <div class="relation-arrow">→</div>
+          </button>
+
+          <button class="relation-card" (click)="managePrerequisites(selectedCourse!)">
+            <div class="relation-icon">🔗</div>
+            <div class="relation-content">
+              <h4 class="relation-title">Cursos Prerequisito</h4>
+              <p class="relation-desc">Cursos necesarios previos</p>
+            </div>
+            <div class="relation-arrow">→</div>
+          </button>
+
+          <button class="relation-card" (click)="manageTags(selectedCourse!)">
+            <div class="relation-icon">🏷️</div>
+            <div class="relation-content">
+              <h4 class="relation-title">Tags</h4>
+              <p class="relation-desc">Gestionar etiquetas</p>
+            </div>
+            <div class="relation-arrow">→</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal btn-cancel" (click)="closeRelationsModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Toast -->
+  <div class="toast toast-success" *ngIf="showSuccessMessage">
+    <div class="toast-icon">✅</div>
+    <div class="toast-message">{{ successMessage }}</div>
+    <div class="toast-progress"></div>
+  </div>
+
+  <!-- Error Toast -->
+  <div class="toast toast-error" *ngIf="showErrorMessage">
+    <div class="toast-icon">❌</div>
+    <div class="toast-message">{{ errorMessage }}</div>
+    <div class="toast-progress"></div>
+  </div>
+</div>

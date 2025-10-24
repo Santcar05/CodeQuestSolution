@@ -72,11 +72,27 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./examen-component/examen-component').then((m) => m.ExamenComponent),
   },
-  //Sección del admin
+  //Sección del admin con child routes
   {
     path: 'admin',
     loadComponent: () =>
-      import('./admin-skill-component/admin-skill-component').then((m) => m.AdminSkillComponent),
+      import('./admin-course-component/admin-course-component').then((m) => m.AdminCourseComponent),
+    children: [
+      {
+        path: 'cursos',
+        loadComponent: () =>
+          import('./admin-course-component/admin-course-component').then(
+            (m) => m.AdminCourseComponent
+          ),
+      },
+      {
+        path: 'skills',
+        loadComponent: () =>
+          import('./admin-skill-component/admin-skill-component').then(
+            (m) => m.AdminSkillComponent
+          ),
+      },
+    ],
   },
   {
     path: '',

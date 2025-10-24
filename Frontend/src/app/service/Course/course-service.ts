@@ -23,4 +23,16 @@ export class CourseService {
   findWeeklyActivity(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/weekly-activity`);
   }
+
+  save(course: Course): Observable<Course> {
+    return this.http.post<Course>(`${this.apiUrl}`, course);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  update(course: Course): Observable<Course> {
+    return this.http.put<Course>(`${this.apiUrl}`, course);
+  }
 }

@@ -6,8 +6,12 @@ import java.util.Map;
 import org.javeriana.codequest.entity.Course;
 import org.javeriana.codequest.service.entity.CourseService;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,4 +58,19 @@ public class CourseController {
         );
     }
 
+    @PostMapping("/save")
+    public void save(@RequestBody Course course) {
+        courseService.save(course);
+    }
+
+    @PutMapping("/update")
+    public void update(@RequestBody Course course) {
+        courseService.save(course);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable Long id) {
+        Course course = courseService.findById(id);
+        courseService.delete(course);
+    }
 }
