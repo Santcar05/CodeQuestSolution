@@ -14,10 +14,12 @@ public class LessonService {
     private LessonRepository lessonRepository;
 
     public void save(Lesson lesson) {
+        lesson.setId(null);
         lessonRepository.save(lesson);
     }
 
-    public void delete(Lesson lesson) {
+    public void delete(Long idLesson) {
+        Lesson lesson = lessonRepository.findById(idLesson).orElse(null);
         lessonRepository.delete(lesson);
     }
 
@@ -33,4 +35,7 @@ public class LessonService {
         return lessonRepository.findAll();
     }
 
+    public void update(Lesson lesson) {
+        lessonRepository.save(lesson);
+    }
 }

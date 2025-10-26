@@ -6,8 +6,12 @@ import java.util.Map;
 import org.javeriana.codequest.entity.Course;
 import org.javeriana.codequest.service.entity.CourseService;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,4 +58,51 @@ public class CourseController {
         );
     }
 
+    @PostMapping("/save")
+    public void save(@RequestBody Course course) {
+        courseService.save(course);
+    }
+
+    @PutMapping("/update/{id}")
+    public Course update(@RequestBody Map<String, Object> updates, @PathVariable Long id) {
+        Course existing = courseService.findById(id);
+        if (existing == null) {
+            throw new RuntimeException("Course not found with id " + id);
+        }
+
+        // Actualizar manualmente campos simples
+        if (updates.containsKey("title")) {
+            existing.setTitle((String) updates.get("title"));
+        }
+        if (updates.containsKey("description")) {
+            existing.setDescription((String) updates.get("description"));
+        }
+        if (updates.containsKey("price")) {
+            existing.setPrice((String) updates.get("price"));
+        }
+        if (updates.containsKey("originalPrice")) {
+            existing.setOriginalPrice((String) updates.get("originalPrice"));
+        }
+        if (updates.containsKey("category")) {
+            existing.setCategory((String) updates.get("category"));
+        }
+        if (updates.containsKey("level")) {
+            existing.setLevel((String) updates.get("level"));
+        }
+        if (updates.containsKey("difficulty")) {
+            existing.setDifficulty((String) updates.get("difficulty"));
+        }
+        if (updates.containsKey("totalPoints")) {
+            existing.setTotalPoints((Integer) updates.get("totalPoints"));
+        }
+
+        courseService.save(existing);
+        return existing;
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable Long id) {
+        Course course = courseService.findById(id);
+        courseService.delete(course);
+    }
 }

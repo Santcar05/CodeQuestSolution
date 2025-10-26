@@ -1,0 +1,658 @@
+<div class="admin-module-container">
+  <!-- Animated Header Hero -->
+  <div class="admin-header">
+    <div class="floating-particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="header-content">
+      <div class="header-title-section">
+        <button class="btn-back" (click)="goBack()">
+          <span class="btn-icon">←</span>
+          <span>Volver</span>
+        </button>
+        <div class="title-icon">📚</div>
+        <div>
+          <h1 class="admin-title">Gestión de Módulos</h1>
+          <p class="admin-subtitle">{{ course?.title || 'Cargando...' }}</p>
+          <div class="course-meta">
+            <span class="meta-item">🎯 {{ getTotalPoints() }} XP Total</span>
+            <span class="meta-item">📖 {{ getTotalLessons() }} Lecciones</span>
+            <span class="meta-item">📊 {{ modules.length }} Módulos</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-create-module" (click)="openCreateModuleModal()">
+        <span class="btn-icon">✨</span>
+        <span>Nuevo Módulo</span>
+        <span class="btn-glow"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Advanced Stats Dashboard -->
+  <div class="stats-grid">
+    <div class="stat-card stat-total pulse-animation">
+      <div class="stat-icon-wrapper">
+        <div class="stat-icon">📚</div>
+        <div class="icon-ring"></div>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ modules.length }}</div>
+        <div class="stat-label">Módulos Totales</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-lessons pulse-animation" style="animation-delay: 0.1s">
+      <div class="stat-icon-wrapper">
+        <div class="stat-icon">📖</div>
+        <div class="icon-ring"></div>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getTotalLessons() }}</div>
+        <div class="stat-label">Lecciones</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-points pulse-animation" style="animation-delay: 0.2s">
+      <div class="stat-icon-wrapper">
+        <div class="stat-icon">🎯</div>
+        <div class="icon-ring"></div>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getTotalPoints() }}</div>
+        <div class="stat-label">XP Total</div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-topics pulse-animation" style="animation-delay: 0.3s">
+      <div class="stat-icon-wrapper">
+        <div class="stat-icon">🗂️</div>
+        <div class="icon-ring"></div>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ getTotalTopics() }}</div>
+        <div class="stat-label">Temas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Search -->
+  <div class="search-container">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        placeholder="Buscar módulos, temas o lecciones..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+        class="search-input"
+      />
+      <div class="search-line"></div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring-2"></div>
+      <div class="spinner-text">Cargando módulos...</div>
+    </div>
+  </div>
+
+  <!-- Modules Tree View -->
+  <div class="modules-tree" *ngIf="!isLoading && filteredModules.length > 0">
+    <div
+      class="module-item"
+      *ngFor="let module of filteredModules; let i = index"
+      [style.animation-delay.ms]="i * 100"
+    >
+      <!-- Module Header -->
+      <div class="module-header" [class.expanded]="expandedModules.has(module.id!)">
+        <div class="module-main-info">
+          <button class="expand-btn" (click)="toggleModule(module.id!)">
+            <span class="expand-icon">{{ expandedModules.has(module.id!) ? '▼' : '▶' }}</span>
+          </button>
+          <div class="module-icon">📦</div>
+          <div class="module-content">
+            <h3 class="module-title">{{ module.title }}</h3>
+            <p class="module-description">{{ module.description }}</p>
+            <div class="module-meta">
+              <span class="meta-item">⏱️ {{ module.duration || 'Sin duración' }}</span>
+              <span class="meta-item">🎯 {{ module.points || 0 }} XP</span>
+              <span class="meta-item">🗂️ {{ module.topics.length || 0 }} temas</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-actions">
+          <div class="progress-section">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="getProgressPercentage(module)"></div>
+            </div>
+            <span class="progress-text">{{ getProgressPercentage(module) }}%</span>
+          </div>
+          <div class="action-buttons">
+            <button
+              class="action-btn btn-edit"
+              (click)="openEditModuleModal(module)"
+              title="Editar módulo"
+            >
+              ✏️
+            </button>
+            <button
+              class="action-btn btn-add"
+              (click)="openCreateTopicModal(module)"
+              title="Agregar tema"
+            >
+              ➕
+            </button>
+            <button
+              class="action-btn btn-delete"
+              (click)="openDeleteModal('module', module)"
+              title="Eliminar módulo"
+            >
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Topics Container -->
+      <div class="topics-container" *ngIf="expandedModules.has(module.id!)">
+        <div class="topics-list">
+          <div
+            class="topic-item"
+            *ngFor="let topic of module.topics || []; let j = index"
+            [style.animation-delay.ms]="j * 50"
+          >
+            <!-- Topic Header -->
+            <div class="topic-header" [class.expanded]="expandedTopics.has(topic.id!)">
+              <div class="topic-main-info">
+                <button class="expand-btn" (click)="toggleTopic(topic.id!)">
+                  <span class="expand-icon">{{ expandedTopics.has(topic.id!) ? '▼' : '▶' }}</span>
+                </button>
+                <div class="topic-icon">📝</div>
+                <div class="topic-content">
+                  <h4 class="topic-title">{{ topic.title }}</h4>
+                  <p class="topic-description">{{ topic.description || 'Sin descripción' }}</p>
+                  <div class="topic-meta">
+                    <span class="meta-item">📖 {{ topic.lessons.length || 0 }} lecciones</span>
+                    <span class="meta-item" [class.completed]="topic.completed">
+                      {{ topic.completed ? '✅ Completado' : '⭕ Pendiente' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="topic-actions">
+                <div class="action-buttons">
+                  <button
+                    class="action-btn btn-edit"
+                    (click)="openEditTopicModal(topic, module)"
+                    title="Editar tema"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    class="action-btn btn-add"
+                    (click)="openCreateLessonModal(topic)"
+                    title="Agregar lección"
+                  >
+                    ➕
+                  </button>
+                  <button
+                    class="action-btn btn-delete"
+                    (click)="openDeleteModal('topic', topic)"
+                    title="Eliminar tema"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lessons Container -->
+            <div class="lessons-container" *ngIf="expandedTopics.has(topic.id!)">
+              <div class="lessons-list">
+                <div
+                  class="lesson-item"
+                  *ngFor="let lesson of topic.lessons || []; let k = index"
+                  [style.animation-delay.ms]="k * 30"
+                >
+                  <div class="lesson-content">
+                    <div class="lesson-icon">🎓</div>
+                    <div class="lesson-info">
+                      <h5 class="lesson-title">{{ lesson.title }}</h5>
+                      <div class="lesson-meta">
+                        <span class="meta-item">⏱️ {{ lesson.duration || 'Sin duración' }}</span>
+                        <span class="meta-item" [class.completed]="lesson.completed">
+                          {{ lesson.completed ? '✅ Completado' : '⭕ Pendiente' }}
+                        </span>
+                        <span class="meta-item preview" *ngIf="lesson.isPreview"
+                          >👁️ Vista previa</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="lesson-actions">
+                    <button
+                      class="action-btn btn-edit"
+                      (click)="openEditLessonModal(lesson, topic)"
+                      title="Editar lección"
+                    >
+                      ✏️
+                    </button>
+                    <button
+                      class="action-btn btn-content"
+                      (click)="openContentModal(lesson)"
+                      title="Gestionar contenido"
+                    >
+                      📁
+                    </button>
+                    <button
+                      class="action-btn btn-delete"
+                      (click)="openDeleteModal('lesson', lesson)"
+                      title="Eliminar lección"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Empty Lessons State -->
+                <div class="empty-lessons" *ngIf="!topic.lessons || topic.lessons.length === 0">
+                  <div class="empty-icon">📚</div>
+                  <p class="empty-text">No hay lecciones en este tema</p>
+                  <button class="btn-add-lesson" (click)="openCreateLessonModal(topic)">
+                    <span class="btn-icon">➕</span>
+                    <span>Agregar Lección</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty Topics State -->
+          <div class="empty-topics" *ngIf="!module.topics || module.topics.length === 0">
+            <div class="empty-icon">🗂️</div>
+            <p class="empty-text">No hay temas en este módulo</p>
+            <button class="btn-add-topic" (click)="openCreateTopicModal(module)">
+              <span class="btn-icon">➕</span>
+              <span>Agregar Tema</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && filteredModules.length === 0">
+    <div class="empty-icon">📚</div>
+    <h3 class="empty-title">
+      {{ searchTerm ? 'No se encontraron módulos' : 'No hay módulos en este curso' }}
+    </h3>
+    <p class="empty-text">
+      {{
+        searchTerm ? 'Intenta con otros términos de búsqueda' : 'Comienza creando tu primer módulo'
+      }}
+    </p>
+    <button class="btn-create-module" (click)="openCreateModuleModal()" *ngIf="!searchTerm">
+      <span class="btn-icon">✨</span>
+      <span>Crear Módulo</span>
+    </button>
+  </div>
+
+  <!-- Module Modal -->
+  <div class="modal-overlay" *ngIf="isModuleModalOpen" (click)="closeModuleModal()">
+    <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          {{ isEditMode ? '✏️ Editar Módulo' : '✨ Nuevo Módulo' }}
+        </h2>
+        <button class="modal-close" (click)="closeModuleModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label">Título del Módulo *</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newModule.title"
+              placeholder="Ej: Fundamentos de Git"
+            />
+          </div>
+
+          <div class="form-group form-full">
+            <label class="form-label">Descripción *</label>
+            <textarea
+              class="form-textarea"
+              [(ngModel)]="newModule.description"
+              placeholder="Describe el contenido y objetivos del módulo..."
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Duración</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newModule.duration"
+              placeholder="Ej: 4 horas"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Puntos XP</label>
+            <input
+              type="number"
+              class="form-input"
+              [(ngModel)]="newModule.points"
+              min="0"
+              placeholder="100"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Progreso (%)</label>
+            <input
+              type="number"
+              class="form-input"
+              [(ngModel)]="newModule.progress"
+              min="0"
+              max="100"
+              placeholder="0"
+            />
+          </div>
+
+          <div class="form-group form-checkboxes">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="newModule.completed" class="checkbox-input" />
+              <span class="checkbox-text">✅ Módulo Completado</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal btn-cancel" (click)="closeModuleModal()">Cancelar</button>
+        <button class="btn-modal btn-save" (click)="saveModule()">
+          <span class="btn-icon">💾</span>
+          <span>{{ isEditMode ? 'Actualizar' : 'Crear' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic Modal -->
+  <div class="modal-overlay" *ngIf="isTopicModalOpen" (click)="closeTopicModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          {{ isEditMode ? '✏️ Editar Tema' : '✨ Nuevo Tema' }}
+        </h2>
+        <button class="modal-close" (click)="closeTopicModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label">Título del Tema *</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newTopic.title"
+              placeholder="Ej: Comandos Esenciales de Git"
+            />
+          </div>
+
+          <div class="form-group form-full">
+            <label class="form-label">Descripción</label>
+            <textarea
+              class="form-textarea"
+              [(ngModel)]="newTopic.description"
+              placeholder="Describe el contenido del tema..."
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="form-group form-checkboxes">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="newTopic.completed" class="checkbox-input" />
+              <span class="checkbox-text">✅ Tema Completado</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal btn-cancel" (click)="closeTopicModal()">Cancelar</button>
+        <button class="btn-modal btn-save" (click)="saveTopic()">
+          <span class="btn-icon">💾</span>
+          <span>{{ isEditMode ? 'Actualizar' : 'Crear' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lesson Modal -->
+  <div class="modal-overlay" *ngIf="isLessonModalOpen" (click)="closeLessonModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          {{ isEditMode ? '✏️ Editar Lección' : '✨ Nueva Lección' }}
+        </h2>
+        <button class="modal-close" (click)="closeLessonModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label">Título de la Lección *</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newLesson.title"
+              placeholder="Ej: Git Status y Log Avanzados"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Duración</label>
+            <input
+              type="text"
+              class="form-input"
+              [(ngModel)]="newLesson.duration"
+              placeholder="Ej: 15 min"
+            />
+          </div>
+
+          <div class="form-group form-checkboxes">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="newLesson.completed" class="checkbox-input" />
+              <span class="checkbox-text">✅ Lección Completada</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="newLesson.isPreview" class="checkbox-input" />
+              <span class="checkbox-text">👁️ Vista Previa</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal btn-cancel" (click)="closeLessonModal()">Cancelar</button>
+        <button class="btn-modal btn-save" (click)="saveLesson()">
+          <span class="btn-icon">💾</span>
+          <span>{{ isEditMode ? 'Actualizar' : 'Crear' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lesson Content Modal -->
+  <div class="modal-overlay" *ngIf="isContentModalOpen" (click)="closeContentModal()">
+    <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">📁 Contenido de Lección</h2>
+        <button class="modal-close" (click)="closeContentModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="content-tabs">
+          <div
+            *ngFor="let type of contentTypes"
+            class="content-tab"
+            [class.active]="activeContentTab === type.value"
+            (click)="activeContentTab = type.value"
+            [style.--tab-color]="type.color"
+          >
+            <span class="tab-icon">{{ type.icon }}</span>
+            <span class="tab-label">{{ type.label }}</span>
+          </div>
+        </div>
+
+        <div class="content-forms">
+          <!-- Video Form -->
+          <div class="content-form" *ngIf="activeContentTab === 'video'">
+            <div class="form-group form-full">
+              <label class="form-label">URL del Video</label>
+              <input
+                type="text"
+                class="form-input"
+                [(ngModel)]="newLessonContent.video"
+                placeholder="https://example.com/video.mp4"
+              />
+            </div>
+          </div>
+
+          <!-- Audio Form -->
+          <div class="content-form" *ngIf="activeContentTab === 'audio'">
+            <div class="form-group form-full">
+              <label class="form-label">URL del Audio</label>
+              <input
+                type="text"
+                class="form-input"
+                [(ngModel)]="newLessonContent.audio"
+                placeholder="https://example.com/audio.mp3"
+              />
+            </div>
+          </div>
+
+          <!-- Document Form -->
+          <div class="content-form" *ngIf="activeContentTab === 'document'">
+            <div class="form-group form-full">
+              <label class="form-label">URL del Documento</label>
+              <input
+                type="text"
+                class="form-input"
+                [(ngModel)]="newLessonContent.document"
+                placeholder="https://example.com/document.pdf"
+              />
+            </div>
+          </div>
+
+          <!-- Code Form -->
+          <div class="content-form" *ngIf="activeContentTab === 'code'">
+            <div class="form-group form-full">
+              <label class="form-label">Código</label>
+              <textarea
+                class="form-textarea code-textarea"
+                [(ngModel)]="newLessonContent.code"
+                placeholder="Escribe el código aquí..."
+                rows="10"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Mindmap Form -->
+          <div class="content-form" *ngIf="activeContentTab === 'mindmap'">
+            <div class="form-group form-full">
+              <label class="form-label">URL del Mapa Mental</label>
+              <input
+                type="text"
+                class="form-input"
+                [(ngModel)]="newLessonContent.mindmap"
+                placeholder="https://example.com/mindmap.png"
+              />
+            </div>
+          </div>
+
+          <!-- Interactive Form -->
+          <div class="content-form" *ngIf="activeContentTab === 'interactive'">
+            <div class="form-group form-full">
+              <label class="form-label">URL del Ejercicio Interactivo</label>
+              <input
+                type="text"
+                class="form-input"
+                [(ngModel)]="newLessonContent.interactive"
+                placeholder="https://example.com/interactive"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal btn-cancel" (click)="closeContentModal()">Cancelar</button>
+        <button class="btn-modal btn-save" (click)="saveLessonContent()">
+          <span class="btn-icon">💾</span>
+          <span>Guardar Contenido</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" *ngIf="isDeleteModalOpen" (click)="closeDeleteModal()">
+    <div class="modal-content modal-delete" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">🗑️ Confirmar Eliminación</h2>
+        <button class="modal-close" (click)="closeDeleteModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="delete-icon-wrapper">
+          <div class="delete-icon">⚠️</div>
+        </div>
+        <p class="delete-warning">
+          ¿Estás seguro de que deseas eliminar
+          <strong>{{ getItemName() }}</strong
+          >?
+        </p>
+        <p class="delete-info">
+          {{ getDeleteMessage() }}
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal btn-cancel" (click)="closeDeleteModal()">Cancelar</button>
+        <button class="btn-modal btn-delete" (click)="confirmDelete()">
+          <span class="btn-icon">🗑️</span>
+          <span>Eliminar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Toast -->
+  <div class="toast toast-success" *ngIf="showSuccessMessage">
+    <div class="toast-icon">✅</div>
+    <div class="toast-message">{{ successMessage }}</div>
+    <div class="toast-progress"></div>
+  </div>
+
+  <!-- Error Toast -->
+  <div class="toast toast-error" *ngIf="showErrorMessage">
+    <div class="toast-icon">❌</div>
+    <div class="toast-message">{{ errorMessage }}</div>
+    <div class="toast-progress"></div>
+  </div>
+</div>

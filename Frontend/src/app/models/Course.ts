@@ -21,7 +21,7 @@ export interface Course {
   xp?: number;
   isNew?: boolean;
   isTrending?: boolean;
-  status?: 'completed' | 'in-progress' | 'not-started';
+  status?: string;
   instructor?: Instructor;
   learningPoints?: string[];
   requirements?: string[];

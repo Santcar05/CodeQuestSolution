@@ -14,6 +14,7 @@ public class LessonContentService {
     private LessonContentRepository lessonContentRepository;
 
     public void save(LessonContent lessonContent) {
+        lessonContent.setId(null);
         lessonContentRepository.save(lessonContent);
     }
 
@@ -31,5 +32,9 @@ public class LessonContentService {
 
     public List<LessonContent> findAll() {
         return lessonContentRepository.findAll();
+    }
+
+    public void update(LessonContent lessonContent) {
+        lessonContentRepository.save(lessonContent);
     }
 }

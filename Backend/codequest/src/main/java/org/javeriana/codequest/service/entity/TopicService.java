@@ -14,6 +14,7 @@ public class TopicService {
     TopicRepository topicRepository;
 
     public Topic save(Topic topic) {
+        topic.setId(null);
         return topicRepository.save(topic);
     }
 
@@ -27,6 +28,10 @@ public class TopicService {
 
     public List<Topic> findAll() {
         return topicRepository.findAll();
+    }
+
+    public void update(Topic topic) {
+        topicRepository.save(topic);
     }
 
 }

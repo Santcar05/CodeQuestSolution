@@ -15,7 +15,10 @@ import org.javeriana.codequest.entity.ExamResults;
 import org.javeriana.codequest.entity.FeaturedUser;
 import org.javeriana.codequest.entity.Instructor;
 import org.javeriana.codequest.entity.LearningMethod;
+import org.javeriana.codequest.entity.Lesson;
+import org.javeriana.codequest.entity.LessonContent;
 import org.javeriana.codequest.entity.MenuItem;
+import org.javeriana.codequest.entity.ModuleModel;
 import org.javeriana.codequest.entity.OptionForm;
 import org.javeriana.codequest.entity.Post;
 import org.javeriana.codequest.entity.Power;
@@ -29,6 +32,7 @@ import org.javeriana.codequest.entity.ResourceModel;
 import org.javeriana.codequest.entity.Skill;
 import org.javeriana.codequest.entity.Technology;
 import org.javeriana.codequest.entity.TestCase;
+import org.javeriana.codequest.entity.Topic;
 import org.javeriana.codequest.entity.Trend;
 import org.javeriana.codequest.entity.UserProfile;
 import org.javeriana.codequest.service.entity.AchievementService;
@@ -43,7 +47,10 @@ import org.javeriana.codequest.service.entity.ExamResultsService;
 import org.javeriana.codequest.service.entity.FeaturedUserService;
 import org.javeriana.codequest.service.entity.InstructorService;
 import org.javeriana.codequest.service.entity.LearningMethodService;
+import org.javeriana.codequest.service.entity.LessonContentService;
+import org.javeriana.codequest.service.entity.LessonService;
 import org.javeriana.codequest.service.entity.MenuItemService;
+import org.javeriana.codequest.service.entity.ModuleModelService;
 import org.javeriana.codequest.service.entity.OptionFormService;
 import org.javeriana.codequest.service.entity.PostService;
 import org.javeriana.codequest.service.entity.PowerService;
@@ -57,6 +64,7 @@ import org.javeriana.codequest.service.entity.ResourceModelService;
 import org.javeriana.codequest.service.entity.SkillService;
 import org.javeriana.codequest.service.entity.TechnologyService;
 import org.javeriana.codequest.service.entity.TestCaseService;
+import org.javeriana.codequest.service.entity.TopicService;
 import org.javeriana.codequest.service.entity.TrendService;
 import org.javeriana.codequest.service.entity.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,17 +113,21 @@ public class DatabaseInit {
     @Autowired
     private LearningMethodService learningMethodService;
 
-    //@Autowired
-    //private LessonService lessonService;
-    //@Autowired
-    //private LessonContentService lessonContentService;
+    @Autowired
+    private LessonService lessonService;
+
+    @Autowired
+    private LessonContentService lessonContentService;
+
     @Autowired
     private MenuItemService menuItemService;
 
-    //@Autowired
-    //private ModuleModelService moduleService;
+    @Autowired
+    private ModuleModelService moduleService;
+
     @Autowired
     private OptionFormService optionFormService;
+
     @Autowired
     private PostService postService;
 
@@ -142,16 +154,7 @@ public class DatabaseInit {
 
     @Autowired
     private ResourceModelService resourceService;
-    /*
-    @Autowired
-    private ReviewService reviewService;
 
-    @Autowired
-    private RoadmapItemService roadmapItemService;
-
-    @Autowired
-    private RoadmapPhaseService roadmapPhaseService;
-     */
     @Autowired
     private SkillService skillService;
 
@@ -161,8 +164,9 @@ public class DatabaseInit {
     @Autowired
     private TestCaseService testCaseService;
 
-//    @Autowired
-//    private TopicService topicService;
+    @Autowired
+    private TopicService topicService;
+
     @Autowired
     private TrendService trendService;
 
@@ -636,7 +640,7 @@ public class DatabaseInit {
                         "Domina Git para trabajo en equipo. Aprende workflows profesionales y resolución de conflictos.",
                         "Tools", "Principiante", 4.9, "25 horas", 19800, 50, 50,
                         "Comandos Básicos de Git",
-                        "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png", // Thumbnail
+                        "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png",
                         "https://miro.medium.com/v2/resize:fit:1400/1*_6M2zk7d9wXp2T_7bVgn8w.png",
                         "Gratis", null, 400, false, false, Course.CourseStatus.COMPLETED,
                         Arrays.asList("Branching Strategies", "Git Flow", "Conflict Resolution", "Hooks", "CI/CD Integration"),
@@ -710,7 +714,359 @@ public class DatabaseInit {
                         instructors.get(3) // Juan Pérez
                 )
         );
+
+        // Guardar cursos primero
         courses.forEach(courseService::save);
+
+        // Ahora crear módulos completos para el curso de Git Avanzado
+        Course gitCourse = courses.stream()
+                .filter(c -> c.getTitle().equals("Git Avanzado: Workflows y Colaboración Profesional"))
+                .findFirst()
+                .orElse(null);
+
+        if (gitCourse != null) {
+            initGitAdvancedModules(gitCourse);
+        }
+    }
+
+    private void initGitAdvancedModules(Course gitCourse) {
+        // Módulo 1: Fundamentos de Git Revisitados
+        ModuleModel module1 = createModule("Fundamentos de Git Revisitados",
+                "Repaso de conceptos fundamentales de Git con enfoque en buenas prácticas",
+                "4 horas", 80, 100, true);
+        module1.setCourse(gitCourse);
+        moduleService.save(module1);
+
+        // Tema 1.1: Comandos Esenciales
+        Topic topic1_1 = createTopic("Comandos Esenciales para el Trabajo Diario", true);
+        topic1_1.setModule(module1);
+        topicService.save(topic1_1);
+
+        // Lecciones del Tema 1.1
+        Lesson lesson1_1_1 = createLesson("Git Status y Log Avanzados", "15 min", true, false);
+        // lesson1_1_1.setTopic(topic1_1);
+        lessonService.save(lesson1_1_1);
+
+        LessonContent content1_1_1 = createLessonContent(
+                "https://example.com/videos/git-status-advanced",
+                "https://example.com/audio/git-status-advanced",
+                "Git_Status_Avanzado.pdf",
+                "git status --short\ngit log --oneline --graph --all\ngit log --since='2024-01-01'",
+                "mindmap-git-status.png",
+                "interactive-git-log",
+                Arrays.asList(
+                        new CodeExplanation(1, "git status --short", "Muestra el estado en formato compacto"),
+                        new CodeExplanation(2, "git log --oneline --graph --all", "Muestra historial gráfico compacto de todas las ramas"),
+                        new CodeExplanation(3, "git log --since='2024-01-01'", "Filtra commits desde fecha específica")
+                )
+        );
+        // content1_1_1.setLesson(lesson1_1_1);
+        lessonContentService.save(content1_1_1);
+
+        Lesson lesson1_1_2 = createLesson("Staging y Commits Efectivos", "20 min", true, false);
+        // lesson1_1_2.setTopic(topic1_1);
+        lessonService.save(lesson1_1_2);
+
+        LessonContent content1_1_2 = createLessonContent(
+                "https://example.com/videos/git-commit-effective",
+                "https://example.com/audio/git-commit-effective",
+                "Commits_Efectivos.pdf",
+                "git add -p\ngit commit -m \"feat: add user authentication\\n\\n- Implement JWT token generation\\n- Add login endpoint\\n- Update user model\"",
+                "mindmap-git-commit.png",
+                "interactive-git-add",
+                Arrays.asList(
+                        new CodeExplanation(1, "git add -p", "Agrega cambios interactivamente, permitiendo revisar cada modificación"),
+                        new CodeExplanation(2, "git commit -m \"feat: add user authentication\"", "Commit con mensaje siguiendo convencional commits")
+                )
+        );
+        // content1_1_2.setLesson(lesson1_1_2);
+        lessonContentService.save(content1_1_2);
+
+        // Tema 1.2: Ramas y Merging
+        Topic topic1_2 = createTopic("Manejo Avanzado de Ramas", true);
+        topic1_2.setModule(module1);
+        topicService.save(topic1_2);
+
+        Lesson lesson1_2_1 = createLesson("Creación y Navegación de Ramas", "18 min", true, false);
+        // lesson1_2_1.setTopic(topic1_2);
+        lessonService.save(lesson1_2_1);
+
+        LessonContent content1_2_1 = createLessonContent(
+                "https://example.com/videos/git-branching",
+                "https://example.com/audio/git-branching",
+                "Ramas_Avanzadas.pdf",
+                "git branch feature/user-auth\ngit checkout feature/user-auth\ngit switch -c hotfix/critical-bug",
+                "mindmap-git-branches.png",
+                "interactive-git-branch",
+                Arrays.asList(
+                        new CodeExplanation(1, "git branch feature/user-auth", "Crea nueva rama para feature de autenticación"),
+                        new CodeExplanation(2, "git checkout feature/user-auth", "Cambia a la rama recién creada"),
+                        new CodeExplanation(3, "git switch -c hotfix/critical-bug", "Crea y cambia a rama de hotfix en un solo comando")
+                )
+        );
+        // content1_2_1.setLesson(lesson1_2_1);
+        lessonContentService.save(content1_2_1);
+
+        // Módulo 2: Workflows de Colaboración
+        ModuleModel module2 = createModule("Workflows de Colaboración",
+                "Estrategias profesionales para trabajo en equipo con Git",
+                "6 horas", 120, 75, false);
+        module2.setCourse(gitCourse);
+        moduleService.save(module2);
+
+        // Tema 2.1: Git Flow
+        Topic topic2_1 = createTopic("Git Flow: Workflow Estándar", false);
+        topic2_1.setModule(module2);
+        topicService.save(topic2_1);
+
+        Lesson lesson2_1_1 = createLesson("Introducción a Git Flow", "25 min", false, true);
+        // lesson2_1_1.setTopic(topic2_1);
+        lessonService.save(lesson2_1_1);
+
+        LessonContent content2_1_1 = createLessonContent(
+                "https://example.com/videos/git-flow-intro",
+                "https://example.com/audio/git-flow-intro",
+                "Git_Flow_Introduction.pdf",
+                "git flow init\ngit flow feature start authentication\ngit flow feature finish authentication",
+                "mindmap-git-flow.png",
+                "interactive-git-flow",
+                Arrays.asList(
+                        new CodeExplanation(1, "git flow init", "Inicializa Git Flow en el repositorio"),
+                        new CodeExplanation(2, "git flow feature start authentication", "Inicia nueva feature branch"),
+                        new CodeExplanation(3, "git flow feature finish authentication", "Finaliza feature y mergea a develop")
+                )
+        );
+        //  content2_1_1.setLesson(lesson2_1_1);
+        lessonContentService.save(content2_1_1);
+
+        Lesson lesson2_1_2 = createLesson("Ramas Principales: main, develop, features", "30 min", false, false);
+        // lesson2_1_2.setTopic(topic2_1);
+        lessonService.save(lesson2_1_2);
+
+        LessonContent content2_1_2 = createLessonContent(
+                "https://example.com/videos/git-flow-branches",
+                "https://example.com/audio/git-flow-branches",
+                "Git_Flow_Branches.pdf",
+                "# main - producción\n# develop - desarrollo\n# feature/* - nuevas funcionalidades\n# release/* - preparación releases\n# hotfix/* - correcciones urgentes",
+                "mindmap-git-flow-branches.png",
+                "interactive-git-branches",
+                Arrays.asList(
+                        new CodeExplanation(1, "main", "Rama principal con código de producción"),
+                        new CodeExplanation(2, "develop", "Rama de integración para desarrollo"),
+                        new CodeExplanation(3, "feature/*", "Ramas temporales para nuevas funcionalidades")
+                )
+        );
+        // content2_1_2.setLesson(lesson2_1_2);
+        lessonContentService.save(content2_1_2);
+
+        // Tema 2.2: GitHub Flow
+        Topic topic2_2 = createTopic("GitHub Flow: Workflow Simplificado", false);
+        topic2_2.setModule(module2);
+        topicService.save(topic2_2);
+
+        Lesson lesson2_2_1 = createLesson("Pull Requests y Code Review", "35 min", false, false);
+        // lesson2_2_1.setTopic(topic2_2);
+        lessonService.save(lesson2_2_1);
+
+        LessonContent content2_2_1 = createLessonContent(
+                "https://example.com/videos/github-flow-pr",
+                "https://example.com/audio/github-flow-pr",
+                "Pull_Requests.pdf",
+                "# Crear PR desde GitHub UI\n# Agregar revisores\n# Resolver comentarios\ngit push origin feature/auth",
+                "mindmap-pull-requests.png",
+                "interactive-pr-workflow",
+                Arrays.asList(
+                        new CodeExplanation(1, "Crear PR desde GitHub UI", "Interfaz web para crear Pull Requests"),
+                        new CodeExplanation(2, "Agregar revisores", "Asignar colegas para revisión de código"),
+                        new CodeExplanation(3, "git push origin feature/auth", "Subir cambios para crear PR")
+                )
+        );
+        // content2_2_1.setLesson(lesson2_2_1);
+        lessonContentService.save(content2_2_1);
+
+        // Módulo 3: Resolución de Conflictos
+        ModuleModel module3 = createModule("Resolución Avanzada de Conflictos",
+                "Técnicas profesionales para manejar y resolver conflictos de merge",
+                "5 horas", 100, 50, false);
+        module3.setCourse(gitCourse);
+        moduleService.save(module3);
+
+        // Tema 3.1: Tipos de Conflictos
+        Topic topic3_1 = createTopic("Identificación y Prevención", false);
+        topic3_1.setModule(module3);
+        topicService.save(topic3_1);
+
+        Lesson lesson3_1_1 = createLesson("Conflictos Comunes y Su Origen", "22 min", false, false);
+        // lesson3_1_1.setTopic(topic3_1);
+        lessonService.save(lesson3_1_1);
+
+        LessonContent content3_1_1 = createLessonContent(
+                "https://example.com/videos/git-conflicts",
+                "https://example.com/audio/git-conflicts",
+                "Tipos_Conflictos.pdf",
+                "<<<<<<< HEAD\nconsole.log('Hello World');\n=======\nconsole.log('Hola Mundo');\n>>>>>>> feature/spanish",
+                "mindmap-conflict-types.png",
+                "interactive-conflict-simulation",
+                Arrays.asList(
+                        new CodeExplanation(1, "<<<<<<< HEAD", "Inicio del conflicto - versión actual"),
+                        new CodeExplanation(2, "=======", "Separador entre las dos versiones"),
+                        new CodeExplanation(3, ">>>>>>> feature/spanish", "Fin del conflicto - versión entrante")
+                )
+        );
+        // content3_1_1.setLesson(lesson3_1_1);
+        lessonContentService.save(content3_1_1);
+
+        Lesson lesson3_1_2 = createLesson("Herramientas de Resolución", "28 min", false, false);
+        //  lesson3_1_2.setTopic(topic3_1);
+        lessonService.save(lesson3_1_2);
+
+        LessonContent content3_1_2 = createLessonContent(
+                "https://example.com/videos/git-tools",
+                "https://example.com/audio/git-tools",
+                "Herramientas_Resolucion.pdf",
+                "git mergetool\ngit config --global merge.tool vscode\ngit add .\ngit commit -m \"Resolve merge conflicts\"",
+                "mindmap-merge-tools.png",
+                "interactive-merge-tool",
+                Arrays.asList(
+                        new CodeExplanation(1, "git mergetool", "Abre herramienta visual para resolver conflictos"),
+                        new CodeExplanation(2, "git config --global merge.tool vscode", "Configura VS Code como herramienta de merge"),
+                        new CodeExplanation(3, "git add .", "Marca conflictos resueltos como listos para commit")
+                )
+        );
+        //  content3_1_2.setLesson(lesson3_1_2);
+        lessonContentService.save(content3_1_2);
+
+        // Módulo 4: Hooks y Automatización
+        ModuleModel module4 = createModule("Hooks y Automatización",
+                "Automatiza tareas con Git Hooks y integración con CI/CD",
+                "4 horas", 80, 25, false);
+        module4.setCourse(gitCourse);
+        moduleService.save(module4);
+
+        // Tema 4.1: Git Hooks
+        Topic topic4_1 = createTopic("Hooks Personalizados", false);
+        topic4_1.setModule(module4);
+        topicService.save(topic4_1);
+
+        Lesson lesson4_1_1 = createLesson("Hooks de Cliente: pre-commit y pre-push", "32 min", false, false);
+        //  lesson4_1_1.setTopic(topic4_1);
+        lessonService.save(lesson4_1_1);
+
+        LessonContent content4_1_1 = createLessonContent(
+                "https://example.com/videos/git-hooks",
+                "https://example.com/audio/git-hooks",
+                "Git_Hooks.pdf",
+                "#!/bin/bash\n# .git/hooks/pre-commit\necho \"Running tests...\"\nnpm test\nif [ $? -ne 0 ]; then\n    echo \"Tests failed!\"\n    exit 1\nfi",
+                "mindmap-git-hooks.png",
+                "interactive-hook-builder",
+                Arrays.asList(
+                        new CodeExplanation(1, "#!/bin/bash", "Shebang para script bash"),
+                        new CodeExplanation(2, "npm test", "Ejecuta suite de pruebas"),
+                        new CodeExplanation(3, "exit 1", "Sale con error si las pruebas fallan")
+                )
+        );
+        //  content4_1_1.setLesson(lesson4_1_1);
+        lessonContentService.save(content4_1_1);
+
+        // Tema 4.2: Integración CI/CD
+        Topic topic4_2 = createTopic("Git en Pipelines de CI/CD", false);
+        topic4_2.setModule(module4);
+        topicService.save(topic4_2);
+
+        Lesson lesson4_2_1 = createLesson("GitHub Actions para Automatización", "40 min", false, false);
+        //   lesson4_2_1.setTopic(topic4_2);
+        lessonService.save(lesson4_2_1);
+
+        LessonContent content4_2_1 = createLessonContent(
+                "https://example.com/videos/github-actions",
+                "https://example.com/audio/github-actions",
+                "GitHub_Actions.pdf",
+                "name: CI Pipeline\non: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n      - run: npm install\n      - run: npm test",
+                "mindmap-ci-cd.png",
+                "interactive-ci-pipeline",
+                Arrays.asList(
+                        new CodeExplanation(1, "on: [push, pull_request]", "Dispara pipeline en push y PR"),
+                        new CodeExplanation(2, "actions/checkout@v3", "Acción para checkout del código"),
+                        new CodeExplanation(3, "npm test", "Ejecuta pruebas en el pipeline")
+                )
+        );
+        //   content4_2_1.setLesson(lesson4_2_1);
+        lessonContentService.save(content4_2_1);
+
+        // Módulo 5: Proyecto Final
+        ModuleModel module5 = createModule("Proyecto Final: Workflow Completo",
+                "Aplicación de todos los conceptos en un proyecto real",
+                "6 hours", 120, 0, false);
+        module5.setCourse(gitCourse);
+        moduleService.save(module5);
+
+        // Tema 5.1: Proyecto Práctico
+        Topic topic5_1 = createTopic("Implementación de Git Flow en Proyecto Real", false);
+        topic5_1.setModule(module5);
+        topicService.save(topic5_1);
+
+        Lesson lesson5_1_1 = createLesson("Setup y Configuración Inicial", "45 min", false, false);
+        //  lesson5_1_1.setTopic(topic5_1);
+        lessonService.save(lesson5_1_1);
+
+        LessonContent content5_1_1 = createLessonContent(
+                "https://example.com/videos/git-project-setup",
+                "https://example.com/audio/git-project-setup",
+                "Proyecto_Final.pdf",
+                "git init\ngit flow init\ngit checkout -b develop\ngit push -u origin develop",
+                "mindmap-final-project.png",
+                "interactive-project-setup",
+                Arrays.asList(
+                        new CodeExplanation(1, "git init", "Inicializa repositorio Git"),
+                        new CodeExplanation(2, "git flow init", "Configura Git Flow con valores por defecto"),
+                        new CodeExplanation(3, "git push -u origin develop", "Sube rama develop y establece upstream")
+                )
+        );
+        //  content5_1_1.setLesson(lesson5_1_1);
+        lessonContentService.save(content5_1_1);
+    }
+
+    // Métodos auxiliares para crear entidades
+    private ModuleModel createModule(String title, String description, String duration, Integer points, Integer progress, Boolean completed) {
+        return ModuleModel.builder()
+                .title(title)
+                .description(description)
+                .duration(duration)
+                .points(points)
+                .progress(progress)
+                .completed(completed)
+                .build();
+    }
+
+    private Topic createTopic(String title, Boolean completed) {
+        return Topic.builder()
+                .title(title)
+                .completed(completed)
+                .build();
+    }
+
+    private Lesson createLesson(String title, String duration, Boolean completed, Boolean isPreview) {
+        return Lesson.builder()
+                .title(title)
+                .duration(duration)
+                .completed(completed)
+                .isPreview(isPreview)
+                .build();
+    }
+
+    private LessonContent createLessonContent(String video, String audio, String document, String code,
+            String mindmap, String interactive, List<CodeExplanation> explanations) {
+        LessonContent content = LessonContent.builder()
+                .video(video)
+                .audio(audio)
+                .document(document)
+                .code(code)
+                .mindmap(mindmap)
+                .interactive(interactive)
+                .codeExplanations(explanations)
+                .build();
+
+        return content;
     }
 
     private Course createCourse(String title, String desc, String cat, String level, Double rating,
@@ -1193,8 +1549,6 @@ public class DatabaseInit {
     private Skill createSkill(String name, Integer level, Integer target, Skill.SkillCategory category) {
         Skill s = new Skill();
         s.setName(name);
-        //s.setLevel(level);
-        //s.setTarget(target);
         s.setCategory(category);
         return s;
     }
@@ -1320,26 +1674,16 @@ public class DatabaseInit {
                         15420,
                         20000,
                         "Diamante",
-                        // Proyectos realizados (deberían ser IDs de proyectos existentes)
-                        Arrays.asList(5L), // Dashboard Analítico completado
-                        // Proyectos en progreso
-                        Arrays.asList(1L, 3L, 4L, 8L), // Sistema de Reservas, API E-commerce, App Fitness, Plataforma Streaming
-                        // Cursos realizados
-                        Arrays.asList(10L, 15L), // SQL Avanzado, Git Avanzado
-                        // Cursos en progreso
-                        Arrays.asList(2L, 3L, 6L, 9L, 17L), // Python Data Science, React Next.js, AWS, Vue.js, UI/UX Design
-                        // Reviews (IDs de reviews existentes)
+                        Arrays.asList(5L),
+                        Arrays.asList(1L, 3L, 4L, 8L),
+                        Arrays.asList(10L, 15L),
+                        Arrays.asList(2L, 3L, 6L, 9L, 17L),
                         Arrays.asList(1L, 3L, 5L),
-                        // Carreras realizadas
-                        Arrays.asList(1L), // Desarrollador Web Full Stack
-                        // Carreras en progreso
-                        Arrays.asList(3L, 6L), // Científico de Datos, Desarrollador Backend
-                        // Posts (IDs de posts existentes)
+                        Arrays.asList(1L),
+                        Arrays.asList(3L, 6L),
                         Arrays.asList(1L, 4L, 7L),
-                        // Badges obtenidos
-                        Arrays.asList(1L, 2L, 4L, 7L), // Python Master, JavaScript Ninja, Web Developer, Cloud Expert
-                        // Powers obtenidos
-                        Arrays.asList(3L, 6L) // Pista del Mentor, Boost de Velocidad
+                        Arrays.asList(1L, 2L, 4L, 7L),
+                        Arrays.asList(3L, 6L)
                 ),
                 createUserProfile(
                         "DevQueen",
@@ -1348,16 +1692,16 @@ public class DatabaseInit {
                         12350,
                         15000,
                         "Platino",
-                        Arrays.asList(5L), // Dashboard Analítico completado
-                        Arrays.asList(1L, 4L, 7L), // Sistema de Reservas, App Fitness, Sistema de Blog
-                        Arrays.asList(10L, 15L, 17L), // SQL Avanzado, Git Avanzado, UI/UX Design
-                        Arrays.asList(2L, 3L, 9L, 18L), // Python Data Science, React Next.js, Vue.js, Rust
+                        Arrays.asList(5L),
+                        Arrays.asList(1L, 4L, 7L),
+                        Arrays.asList(10L, 15L, 17L),
+                        Arrays.asList(2L, 3L, 9L, 18L),
                         Arrays.asList(2L, 4L, 6L),
-                        Arrays.asList(2L), // Desarrollador Móvil
-                        Arrays.asList(1L, 7L), // Desarrollador Web Full Stack, Desarrollador Frontend
+                        Arrays.asList(2L),
+                        Arrays.asList(1L, 7L),
                         Arrays.asList(2L, 5L, 8L),
-                        Arrays.asList(1L, 4L, 6L), // Python Master, Web Developer, Algorithm Master
-                        Arrays.asList(1L, 4L) // Doble XP, Revisión Instantánea
+                        Arrays.asList(1L, 4L, 6L),
+                        Arrays.asList(1L, 4L)
                 ),
                 createUserProfile(
                         "PythonGuru",
@@ -1366,16 +1710,16 @@ public class DatabaseInit {
                         9870,
                         12000,
                         "Oro",
-                        Arrays.asList(5L, 7L), // Dashboard Analítico, Sistema de Blog
-                        Arrays.asList(2L, 3L, 6L), // Red Social, API E-commerce, Chatbot IA
-                        Arrays.asList(2L, 10L, 12L, 15L), // Python Data Science, SQL Avanzado, Go Programming, Git Avanzado
-                        Arrays.asList(11L, 13L, 16L, 19L), // TensorFlow, Angular, Blockchain, GraphQL
+                        Arrays.asList(5L, 7L),
+                        Arrays.asList(2L, 3L, 6L),
+                        Arrays.asList(2L, 10L, 12L, 15L),
+                        Arrays.asList(11L, 13L, 16L, 19L),
                         Arrays.asList(7L, 8L),
-                        Arrays.asList(3L), // Científico de Datos
-                        Arrays.asList(5L, 8L), // Especialista en Ciberseguridad, Ingeniero de Machine Learning
+                        Arrays.asList(3L),
+                        Arrays.asList(5L, 8L),
                         Arrays.asList(3L, 6L),
-                        Arrays.asList(1L, 3L, 5L, 8L), // Python Master, Java Expert, Data Scientist, Algorithm Master
-                        Arrays.asList(2L, 5L, 7L) // Racha Congelada, Energía Infinita, Escudo de Protección
+                        Arrays.asList(1L, 3L, 5L, 8L),
+                        Arrays.asList(2L, 5L, 7L)
                 ),
                 createUserProfile(
                         "ReactNinja",
@@ -1384,16 +1728,16 @@ public class DatabaseInit {
                         11240,
                         14000,
                         "Platino",
-                        Arrays.asList(5L), // Dashboard Analítico
-                        Arrays.asList(1L, 2L, 4L, 8L), // Sistema de Reservas, Red Social, App Fitness, Plataforma Streaming
-                        Arrays.asList(1L, 3L, 9L, 15L), // JavaScript Moderno, React Next.js, Vue.js, Git Avanzado
-                        Arrays.asList(14L, 17L, 18L, 20L), // Angular, UI/UX Design, Rust, DevOps Azure
+                        Arrays.asList(5L),
+                        Arrays.asList(1L, 2L, 4L, 8L),
+                        Arrays.asList(1L, 3L, 9L, 15L),
+                        Arrays.asList(14L, 17L, 18L, 20L),
                         Arrays.asList(1L, 3L, 5L),
-                        Arrays.asList(7L), // Desarrollador Frontend
-                        Arrays.asList(1L, 2L, 4L), // Desarrollador Web Full Stack, Desarrollador Móvil, DevOps Engineer
+                        Arrays.asList(7L),
+                        Arrays.asList(1L, 2L, 4L),
                         Arrays.asList(4L, 7L),
-                        Arrays.asList(2L, 4L, 7L), // JavaScript Ninja, Web Developer, Cloud Expert
-                        Arrays.asList(1L, 3L, 8L) // Doble XP, Pista del Mentor, Visión del Código
+                        Arrays.asList(2L, 4L, 7L),
+                        Arrays.asList(1L, 3L, 8L)
                 ),
                 createUserProfile(
                         "CloudMaster",
@@ -1402,16 +1746,16 @@ public class DatabaseInit {
                         13340,
                         18000,
                         "Diamante",
-                        Arrays.asList(5L, 7L), // Dashboard Analítico, Sistema de Blog
-                        Arrays.asList(3L, 6L, 8L), // API E-commerce, Chatbot IA, Plataforma Streaming
-                        Arrays.asList(6L, 7L, 10L, 15L, 20L), // AWS, Docker Kubernetes, SQL Avanzado, Git Avanzado, DevOps Azure
-                        Arrays.asList(11L, 13L, 16L, 19L), // TensorFlow, Angular, Blockchain, GraphQL
+                        Arrays.asList(5L, 7L),
+                        Arrays.asList(3L, 6L, 8L),
+                        Arrays.asList(6L, 7L, 10L, 15L, 20L),
+                        Arrays.asList(11L, 13L, 16L, 19L),
                         Arrays.asList(2L, 4L, 6L, 8L),
-                        Arrays.asList(4L, 8L), // Ingeniero DevOps, Ingeniero de Machine Learning
-                        Arrays.asList(3L, 5L, 6L), // Científico de Datos, Especialista en Ciberseguridad, Desarrollador Backend
+                        Arrays.asList(4L, 8L),
+                        Arrays.asList(3L, 5L, 6L),
                         Arrays.asList(5L, 8L),
-                        Arrays.asList(4L, 7L, 8L), // Web Developer, Cloud Expert, Algorithm Master
-                        Arrays.asList(1L, 4L, 5L, 7L) // Doble XP, Revisión Instantánea, Energía Infinita, Escudo de Protección
+                        Arrays.asList(4L, 7L, 8L),
+                        Arrays.asList(1L, 4L, 5L, 7L)
                 )
         );
         users.forEach(userProfileService::save);
@@ -1429,9 +1773,6 @@ public class DatabaseInit {
         user.setXp(xp);
         user.setMaxXp(maxXp);
         user.setRank(rank);
-
-        // Nota: En una implementación real, estos serían objetos completos, no solo IDs
-        // Para el seed, asumimos que las relaciones se manejarán de otra forma
         return user;
     }
 }

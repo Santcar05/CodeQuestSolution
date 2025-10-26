@@ -16,4 +16,16 @@ export class TopicService {
   findById(id: number): Observable<Topic> {
     return this.http.get<Topic>(`${this.apiUrl}/${id}`);
   }
+
+  save(topic: Topic, idModule: number): Observable<Topic> {
+    return this.http.post<Topic>(`${this.apiUrl}/save/${idModule}`, topic);
+  }
+
+  update(topic: Topic): Observable<Topic> {
+    return this.http.put<Topic>(`${this.apiUrl}/update/${topic.id}`, topic);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
+  }
 }
