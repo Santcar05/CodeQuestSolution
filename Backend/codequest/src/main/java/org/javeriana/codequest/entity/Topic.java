@@ -2,6 +2,8 @@ package org.javeriana.codequest.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,6 +46,7 @@ public class Topic {
     @JoinColumn(name = "topic_id")
     private List<Lesson> lessons;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "module_id")
     private ModuleModel module;
