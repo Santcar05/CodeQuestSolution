@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Course } from '../models/Course';
 import { CourseService } from '../service/Course/course-service';
+import { RouterOutlet } from '@angular/router';
 
 // Importar el servicio cuando esté disponible
 // import { CourseService } from '../service/Course/course.service';
@@ -11,7 +12,7 @@ import { CourseService } from '../service/Course/course-service';
 @Component({
   selector: 'app-admin-course',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterOutlet],
   templateUrl: './admin-course-component.html',
   styleUrls: ['./admin-course-component.css'],
 })
@@ -86,6 +87,7 @@ export class AdminCourseComponent implements OnInit {
   constructor(
     private router: Router,
     private courseService: CourseService,
+    private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -324,31 +326,32 @@ export class AdminCourseComponent implements OnInit {
   }
 
   manageInstructor(course: Course): void {
-    this.router.navigate(['/admin/course', course.id, 'instructor']);
+    this.router.navigate(['/admin/cursos', course.id, 'instructor']);
   }
 
   manageModules(course: Course): void {
-    this.router.navigate(['/admin/course', course.id, 'modules']);
+    // Navegación corregida
+    this.router.navigate([course.id, 'modules'], { relativeTo: this.route });
   }
 
   manageReviews(course: Course): void {
-    this.router.navigate(['/admin/course', course.id, 'reviews']);
+    this.router.navigate(['/admin/cursos', course.id, 'reviews']);
   }
 
   manageLearningPoints(course: Course): void {
-    this.router.navigate(['/admin/course', course.id, 'learning-points']);
+    this.router.navigate(['/admin/cursos', course.id, 'learning-points']);
   }
 
   manageRequirements(course: Course): void {
-    this.router.navigate(['/admin/course', course.id, 'requirements']);
+    this.router.navigate(['/admin/cursos', course.id, 'requirements']);
   }
 
   managePrerequisites(course: Course): void {
-    this.router.navigate(['/admin/course', course.id, 'prerequisites']);
+    this.router.navigate(['/admin/cursos', course.id, 'prerequisites']);
   }
 
   manageTags(course: Course): void {
-    this.router.navigate(['/admin/course', course.id, 'tags']);
+    this.router.navigate(['/admin/cursos', course.id, 'tags']);
   }
 
   showSuccess(message: string): void {

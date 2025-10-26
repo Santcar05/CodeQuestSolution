@@ -75,8 +75,7 @@ export const routes: Routes = [
   //Sección del admin con child routes
   {
     path: 'admin',
-    loadComponent: () =>
-      import('./admin-course-component/admin-course-component').then((m) => m.AdminCourseComponent),
+    loadComponent: () => import('./admin-component/admin-component').then((m) => m.AdminComponent),
     children: [
       {
         path: 'cursos',
@@ -86,11 +85,24 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'cursos/:id/modules',
+        loadComponent: () =>
+          import('./admin-module-component/admin-module-component').then(
+            (m) => m.AdminModuleComponentComponent
+          ),
+      },
+      {
         path: 'skills',
         loadComponent: () =>
           import('./admin-skill-component/admin-skill-component').then(
             (m) => m.AdminSkillComponent
           ),
+      },
+      // Redirección por defecto dentro de admin
+      {
+        path: '',
+        redirectTo: 'cursos',
+        pathMatch: 'full',
       },
     ],
   },
