@@ -16,8 +16,8 @@ export class LessonContentService {
     return this.http.get<LessonContent>(`${this.apiUrl}/${id}`);
   }
 
-  save(lessonContent: LessonContent): Observable<LessonContent> {
-    return this.http.post<LessonContent>(`${this.apiUrl}/save`, lessonContent);
+  save(lessonContent: LessonContent, id: number): Observable<LessonContent> {
+    return this.http.post<LessonContent>(`${this.apiUrl}/save/${id}`, lessonContent);
   }
 
   update(lessonContent: LessonContent): Observable<LessonContent> {
@@ -26,5 +26,9 @@ export class LessonContentService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
+  }
+
+  findByLessonId(id: number): Observable<LessonContent> {
+    return this.http.get<LessonContent>(`${this.apiUrl}/lesson/${id}`);
   }
 }

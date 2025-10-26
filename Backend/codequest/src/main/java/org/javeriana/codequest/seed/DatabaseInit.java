@@ -744,7 +744,7 @@ public class DatabaseInit {
 
         // Lecciones del Tema 1.1
         Lesson lesson1_1_1 = createLesson("Git Status y Log Avanzados", "15 min", true, false);
-        // lesson1_1_1.setTopic(topic1_1);
+        lesson1_1_1.setTopic(topic1_1);
         lessonService.save(lesson1_1_1);
 
         LessonContent content1_1_1 = createLessonContent(
@@ -760,11 +760,11 @@ public class DatabaseInit {
                         new CodeExplanation(3, "git log --since='2024-01-01'", "Filtra commits desde fecha específica")
                 )
         );
-        // content1_1_1.setLesson(lesson1_1_1);
+        content1_1_1.setLesson(lesson1_1_1);
         lessonContentService.save(content1_1_1);
 
         Lesson lesson1_1_2 = createLesson("Staging y Commits Efectivos", "20 min", true, false);
-        // lesson1_1_2.setTopic(topic1_1);
+        lesson1_1_2.setTopic(topic1_1);
         lessonService.save(lesson1_1_2);
 
         LessonContent content1_1_2 = createLessonContent(
@@ -779,7 +779,7 @@ public class DatabaseInit {
                         new CodeExplanation(2, "git commit -m \"feat: add user authentication\"", "Commit con mensaje siguiendo convencional commits")
                 )
         );
-        // content1_1_2.setLesson(lesson1_1_2);
+        content1_1_2.setLesson(lesson1_1_2);
         lessonContentService.save(content1_1_2);
 
         // Tema 1.2: Ramas y Merging
@@ -788,7 +788,7 @@ public class DatabaseInit {
         topicService.save(topic1_2);
 
         Lesson lesson1_2_1 = createLesson("Creación y Navegación de Ramas", "18 min", true, false);
-        // lesson1_2_1.setTopic(topic1_2);
+        lesson1_2_1.setTopic(topic1_2);
         lessonService.save(lesson1_2_1);
 
         LessonContent content1_2_1 = createLessonContent(
@@ -804,7 +804,7 @@ public class DatabaseInit {
                         new CodeExplanation(3, "git switch -c hotfix/critical-bug", "Crea y cambia a rama de hotfix en un solo comando")
                 )
         );
-        // content1_2_1.setLesson(lesson1_2_1);
+        content1_2_1.setLesson(lesson1_2_1);
         lessonContentService.save(content1_2_1);
 
         // Módulo 2: Workflows de Colaboración
@@ -820,7 +820,7 @@ public class DatabaseInit {
         topicService.save(topic2_1);
 
         Lesson lesson2_1_1 = createLesson("Introducción a Git Flow", "25 min", false, true);
-        // lesson2_1_1.setTopic(topic2_1);
+        lesson2_1_1.setTopic(topic2_1);
         lessonService.save(lesson2_1_1);
 
         LessonContent content2_1_1 = createLessonContent(
@@ -836,11 +836,11 @@ public class DatabaseInit {
                         new CodeExplanation(3, "git flow feature finish authentication", "Finaliza feature y mergea a develop")
                 )
         );
-        //  content2_1_1.setLesson(lesson2_1_1);
+        content2_1_1.setLesson(lesson2_1_1);
         lessonContentService.save(content2_1_1);
 
         Lesson lesson2_1_2 = createLesson("Ramas Principales: main, develop, features", "30 min", false, false);
-        // lesson2_1_2.setTopic(topic2_1);
+        lesson2_1_2.setTopic(topic2_1);
         lessonService.save(lesson2_1_2);
 
         LessonContent content2_1_2 = createLessonContent(
@@ -856,7 +856,7 @@ public class DatabaseInit {
                         new CodeExplanation(3, "feature/*", "Ramas temporales para nuevas funcionalidades")
                 )
         );
-        // content2_1_2.setLesson(lesson2_1_2);
+        content2_1_2.setLesson(lesson2_1_2);
         lessonContentService.save(content2_1_2);
 
         // Tema 2.2: GitHub Flow
@@ -865,7 +865,7 @@ public class DatabaseInit {
         topicService.save(topic2_2);
 
         Lesson lesson2_2_1 = createLesson("Pull Requests y Code Review", "35 min", false, false);
-        // lesson2_2_1.setTopic(topic2_2);
+        lesson2_2_1.setTopic(topic2_2);
         lessonService.save(lesson2_2_1);
 
         LessonContent content2_2_1 = createLessonContent(
@@ -881,7 +881,7 @@ public class DatabaseInit {
                         new CodeExplanation(3, "git push origin feature/auth", "Subir cambios para crear PR")
                 )
         );
-        // content2_2_1.setLesson(lesson2_2_1);
+        content2_2_1.setLesson(lesson2_2_1);
         lessonContentService.save(content2_2_1);
 
         // Módulo 3: Resolución de Conflictos
@@ -897,7 +897,7 @@ public class DatabaseInit {
         topicService.save(topic3_1);
 
         Lesson lesson3_1_1 = createLesson("Conflictos Comunes y Su Origen", "22 min", false, false);
-        // lesson3_1_1.setTopic(topic3_1);
+        lesson3_1_1.setTopic(topic3_1);
         lessonService.save(lesson3_1_1);
 
         LessonContent content3_1_1 = createLessonContent(
@@ -913,11 +913,11 @@ public class DatabaseInit {
                         new CodeExplanation(3, ">>>>>>> feature/spanish", "Fin del conflicto - versión entrante")
                 )
         );
-        // content3_1_1.setLesson(lesson3_1_1);
+        content3_1_1.setLesson(lesson3_1_1);
         lessonContentService.save(content3_1_1);
 
         Lesson lesson3_1_2 = createLesson("Herramientas de Resolución", "28 min", false, false);
-        //  lesson3_1_2.setTopic(topic3_1);
+        lesson3_1_2.setTopic(topic3_1);
         lessonService.save(lesson3_1_2);
 
         LessonContent content3_1_2 = createLessonContent(
@@ -933,7 +933,7 @@ public class DatabaseInit {
                         new CodeExplanation(3, "git add .", "Marca conflictos resueltos como listos para commit")
                 )
         );
-        //  content3_1_2.setLesson(lesson3_1_2);
+        content3_1_2.setLesson(lesson3_1_2);
         lessonContentService.save(content3_1_2);
 
         // Módulo 4: Hooks y Automatización
@@ -949,7 +949,7 @@ public class DatabaseInit {
         topicService.save(topic4_1);
 
         Lesson lesson4_1_1 = createLesson("Hooks de Cliente: pre-commit y pre-push", "32 min", false, false);
-        //  lesson4_1_1.setTopic(topic4_1);
+        lesson4_1_1.setTopic(topic4_1);
         lessonService.save(lesson4_1_1);
 
         LessonContent content4_1_1 = createLessonContent(
@@ -965,7 +965,7 @@ public class DatabaseInit {
                         new CodeExplanation(3, "exit 1", "Sale con error si las pruebas fallan")
                 )
         );
-        //  content4_1_1.setLesson(lesson4_1_1);
+        content4_1_1.setLesson(lesson4_1_1);
         lessonContentService.save(content4_1_1);
 
         // Tema 4.2: Integración CI/CD
@@ -974,7 +974,7 @@ public class DatabaseInit {
         topicService.save(topic4_2);
 
         Lesson lesson4_2_1 = createLesson("GitHub Actions para Automatización", "40 min", false, false);
-        //   lesson4_2_1.setTopic(topic4_2);
+        lesson4_2_1.setTopic(topic4_2);
         lessonService.save(lesson4_2_1);
 
         LessonContent content4_2_1 = createLessonContent(
@@ -990,7 +990,7 @@ public class DatabaseInit {
                         new CodeExplanation(3, "npm test", "Ejecuta pruebas en el pipeline")
                 )
         );
-        //   content4_2_1.setLesson(lesson4_2_1);
+        content4_2_1.setLesson(lesson4_2_1);
         lessonContentService.save(content4_2_1);
 
         // Módulo 5: Proyecto Final
@@ -1006,7 +1006,7 @@ public class DatabaseInit {
         topicService.save(topic5_1);
 
         Lesson lesson5_1_1 = createLesson("Setup y Configuración Inicial", "45 min", false, false);
-        //  lesson5_1_1.setTopic(topic5_1);
+        lesson5_1_1.setTopic(topic5_1);
         lessonService.save(lesson5_1_1);
 
         LessonContent content5_1_1 = createLessonContent(
@@ -1022,7 +1022,7 @@ public class DatabaseInit {
                         new CodeExplanation(3, "git push -u origin develop", "Sube rama develop y establece upstream")
                 )
         );
-        //  content5_1_1.setLesson(lesson5_1_1);
+        content5_1_1.setLesson(lesson5_1_1);
         lessonContentService.save(content5_1_1);
     }
 

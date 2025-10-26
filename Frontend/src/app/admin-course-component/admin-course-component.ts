@@ -56,7 +56,7 @@ export class AdminCourseComponent implements OnInit {
     xp: 0,
     isNew: false,
     isTrending: false,
-    status: 'not-started',
+    status: 'NOT_STARTED',
     totalPoints: 0,
     difficulty: 'beginner',
     tags: [],
@@ -79,9 +79,9 @@ export class AdminCourseComponent implements OnInit {
   ];
 
   statusOptions = [
-    { value: 'not-started', label: 'No Iniciado', icon: '⭕', color: '#94a3b8' },
-    { value: 'in-progress', label: 'En Progreso', icon: '🔄', color: '#f59e0b' },
-    { value: 'completed', label: 'Completado', icon: '✅', color: '#10b981' },
+    { value: 'NOT_STARTED', label: 'No Iniciado', icon: '⭕', color: '#94a3b8' },
+    { value: 'IN_PROGRESS', label: 'En Progreso', icon: '🔄', color: '#f59e0b' },
+    { value: 'COMPLETED', label: 'Completado', icon: '✅', color: '#10b981' },
   ];
 
   constructor(
@@ -191,7 +191,7 @@ export class AdminCourseComponent implements OnInit {
       xp: 0,
       isNew: false,
       isTrending: false,
-      status: 'not-started',
+      status: 'NOT_STARTED',
       totalPoints: 0,
       difficulty: 'beginner',
       tags: [],

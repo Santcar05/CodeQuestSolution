@@ -2,6 +2,8 @@ package org.javeriana.codequest.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,4 +51,8 @@ public class LessonContent {
     @JoinColumn(name = "lesson_content_id")
     private List<CodeExplanation> codeExplanations;
 
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "lesson_id")
+    private Lesson lesson;
 }
