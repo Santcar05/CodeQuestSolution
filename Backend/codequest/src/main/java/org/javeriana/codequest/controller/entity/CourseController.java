@@ -63,9 +63,41 @@ public class CourseController {
         courseService.save(course);
     }
 
-    @PutMapping("/update")
-    public void update(@RequestBody Course course) {
-        courseService.save(course);
+    @PutMapping("/update/{id}")
+    public Course update(@RequestBody Map<String, Object> updates, @PathVariable Long id) {
+        Course existing = courseService.findById(id);
+        if (existing == null) {
+            throw new RuntimeException("Course not found with id " + id);
+        }
+
+        // Actualizar manualmente campos simples
+        if (updates.containsKey("title")) {
+            existing.setTitle((String) updates.get("title"));
+        }
+        if (updates.containsKey("description")) {
+            existing.setDescription((String) updates.get("description"));
+        }
+        if (updates.containsKey("price")) {
+            existing.setPrice((String) updates.get("price"));
+        }
+        if (updates.containsKey("originalPrice")) {
+            existing.setOriginalPrice((String) updates.get("originalPrice"));
+        }
+        if (updates.containsKey("category")) {
+            existing.setCategory((String) updates.get("category"));
+        }
+        if (updates.containsKey("level")) {
+            existing.setLevel((String) updates.get("level"));
+        }
+        if (updates.containsKey("difficulty")) {
+            existing.setDifficulty((String) updates.get("difficulty"));
+        }
+        if (updates.containsKey("totalPoints")) {
+            existing.setTotalPoints((Integer) updates.get("totalPoints"));
+        }
+
+        courseService.save(existing);
+        return existing;
     }
 
     @DeleteMapping("/delete/{id}")

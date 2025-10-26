@@ -25,14 +25,14 @@ export class CourseService {
   }
 
   save(course: Course): Observable<Course> {
-    return this.http.post<Course>(`${this.apiUrl}`, course);
+    return this.http.post<Course>(`${this.apiUrl}/save`, course);
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 
   update(course: Course): Observable<Course> {
-    return this.http.put<Course>(`${this.apiUrl}`, course);
+    return this.http.put<Course>(`${this.apiUrl}/update/${course.id}`, course);
   }
 }

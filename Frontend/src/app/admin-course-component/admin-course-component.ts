@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -83,7 +83,11 @@ export class AdminCourseComponent implements OnInit {
     { value: 'completed', label: 'Completado', icon: '✅', color: '#10b981' },
   ];
 
-  constructor(private router: Router, private courseService: CourseService) {}
+  constructor(
+    private router: Router,
+    private courseService: CourseService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadCourses();
@@ -97,6 +101,7 @@ export class AdminCourseComponent implements OnInit {
         this.courses = courses;
         this.applyFilters();
         this.isLoading = false;
+        this.cdRef.detectChanges();
       },
       error: (err) => {
         console.error('Error loading courses:', err);
@@ -104,53 +109,6 @@ export class AdminCourseComponent implements OnInit {
         this.isLoading = false;
       },
     });
-  }
-
-  getMockCourses(): Course[] {
-    return [
-      {
-        id: 1,
-        title: 'Angular Avanzado',
-        description: 'Aprende Angular desde cero hasta nivel avanzado',
-        category: 'desarrollo',
-        level: 'advanced',
-        rating: 4.8,
-        duration: '40 horas',
-        students: 1250,
-        lessons: 120,
-        completedLessons: 45,
-        price: '$99.99',
-        originalPrice: '$199.99',
-        xp: 5000,
-        isNew: true,
-        isTrending: true,
-        status: 'in-progress',
-        totalPoints: 5000,
-        difficulty: 'advanced',
-        tags: ['Angular', 'TypeScript', 'RxJS'],
-      },
-      {
-        id: 2,
-        title: 'Diseño UX/UI Profesional',
-        description: 'Domina el diseño de experiencias de usuario',
-        category: 'diseno',
-        level: 'intermediate',
-        rating: 4.9,
-        duration: '30 horas',
-        students: 890,
-        lessons: 85,
-        completedLessons: 0,
-        price: '$79.99',
-        originalPrice: '$149.99',
-        xp: 3500,
-        isNew: false,
-        isTrending: true,
-        status: 'not-started',
-        totalPoints: 3500,
-        difficulty: 'intermediate',
-        tags: ['UX', 'UI', 'Figma'],
-      },
-    ];
   }
 
   applyFilters(): void {
@@ -256,30 +214,54 @@ export class AdminCourseComponent implements OnInit {
 
     this.isLoading = true;
 
-    // Simulación - Reemplazar con llamada al servicio
-    setTimeout(() => {
-      if (this.isEditMode) {
-        const index = this.courses.findIndex((c) => c.id === this.newCourse.id);
-        if (index !== -1) {
-          this.courses[index] = { ...this.newCourse };
-        }
-        this.showSuccess('Curso actualizado exitosamente');
-      } else {
-        this.newCourse.id = this.courses.length + 1;
-        this.courses.push({ ...this.newCourse });
-        this.showSuccess('Curso creado exitosamente');
-      }
-      this.applyFilters();
-      this.closeModal();
-      this.isLoading = false;
-    }, 800);
-
-    // Descomentar cuando el servicio esté disponible:
-    // if (this.isEditMode) {
-    //   this.courseService.update(this.newCourse).subscribe({...});
-    // } else {
-    //   this.courseService.create(this.newCourse).subscribe({...});
-    // }
+    if (this.isEditMode) {
+      //Actualizar curso existente
+      this.courseService.update(this.newCourse).subscribe({
+        next: (updatedCourse) => {
+          const index = this.courses.findIndex((c) => c.id === updatedCourse.id);
+          if (index !== -1) {
+            this.courses[index] = updatedCourse;
+          }
+          this.applyFilters();
+          this.showSuccess('Curso actualizado correctamente');
+          this.isModalOpen = false;
+          this.isLoading = false; // Finaliza carga
+          this.cdRef.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error al actualizar curso:', err);
+          this.showError('Error al actualizar el curso');
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        },
+        complete: () => {
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        },
+      });
+    } else {
+      // Crear nuevo curso
+      this.courseService.save(this.newCourse).subscribe({
+        next: (createdCourse) => {
+          this.courses.push(createdCourse);
+          this.applyFilters();
+          this.showSuccess('Curso creado correctamente');
+          this.isModalOpen = false;
+          this.isLoading = false; //Finaliza carga
+          this.cdRef.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error al crear curso:', err);
+          this.showError('Error al crear el curso');
+          this.isLoading = false; //Finaliza carga
+          this.cdRef.detectChanges();
+        },
+        complete: () => {
+          this.isLoading = false; // Finaliza carga
+          this.cdRef.detectChanges();
+        },
+      });
+    }
   }
 
   validateCourse(): boolean {
@@ -312,17 +294,22 @@ export class AdminCourseComponent implements OnInit {
     if (this.courseToDelete) {
       this.isLoading = true;
 
-      // Simulación - Reemplazar con llamada al servicio
-      setTimeout(() => {
-        this.courses = this.courses.filter((c) => c.id !== this.courseToDelete!.id);
-        this.applyFilters();
-        this.showSuccess('Curso eliminado exitosamente');
-        this.closeDeleteModal();
-        this.isLoading = false;
-      }, 800);
-
-      // Descomentar cuando el servicio esté disponible:
-      // this.courseService.delete(this.courseToDelete.id).subscribe({...});
+      this.courseService.delete(this.courseToDelete.id).subscribe({
+        next: () => {
+          this.courses = this.courses.filter((c) => c.id !== this.courseToDelete!.id);
+          this.applyFilters();
+          this.showSuccess('Curso eliminado exitosamente');
+          this.closeDeleteModal();
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error deleting course:', err);
+          this.showError('Error al eliminar el curso');
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        },
+      });
     }
   }
 

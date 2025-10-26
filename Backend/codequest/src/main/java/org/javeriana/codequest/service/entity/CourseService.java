@@ -36,4 +36,5 @@ public class CourseService {
     public List<Course> findAll() {
         return courseRepository.findAll();
     }
+
 }
