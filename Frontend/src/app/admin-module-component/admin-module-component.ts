@@ -534,22 +534,27 @@ export class AdminModuleComponentComponent implements OnInit {
   openContentModal(lesson: Lesson): void {
     this.selectedLesson = lesson;
 
-    if (lesson.content) {
-      this.newLessonContent = { ...lesson.content };
+    // Cargar el contenido si no está presente
+    if (!lesson.content) {
+      this.lessonContentService.findByLessonId(lesson.id).subscribe({
+        next: (content) => {
+          this.newLessonContent = content;
+          this.isContentModalOpen = true;
+          this.activeContentTab = 'video';
+          this.cdRef.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error loading content:', err);
+          this.showError('No se pudo cargar el contenido de la lección');
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        },
+      });
     } else {
-      this.newLessonContent = {
-        video: '',
-        audio: '',
-        document: '',
-        code: '',
-        mindmap: '',
-        interactive: '',
-        codeExplanations: [],
-      };
+      this.newLessonContent = { ...lesson.content };
+      this.isContentModalOpen = true;
+      this.activeContentTab = 'video';
     }
-
-    this.isContentModalOpen = true;
-    this.activeContentTab = 'video';
   }
 
   closeContentModal(): void {
@@ -569,7 +574,7 @@ export class AdminModuleComponentComponent implements OnInit {
       lessonId: this.selectedLesson.id,
     };
 
-    this.lessonContentService.save(contentToSave).subscribe({
+    this.lessonContentService.save(contentToSave, this.selectedLesson.id).subscribe({
       next: (savedContent) => {
         this.selectedLesson!.content = savedContent;
         this.showSuccess('Contenido guardado correctamente');

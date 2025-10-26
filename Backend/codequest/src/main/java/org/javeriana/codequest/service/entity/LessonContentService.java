@@ -37,4 +37,8 @@ public class LessonContentService {
     public void update(LessonContent lessonContent) {
         lessonContentRepository.save(lessonContent);
     }
+
+    public LessonContent findByLessonId(Long id) {
+        return lessonContentRepository.findByLessonId(id);
+    }
 }

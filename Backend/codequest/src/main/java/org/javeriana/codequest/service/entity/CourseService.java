@@ -18,6 +18,8 @@ public class CourseService {
     }
 
     public void save(Course course) {
+        course.setId(null);
+        course.setStudents(0);
         courseRepository.save(course);
     }
 

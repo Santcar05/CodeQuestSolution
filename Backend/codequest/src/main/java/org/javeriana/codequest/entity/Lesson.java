@@ -42,7 +42,7 @@ public class Lesson {
     @Column(name = "is_preview")
     private Boolean isPreview;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "content_id")
     private LessonContent content;
 
