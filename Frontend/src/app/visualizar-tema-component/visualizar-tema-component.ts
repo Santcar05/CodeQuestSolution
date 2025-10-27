@@ -1,5 +1,5 @@
 // visualizar-tema.component.ts
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
@@ -12,13 +12,21 @@ import { environment } from '../../../environment';
 
 // Pipe para sanitizar URLs de recursos
 import { Pipe, PipeTransform } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ModuleModel } from '../models/ModuleModel';
 import { LearningMethod } from '../models/LearningMethod';
 import { CommentModel } from '../models/Comment';
 import { Topic } from '../models/Topic';
 import { Lesson } from '../models/Lesson';
 import { CodeExplanation } from '../models/CodeExplanation';
+import { LessonContent } from '../models/LessonContent';
+
+// Servicios
+import { ModuleModelService } from '../service/ModuleModel/module-model-service';
+import { TopicService } from '../service/Topic/topic-service';
+import { LessonService } from '../service/Lesson/lesson-service';
+import { CommentModelService } from '../service/CommentModel/comment-model-service';
+import { LessonContentService } from '../service/LessonContent/lesson-content-service';
 
 @Pipe({
   name: 'safeResourceUrl',
@@ -54,230 +62,26 @@ export class SafeUrlPipe implements PipeTransform {
 export class VisualizarTemaComponent implements OnInit {
   // Configuración de JDoodl
   private readonly JDoodleConfig = {
-    clientId: environment.clientIdJDoodle, // Regístrate en https://www.jdoodle.com/
-    clientSecret: environment.clientSecretDoodle, // Obtén tus credenciales
+    clientId: environment.clientIdJDoodle,
+    clientSecret: environment.clientSecretDoodle,
     apiUrl: 'https://api.jdoodle.com/v1/execute',
   };
 
-  constructor(private sanitizer: DomSanitizer, private http: HttpClient, private router: Router) {}
-  // Datos de ejemplo actualizados con explicaciones de código
-  modules: ModuleModel[] = [
-    {
-      id: 1,
-      title: 'Fundamentos de C++',
-      description: 'Aprende los conceptos básicos de C++',
-      progress: 75,
-      completed: false,
-      topics: [
-        {
-          id: 1,
-          title: 'Sintaxis Básica',
-          description: 'Estructura fundamental del código C++',
-          completed: true,
-          lessons: [
-            {
-              id: 1,
-              title: 'Hola Mundo en C++',
-              duration: '15 min',
-              completed: true,
-              isPreview: true,
-              content: {
-                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                audio: 'https://www.soundjay.com/button/beep-07.wav',
-                document: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-                code: `#include <iostream>
-using namespace std;
+  constructor(
+    private sanitizer: DomSanitizer,
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private moduleService: ModuleModelService,
+    private topicService: TopicService,
+    private lessonService: LessonService,
+    private lessonContentService: LessonContentService,
+    private commentService: CommentModelService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
-int main() {
-    cout << "¡Hola Mundo!" << endl;
-    return 0;
-}`,
-                codeExplanations: [
-                  {
-                    line: 1,
-                    code: '#include <iostream>',
-                    explanation: 'Incluye la biblioteca estándar de entrada/salida de C++',
-                  },
-                  {
-                    line: 2,
-                    code: 'using namespace std;',
-                    explanation:
-                      'Permite usar elementos de la biblioteca estándar sin el prefijo std::',
-                  },
-                  {
-                    line: 3,
-                    code: 'int main() {',
-                    explanation: 'Función principal donde comienza la ejecución del programa',
-                  },
-                  {
-                    line: 4,
-                    code: '    cout << "¡Hola Mundo!" << endl;',
-                    explanation:
-                      'Imprime el texto "¡Hola Mundo!" en la consola y añade un salto de línea',
-                  },
-                  {
-                    line: 5,
-                    code: '    return 0;',
-                    explanation:
-                      'Termina la función main indicando que el programa finalizó correctamente',
-                  },
-                  { line: 6, code: '}', explanation: 'Cierra la función main' },
-                ],
-              },
-            },
-            {
-              id: 2,
-              title: 'Variables y Tipos de Datos',
-              duration: '25 min',
-              completed: true,
-              isPreview: false,
-              content: {
-                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                code: `#include <iostream>
-using namespace std;
-
-int main() {
-    // Declaración de variables
-    int edad = 25;
-    double altura = 1.75;
-    char letra = 'A';
-    string nombre = "Juan";
-    bool esEstudiante = true;
-    
-    // Mostrar valores
-    cout << "Nombre: " << nombre << endl;
-    cout << "Edad: " << edad << " años" << endl;
-    cout << "Altura: " << altura << " metros" << endl;
-    cout << "Letra: " << letra << endl;
-    cout << "Es estudiante: " << (esEstudiante ? "Sí" : "No") << endl;
-    
-    return 0;
-}`,
-                codeExplanations: [
-                  {
-                    line: 5,
-                    code: 'int edad = 25;',
-                    explanation: 'Declara una variable entera llamada "edad" con valor 25',
-                  },
-                  {
-                    line: 6,
-                    code: 'double altura = 1.75;',
-                    explanation: 'Declara una variable decimal de doble precisión llamada "altura"',
-                  },
-                  {
-                    line: 7,
-                    code: 'char letra = "A";',
-                    explanation: 'Declara una variable carácter que almacena un solo caracter',
-                  },
-                  {
-                    line: 8,
-                    code: 'string nombre = "Juan";',
-                    explanation: 'Declara una variable string que almacena texto',
-                  },
-                  {
-                    line: 9,
-                    code: 'bool esEstudiante = true;',
-                    explanation: 'Declara una variable booleana que puede ser true o false',
-                  },
-                  {
-                    line: 12,
-                    code: 'cout << "Nombre: " << nombre << endl;',
-                    explanation: 'Concatena y muestra múltiples valores en la consola',
-                  },
-                ],
-              },
-            },
-          ],
-        },
-        {
-          id: 2,
-          title: 'Estructuras de Control',
-          description: 'Condicionales y bucles en C++',
-          completed: false,
-          lessons: [
-            {
-              id: 3,
-              title: 'Condicional if-else',
-              duration: '20 min',
-              completed: false,
-              isPreview: false,
-              content: {
-                code: `#include <iostream>
-using namespace std;
-
-int main() {
-    int numero;
-    
-    cout << "Ingresa un número: ";
-    cin >> numero;
-    
-    if (numero > 0) {
-        cout << "El número es positivo" << endl;
-    } else if (numero < 0) {
-        cout << "El número es negativo" << endl;
-    } else {
-        cout << "El número es cero" << endl;
-    }
-    
-    return 0;
-}`,
-                codeExplanations: [
-                  {
-                    line: 5,
-                    code: 'int numero;',
-                    explanation: 'Declara una variable entera sin inicializar',
-                  },
-                  {
-                    line: 7,
-                    code: 'cout << "Ingresa un número: ";',
-                    explanation: 'Muestra un mensaje pidiendo al usuario que ingrese un número',
-                  },
-                  {
-                    line: 8,
-                    code: 'cin >> numero;',
-                    explanation:
-                      'Lee un valor desde el teclado y lo almacena en la variable numero',
-                  },
-                  {
-                    line: 10,
-                    code: 'if (numero > 0) {',
-                    explanation: 'Condicional que verifica si el número es mayor que cero',
-                  },
-                  {
-                    line: 11,
-                    code: '    cout << "El número es positivo" << endl;',
-                    explanation: 'Se ejecuta solo si la condición anterior es verdadera',
-                  },
-                  {
-                    line: 12,
-                    code: '} else if (numero < 0) {',
-                    explanation: 'Condición alternativa si la primera condición es falsa',
-                  },
-                  {
-                    line: 13,
-                    code: '    cout << "El número es negativo" << endl;',
-                    explanation: 'Se ejecuta si el número es menor que cero',
-                  },
-                  {
-                    line: 14,
-                    code: '} else {',
-                    explanation:
-                      'Bloque que se ejecuta si todas las condiciones anteriores son falsas',
-                  },
-                  {
-                    line: 15,
-                    code: '    cout << "El número es cero" << endl;',
-                    explanation: 'Se ejecuta cuando el número es exactamente cero',
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      ],
-    },
-  ];
-
+  // Datos que vendrán del backend
+  modules: ModuleModel[] = [];
   learningMethods: LearningMethod[] = [
     {
       id: 'visual',
@@ -316,22 +120,12 @@ int main() {
     },
   ];
 
-  comments: CommentModel[] = [
-    {
-      id: 1,
-      user: 'Ana Martínez',
-      avatar:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-      text: 'Excelente explicación sobre la sintaxis básica. Me ayudó mucho a entender la estructura del código.',
-      timestamp: new Date('2024-01-15T10:30:00'),
-      likes: 12,
-    },
-  ];
+  comments: CommentModel[] = [];
 
   // Estado del componente
-  selectedModule: ModuleModel = this.modules[0];
-  selectedTopic: Topic = this.modules[0].topics[0];
-  selectedLesson: Lesson = this.modules[0].topics[0].lessons[0];
+  selectedModule: ModuleModel | null = null;
+  selectedTopic: Topic | null = null;
+  selectedLesson: Lesson | null = null;
   selectedMethod: LearningMethod = this.learningMethods[0];
 
   // Código del usuario
@@ -344,82 +138,321 @@ int main() {
   expandedModules: boolean[] = [];
   expandedTopics: boolean[][] = [];
 
+  // Estado de carga
+  isLoading: boolean = true;
+  error: string | null = null;
+
+  // ID del curso
+  courseId: number = 0;
+
   ngOnInit() {
-    // Inicializar estados expandidos
-    this.expandedModules = new Array(this.modules.length).fill(false);
-    this.expandedTopics = this.modules.map((module) => new Array(module.topics.length).fill(false));
+    // Obtener el ID del curso de los parámetros de la ruta
+    this.route.params.subscribe((params) => {
+      this.courseId = +params['id'];
+      console.log('ID del curso:', this.courseId);
+      this.loadData();
+    });
+  }
 
-    // Expandir el primer módulo y tema por defecto
-    if (this.expandedModules.length > 0) {
-      this.expandedModules[0] = true;
-    }
-    if (this.expandedTopics[0]?.length > 0) {
-      this.expandedTopics[0][0] = true;
+  // Cargar datos desde el backend
+  loadData(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    // Cargar módulos del curso
+    this.moduleService.findByCourseId(this.courseId).subscribe({
+      next: (modules) => {
+        this.modules = modules || [];
+
+        if (this.modules.length === 0) {
+          this.error = 'No se encontraron módulos para este curso.';
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+          return;
+        }
+
+        // Cargar topics para cada módulo
+        this.loadTopicsForModules();
+      },
+      error: (error) => {
+        console.error('Error cargando módulos:', error);
+        this.error = 'Error al cargar los módulos del curso.';
+        this.isLoading = false;
+        this.cdRef.detectChanges();
+      },
+    });
+  }
+
+  // Cargar topics para todos los módulos
+  private loadTopicsForModules(): void {
+    const moduleRequests = this.modules.map((module) =>
+      this.topicService.findByModuleId(module.id!).pipe(
+        catchError((error) => {
+          console.error(`Error cargando topics para módulo ${module.id}:`, error);
+          return of([]);
+        })
+      )
+    );
+
+    // Esperar a que todos los requests de topics terminen
+    let completedRequests = 0;
+
+    moduleRequests.forEach((request, index) => {
+      request.subscribe({
+        next: (topics) => {
+          this.modules[index].topics = topics || [];
+          completedRequests++;
+
+          // Si todos los topics se cargaron, cargar las lessons
+          if (completedRequests === moduleRequests.length) {
+            this.loadLessonsForTopics();
+          }
+        },
+        error: () => {
+          completedRequests++;
+          if (completedRequests === moduleRequests.length) {
+            this.loadLessonsForTopics();
+          }
+        },
+      });
+    });
+  }
+
+  // Cargar lessons para todos los topics
+  private loadLessonsForTopics(): void {
+    const lessonRequests: any[] = [];
+
+    this.modules.forEach((module) => {
+      if (module.topics) {
+        module.topics.forEach((topic) => {
+          if (topic.id) {
+            const request = this.lessonService.findByTopicId(topic.id).pipe(
+              catchError((error) => {
+                console.error(`Error cargando lessons para topic ${topic.id}:`, error);
+                return of([]);
+              })
+            );
+            lessonRequests.push({ module, topic, request });
+          }
+        });
+      }
+    });
+
+    if (lessonRequests.length === 0) {
+      this.finalizeDataLoading();
+      return;
     }
 
-    // Inicializar el código del usuario con el código de ejemplo
-    if (this.selectedLesson.content!.code) {
-      this.userCode = this.selectedLesson.content!.code;
+    let completedRequests = 0;
+
+    lessonRequests.forEach(({ module, topic, request }) => {
+      request.subscribe({
+        next: (lessons: Lesson[]) => {
+          topic.lessons = lessons || [];
+          completedRequests++;
+
+          if (completedRequests === lessonRequests.length) {
+            // Cargar contenido para todas las lecciones
+            this.loadContentForLessons();
+          }
+        },
+        error: () => {
+          completedRequests++;
+          if (completedRequests === lessonRequests.length) {
+            this.finalizeDataLoading();
+          }
+        },
+      });
+    });
+  }
+
+  // Cargar contenido para todas las lecciones
+  private loadContentForLessons(): void {
+    const contentRequests: any[] = [];
+
+    // Recopilar todas las lecciones que necesitan contenido
+    this.modules.forEach((module) => {
+      if (module.topics) {
+        module.topics.forEach((topic) => {
+          if (topic.lessons) {
+            topic.lessons.forEach((lesson) => {
+              if (lesson.id) {
+                const request = this.lessonContentService.findByLessonId(lesson.id).pipe(
+                  catchError((error) => {
+                    console.error(`Error cargando contenido para lección ${lesson.id}:`, error);
+                    return of(null);
+                  })
+                );
+                contentRequests.push({ module, topic, lesson, request });
+              }
+            });
+          }
+        });
+      }
+    });
+
+    if (contentRequests.length === 0) {
+      this.finalizeDataLoading();
+      return;
     }
+
+    let completedRequests = 0;
+
+    contentRequests.forEach(({ module, topic, lesson, request }) => {
+      request.subscribe({
+        next: (lessonContent: LessonContent | null) => {
+          // Asignar el contenido a la lección correspondiente
+          if (lessonContent) {
+            lesson.content = lessonContent;
+          }
+
+          completedRequests++;
+
+          if (completedRequests === contentRequests.length) {
+            this.finalizeDataLoading();
+          }
+        },
+        error: () => {
+          completedRequests++;
+          if (completedRequests === contentRequests.length) {
+            this.finalizeDataLoading();
+          }
+        },
+      });
+    });
+  }
+
+  // Finalizar la carga de datos
+  private finalizeDataLoading(): void {
+    // Cargar comentarios
+    this.commentService.findAll().subscribe({
+      next: (comments) => {
+        this.comments = comments || [];
+
+        // Inicializar estados expandidos
+        this.expandedModules = new Array(this.modules.length).fill(false);
+        this.expandedTopics = this.modules.map((module) =>
+          new Array(module.topics?.length || 0).fill(false)
+        );
+
+        // Seleccionar primer módulo, topic y lesson por defecto
+        if (this.modules.length > 0) {
+          this.selectModule(this.modules[0]);
+          this.expandedModules[0] = true;
+        }
+
+        this.isLoading = false;
+        this.cdRef.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error cargando comentarios:', error);
+        this.comments = [];
+
+        // Inicializar estados expandidos incluso si fallan los comentarios
+        this.expandedModules = new Array(this.modules.length).fill(false);
+        this.expandedTopics = this.modules.map((module) =>
+          new Array(module.topics?.length || 0).fill(false)
+        );
+
+        if (this.modules.length > 0) {
+          this.selectModule(this.modules[0]);
+          this.expandedModules[0] = true;
+        }
+
+        this.isLoading = false;
+        this.cdRef.detectChanges();
+      },
+    });
   }
 
   selectModule(module: ModuleModel): void {
     this.selectedModule = module;
-    if (module.topics.length > 0) {
+    if (module.topics && module.topics.length > 0) {
       this.selectTopic(module.topics[0]);
+    } else {
+      this.selectedTopic = null;
+      this.selectedLesson = null;
+      this.userCode = '';
     }
+    this.cdRef.detectChanges();
   }
 
   selectTopic(topic: Topic): void {
     this.selectedTopic = topic;
-    if (topic.lessons.length > 0) {
+    if (topic.lessons && topic.lessons.length > 0) {
       this.selectLesson(topic.lessons[0]);
+    } else {
+      this.selectedLesson = null;
+      this.userCode = '';
     }
+    this.cdRef.detectChanges();
   }
 
   selectLesson(lesson: Lesson): void {
     this.selectedLesson = lesson;
+
     // Actualizar el código del usuario cuando cambia la lección
-    if (lesson.content!.code) {
-      this.userCode = lesson.content!.code;
-    } else {
-      this.userCode = '';
-    }
+    this.updateUserCode();
+
     this.codeOutput = '';
+    this.cdRef.detectChanges();
+  }
+
+  // Método para actualizar el código del usuario basado en la lección actual
+  private updateUserCode(): void {
+    if (!this.selectedLesson) {
+      this.userCode = '';
+      return;
+    }
+
+    // Buscar código en el contenido de la lección
+    const lesson = this.selectedLesson;
+
+    if (lesson.content?.code) {
+      this.userCode = lesson.content.code;
+    } else {
+      // Código por defecto si no hay código específico
+      this.userCode = `#include <iostream>\nusing namespace std;\n\nint main() {\n    // Escribe tu código aquí\n    cout << "¡Hola Mundo!" << endl;\n    return 0;\n}`;
+    }
   }
 
   selectMethod(method: LearningMethod): void {
     this.selectedMethod = method;
+    this.cdRef.detectChanges();
   }
 
   toggleModule(index: number): void {
     this.expandedModules[index] = !this.expandedModules[index];
+    this.cdRef.detectChanges();
   }
 
   toggleTopic(moduleIndex: number, topicIndex: number): void {
     this.expandedTopics[moduleIndex][topicIndex] = !this.expandedTopics[moduleIndex][topicIndex];
+    this.cdRef.detectChanges();
   }
 
   // Navegar a la siguiente explicación
   nextExplanation(): void {
-    const currentTopic = this.selectedTopic;
-    const currentLessonIndex = currentTopic.lessons.findIndex(
-      (lesson) => lesson.id === this.selectedLesson.id
-    );
+    if (!this.selectedTopic || !this.selectedLesson || !this.selectedModule) {
+      return;
+    }
 
-    if (currentLessonIndex < currentTopic.lessons.length - 1) {
+    const currentTopic = this.selectedTopic;
+    const currentLessonIndex =
+      currentTopic.lessons?.findIndex((lesson) => lesson.id === this.selectedLesson!.id) ?? -1;
+
+    if (currentLessonIndex !== -1 && currentLessonIndex < (currentTopic.lessons?.length || 0) - 1) {
       // Siguiente lección en el mismo tema
-      this.selectLesson(currentTopic.lessons[currentLessonIndex + 1]);
+      this.selectLesson(currentTopic.lessons![currentLessonIndex + 1]);
     } else {
       // Buscar siguiente tema
       const currentModule = this.selectedModule;
-      const currentTopicIndex = currentModule.topics.findIndex(
-        (topic) => topic.id === currentTopic.id
-      );
+      const currentTopicIndex =
+        currentModule.topics?.findIndex((topic) => topic.id === currentTopic.id) ?? -1;
 
-      if (currentTopicIndex < currentModule.topics.length - 1) {
+      if (currentTopicIndex !== -1 && currentTopicIndex < (currentModule.topics?.length || 0) - 1) {
         // Siguiente tema en el mismo módulo
-        const nextTopic = currentModule.topics[currentTopicIndex + 1];
+        const nextTopic = currentModule.topics![currentTopicIndex + 1];
         this.selectTopic(nextTopic);
       } else {
         // Buscar siguiente módulo
@@ -434,9 +467,13 @@ int main() {
     }
   }
 
-  // Compilar y ejecutar código C++
   // Compilar y ejecutar código C++ usando el backend Spring Boot
   compileAndRun(): void {
+    if (!this.userCode.trim()) {
+      this.codeOutput = '❌ No hay código para compilar.';
+      return;
+    }
+
     this.isCompiling = true;
     this.codeOutput = '🔄 Compilando y ejecutando código...\n\n';
 
@@ -447,7 +484,7 @@ int main() {
     const requestBody = {
       script: codeToCompile,
       language: 'cpp',
-      versionIndex: '0', // versión más reciente de C++
+      versionIndex: '0',
       clientId: this.JDoodleConfig.clientId,
       clientSecret: this.JDoodleConfig.clientSecret,
     };
@@ -456,7 +493,7 @@ int main() {
       'Content-Type': 'application/json',
     });
 
-    // Enviar la petición a tu backend (NO directamente a JDoodle)
+    // Enviar la petición a tu backend
     this.http
       .post<any>('http://localhost:8080/api/jdoodle/execute', requestBody, { headers })
       .pipe(
@@ -491,16 +528,21 @@ int main() {
         } catch (e) {
           this.codeOutput = '❌ Error procesando la respuesta del servidor.';
         }
+        this.cdRef.detectChanges();
       });
   }
 
   // Método alternativo usando Judge0 API (opción de respaldo)
   async compileWithJudge0(): Promise<void> {
+    if (!this.userCode.trim()) {
+      this.codeOutput = '❌ No hay código para compilar.';
+      return;
+    }
+
     this.isCompiling = true;
     this.codeOutput = '🔄 Compilando con Judge0 API...\n\n';
 
     try {
-      // Judge0 es otra API gratuita para compilar código
       const response = await fetch('https://api.judge0.com/submissions?wait=true', {
         method: 'POST',
         headers: {
@@ -531,6 +573,7 @@ int main() {
       this.codeOutput += '💡 Prueba configurando JDoodle o verifica tu conexión a internet.';
     } finally {
       this.isCompiling = false;
+      this.cdRef.detectChanges();
     }
   }
 
@@ -558,7 +601,10 @@ int main() {
 
     if (suggestions.length > 0) {
       this.codeOutput = '💡 Sugerencias para tu código:\n' + suggestions.join('\n');
+    } else {
+      this.codeOutput = '✅ El código parece estar bien estructurado.';
     }
+    this.cdRef.detectChanges();
   }
 
   // Método para limpiar y formatear el código
@@ -575,6 +621,7 @@ int main() {
     }
 
     this.userCode = formattedCode;
+    this.cdRef.detectChanges();
   }
 
   addComment(): void {
@@ -590,9 +637,23 @@ int main() {
         image: this.selectedFile ? URL.createObjectURL(this.selectedFile) : undefined,
       };
 
-      this.comments.unshift(comment);
-      this.newComment = '';
-      this.selectedFile = null;
+      // Guardar comentario en el backend
+      this.commentService.save(comment).subscribe({
+        next: (savedComment) => {
+          this.comments.unshift(savedComment);
+          this.newComment = '';
+          this.selectedFile = null;
+          this.cdRef.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error al guardar comentario:', error);
+          // Mostrar comentario localmente aunque falle el guardado
+          this.comments.unshift(comment);
+          this.newComment = '';
+          this.selectedFile = null;
+          this.cdRef.detectChanges();
+        },
+      });
     }
   }
 
@@ -600,98 +661,204 @@ int main() {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
+      this.cdRef.detectChanges();
     }
   }
 
   removeFile(): void {
     this.selectedFile = null;
+    this.cdRef.detectChanges();
   }
 
   likeComment(comment: CommentModel): void {
     comment.likes++;
+    // Opcional: Actualizar en el backend
+    this.commentService.update(comment).subscribe({
+      error: (error) => console.error('Error al actualizar like:', error),
+    });
+    this.cdRef.detectChanges();
   }
 
+  // Método para obtener contenido basado en el método seleccionado
   getCurrentContent(): any {
+    if (!this.selectedLesson?.content) {
+      console.log('No lesson content available');
+      return null;
+    }
+
     const content = this.selectedLesson.content;
+    console.log('Current content:', content);
+    console.log('Selected method:', this.selectedMethod.id);
 
     switch (this.selectedMethod.id) {
       case 'visual':
-        return content!.video || content!.mindmap;
+        return content.video || content.mindmap;
       case 'auditivo':
-        return content!.audio;
+        return content.audio;
       case 'lectura':
-        return content!.document;
+        return content.document;
       case 'kinestesico':
-        return content!.code;
+        return content.code;
       case 'mixto':
       default:
-        return content!.video;
+        // Para mixto, priorizar video, luego código
+        return (
+          content.video || content.code || content.document || content.audio || content.mindmap
+        );
     }
   }
 
   getContentType(): string {
     const content = this.getCurrentContent();
-    if (!content) return 'none';
+
+    if (!content) {
+      console.log('No content found for type detection');
+      return 'none';
+    }
+
+    console.log('Content found for type detection:', content);
 
     if (typeof content === 'string') {
-      if (content.includes('youtube') || content.includes('video')) return 'video';
-      if (content.includes('audio') || content.includes('.wav') || content.includes('.mp3'))
+      if (
+        content.includes('youtube') ||
+        content.includes('vimeo') ||
+        content.includes('video') ||
+        content.includes('.mp4') ||
+        content.includes('.webm')
+      ) {
+        return 'video';
+      } else if (
+        content.includes('audio') ||
+        content.includes('.wav') ||
+        content.includes('.mp3')
+      ) {
         return 'audio';
-      if (content.includes('pdf') || content.includes('document')) return 'document';
+      } else if (
+        content.includes('pdf') ||
+        content.includes('document') ||
+        content.includes('.doc')
+      ) {
+        return 'document';
+      } else {
+        // Si no coincide con otros tipos, asumir que es código
+        return 'code';
+      }
     }
 
     return 'code';
   }
 
   isMethodAvailable(method: LearningMethod): boolean {
+    if (!this.selectedLesson?.content) {
+      return false;
+    }
+
     const content = this.selectedLesson.content;
+    let hasContent = false;
 
     switch (method.id) {
       case 'visual':
-        return !!(content!.video || content!.mindmap);
+        hasContent = !!(content.video || content.mindmap);
+        break;
       case 'auditivo':
-        return !!content!.audio;
+        hasContent = !!content.audio;
+        break;
       case 'lectura':
-        return !!content!.document;
+        hasContent = !!content.document;
+        break;
       case 'kinestesico':
-        return !!content!.code;
+        hasContent = !!content.code;
+        break;
       case 'mixto':
-        return true;
+        // Mixto está disponible si hay al menos un tipo de contenido
+        hasContent = !!(
+          content.video ||
+          content.audio ||
+          content.document ||
+          content.code ||
+          content.mindmap
+        );
+        break;
       default:
-        return false;
+        hasContent = false;
     }
+
+    console.log(`Method ${method.name} available:`, hasContent);
+    return hasContent;
   }
 
   completeLesson(): void {
+    if (!this.selectedLesson || !this.selectedTopic || !this.selectedModule) {
+      return;
+    }
+
     this.selectedLesson.completed = true;
 
+    // Actualizar en el backend
+    this.lessonService.update(this.selectedLesson).subscribe({
+      error: (error) => console.error('Error al actualizar lección:', error),
+    });
+
     // Actualizar progreso del tema
-    const allLessonsCompleted = this.selectedTopic.lessons.every((lesson) => lesson.completed);
+    const allLessonsCompleted =
+      this.selectedTopic.lessons?.every((lesson) => lesson.completed) ?? false;
     if (allLessonsCompleted) {
       this.selectedTopic.completed = true;
+      this.topicService.update(this.selectedTopic).subscribe({
+        error: (error) => console.error('Error al actualizar tema:', error),
+      });
     }
 
     // Actualizar progreso del módulo
-    const completedTopics = this.selectedModule.topics.filter((topic) => topic.completed).length;
-    this.selectedModule.progress = Math.round(
-      (completedTopics / this.selectedModule.topics.length) * 100
-    );
+    const completedTopics =
+      this.selectedModule.topics?.filter((topic) => topic.completed).length || 0;
+    const totalTopics = this.selectedModule.topics?.length || 1;
+    this.selectedModule.progress = Math.round((completedTopics / totalTopics) * 100);
 
     if (this.selectedModule.progress === 100) {
       this.selectedModule.completed = true;
     }
+
+    this.moduleService.update(this.selectedModule).subscribe({
+      error: (error) => console.error('Error al actualizar módulo:', error),
+    });
+
+    this.cdRef.detectChanges();
   }
 
   // Obtener explicaciones de código si existen
   getCodeExplanations(): CodeExplanation[] {
-    return this.selectedLesson.content!.codeExplanations || [];
+    return this.selectedLesson?.content?.codeExplanations || [];
   }
 
   closeSidebar(): void {
-    this.router.navigate(['/detalle-curso', this.selectedTopic.id]);
+    this.router.navigate(['/detalle-curso', this.courseId]);
   }
 
   openQuiz(): void {
-    this.router.navigate(['/examen', this.selectedLesson.id]);
+    if (this.selectedLesson?.id) {
+      this.router.navigate(['/examen', this.selectedLesson.id]);
+    }
+  }
+
+  // Método para recargar datos
+  reloadData(): void {
+    this.loadData();
+  }
+
+  // Método para debug: mostrar información de la lección actual
+  debugLessonInfo(): void {
+    if (this.selectedLesson) {
+      console.log('=== DEBUG LESSON INFO ===');
+      console.log('Lesson:', this.selectedLesson);
+      console.log('Content:', this.selectedLesson.content);
+      console.log('Available methods:');
+      this.learningMethods.forEach((method) => {
+        console.log(`- ${method.name}: ${this.isMethodAvailable(method)}`);
+      });
+      console.log('Current content:', this.getCurrentContent());
+      console.log('Content type:', this.getContentType());
+      console.log('=====================');
+    }
   }
 }

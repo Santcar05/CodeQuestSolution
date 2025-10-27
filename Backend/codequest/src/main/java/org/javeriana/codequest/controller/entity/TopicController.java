@@ -42,6 +42,11 @@ public class TopicController {
         return topicService.findById(id);
     }
 
+    @GetMapping("/module/{idModule}")
+    public List<Topic> getTopicsByModuleId(@PathVariable Long idModule) {
+        return topicService.findByModuleId(idModule);
+    }
+
     @PostMapping("/save/{idModule}")
     public void save(@RequestBody Topic topic, @PathVariable Long idModule) {
         ModuleModel module = moduleService.findById(idModule);

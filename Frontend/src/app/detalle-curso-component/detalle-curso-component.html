@@ -114,13 +114,13 @@
 
             <div class="instructor-info">
               <img
-                [src]="course!.instructor!.avatar"
-                [alt]="course!.instructor!.name"
+                [src]="course!.instructor?.avatar"
+                [alt]="course!.instructor?.name"
                 class="instructor-avatar"
               />
               <div class="instructor-details">
                 <span class="instructor-label">Instructor</span>
-                <span class="instructor-name">{{ course!.instructor!.name }}</span>
+                <span class="instructor-name">{{ course!.instructor?.name }}</span>
               </div>
             </div>
 

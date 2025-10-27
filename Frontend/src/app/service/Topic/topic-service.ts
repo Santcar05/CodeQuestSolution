@@ -17,6 +17,10 @@ export class TopicService {
     return this.http.get<Topic>(`${this.apiUrl}/${id}`);
   }
 
+  findByModuleId(moduleId: number): Observable<Topic[]> {
+    return this.http.get<Topic[]>(`${this.apiUrl}/module/${moduleId}`);
+  }
+
   save(topic: Topic, idModule: number): Observable<Topic> {
     return this.http.post<Topic>(`${this.apiUrl}/save/${idModule}`, topic);
   }

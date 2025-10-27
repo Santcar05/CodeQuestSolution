@@ -2,10 +2,13 @@ package org.javeriana.codequest.controller.entity;
 
 import java.util.List;
 
+import org.javeriana.codequest.entity.Lesson;
 import org.javeriana.codequest.entity.LessonContent;
 import org.javeriana.codequest.service.entity.LessonContentService;
 import org.javeriana.codequest.service.entity.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,9 +39,35 @@ public class LessonContentController {
     }
 
     @PostMapping("/save/{idLesson}")
-    public void save(@RequestBody LessonContent lessonContent, @PathVariable Long idLesson) {
-        lessonContent.setLesson(lessonService.findById(idLesson));
-        lessonContentService.save(lessonContent);
+    public ResponseEntity<?> save(@RequestBody LessonContent lessonContent, @PathVariable Long idLesson) {
+        try {
+            Lesson lesson = lessonService.findById(idLesson);
+
+            if (lesson == null) {
+                return ResponseEntity.badRequest().body("Lesson not found with id: " + idLesson);
+            }
+            lesson.setContent(lessonContent);
+            // Verificar si ya existe contenido para esta lección
+            LessonContent existingContent = lessonContentService.findByLessonId(idLesson);
+            if (existingContent != null) {
+                // Actualizar el contenido existente
+                lessonContent.setId(existingContent.getId());
+                lessonContent.setLesson(lesson);
+                lessonContentService.update(lessonContent);
+                return ResponseEntity.ok("Lesson content updated successfully");
+            } else {
+                // Crear nuevo contenido
+                lessonContent.setLesson(lesson);
+                lessonContentService.save(lessonContent);
+
+                return ResponseEntity.ok("Lesson content created successfully");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error saving lesson content: " + e.getMessage());
+        }
     }
 
     @PutMapping("/update")

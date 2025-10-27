@@ -21,7 +21,7 @@ import { LessonContentService } from '../service/LessonContent/lesson-content-se
   templateUrl: './admin-module-component.html',
   styleUrls: ['./admin-module-component.css'],
 })
-export class AdminModuleComponentComponent implements OnInit {
+export class AdminModuleComponent implements OnInit {
   course: Course | null = null;
   modules: ModuleModel[] = [];
   filteredModules: ModuleModel[] = [];
@@ -530,31 +530,44 @@ export class AdminModuleComponentComponent implements OnInit {
     return true;
   }
 
-  // Lesson Content Management
+  // Content Management
   openContentModal(lesson: Lesson): void {
     this.selectedLesson = lesson;
 
-    // Cargar el contenido si no está presente
-    if (!lesson.content) {
-      this.lessonContentService.findByLessonId(lesson.id).subscribe({
-        next: (content) => {
-          this.newLessonContent = content;
-          this.isContentModalOpen = true;
-          this.activeContentTab = 'video';
-          this.cdRef.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error loading content:', err);
-          this.showError('No se pudo cargar el contenido de la lección');
-          this.isLoading = false;
-          this.cdRef.detectChanges();
-        },
-      });
-    } else {
-      this.newLessonContent = { ...lesson.content };
-      this.isContentModalOpen = true;
-      this.activeContentTab = 'video';
-    }
+    // Inicializar newLessonContent con valores por defecto
+    this.newLessonContent = {
+      video: '',
+      audio: '',
+      document: '',
+      code: '',
+      mindmap: '',
+      interactive: '',
+      codeExplanations: [],
+    };
+
+    // Cargar el contenido si existe
+    this.lessonContentService.findByLessonId(lesson.id).subscribe({
+      next: (content) => {
+        if (content) {
+          // Fusionar el contenido cargado con los valores por defecto
+          this.newLessonContent = {
+            ...this.newLessonContent,
+            ...content,
+            codeExplanations: content.codeExplanations || [],
+          };
+        }
+        this.isContentModalOpen = true;
+        this.activeContentTab = 'video';
+        this.cdRef.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading content:', err);
+        // Si no existe contenido, usar valores por defecto
+        this.isContentModalOpen = true;
+        this.activeContentTab = 'video';
+        this.cdRef.detectChanges();
+      },
+    });
   }
 
   closeContentModal(): void {
@@ -568,15 +581,27 @@ export class AdminModuleComponentComponent implements OnInit {
 
     this.isLoading = true;
 
-    // Para guardar el contenido, necesitamos enviar el lessonId
-    const contentToSave = {
-      ...this.newLessonContent,
-      lessonId: this.selectedLesson.id,
+    // Crear un objeto limpio de LessonContent
+    const contentToSave: LessonContent = {
+      id: this.newLessonContent.id || null, // Para updates mantener el ID
+      video: this.newLessonContent.video || '',
+      audio: this.newLessonContent.audio || '',
+      document: this.newLessonContent.document || '',
+      code: this.newLessonContent.code || '',
+      mindmap: this.newLessonContent.mindmap || '',
+      interactive: this.newLessonContent.interactive || '',
+      codeExplanations: this.newLessonContent.codeExplanations || [], // Inicializar como array vacío
+      // NO incluir lesson aquí - se establece en el backend
     };
+
+    console.log('Enviando LessonContent:', contentToSave); // Debug
 
     this.lessonContentService.save(contentToSave, this.selectedLesson.id).subscribe({
       next: (savedContent) => {
-        this.selectedLesson!.content = savedContent;
+        console.log('Contenido guardado:', savedContent); // Debug
+        if (this.selectedLesson) {
+          this.selectedLesson.content = savedContent;
+        }
         this.showSuccess('Contenido guardado correctamente');
         this.closeContentModal();
         this.isLoading = false;
@@ -584,7 +609,8 @@ export class AdminModuleComponentComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error saving lesson content:', err);
-        this.showError('Error al guardar el contenido');
+        console.error('Error details:', err.error); // Más detalles del error
+        this.showError('Error al guardar el contenido: ' + (err.error?.message || err.message));
         this.isLoading = false;
         this.cdRef.detectChanges();
       },
