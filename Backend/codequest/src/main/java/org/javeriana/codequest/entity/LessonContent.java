@@ -52,7 +52,6 @@ public class LessonContent {
     private List<CodeExplanation> codeExplanations;
 
     @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "lesson_id")
+    @OneToOne(mappedBy = "content", fetch = FetchType.LAZY) // mappedBy apunta al campo en Lesson
     private Lesson lesson;
 }

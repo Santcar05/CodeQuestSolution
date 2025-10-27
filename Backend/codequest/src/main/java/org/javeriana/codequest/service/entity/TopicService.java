@@ -30,6 +30,10 @@ public class TopicService {
         return topicRepository.findAll();
     }
 
+    public List<Topic> findByModuleId(Long idModule) {
+        return topicRepository.findByModuleId(idModule);
+    }
+
     public void update(Topic topic) {
         topicRepository.save(topic);
     }

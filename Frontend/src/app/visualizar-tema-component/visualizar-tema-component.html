@@ -1,347 +1,84 @@
 <!-- visualizar-tema.component.html -->
 <div class="learning-container">
-  <!-- Sidebar de navegación (se mantiene igual) -->
-  <div class="navigation-sidebar">
-    <div class="sidebar-header">
-      <h3>Contenido del Curso</h3>
-      <div class="progress-indicator">
-        <span>Progreso: {{ selectedModule.progress }}%</span>
-        <div class="progress-bar">
-          <div class="progress-fill" [style.width.%]="selectedModule.progress"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="modules-list">
-      <div
-        *ngFor="let module of modules; let i = index"
-        class="module-item"
-        [class.active]="module.id === selectedModule.id"
-        [class.expanded]="expandedModules[i]"
-      >
-        <div class="module-header" (click)="toggleModule(i)">
-          <div class="module-info">
-            <div class="module-status">
-              <span class="module-icon" [class.completed]="module.completed">
-                {{ module.completed ? '✓' : i + 1 }}
-              </span>
-            </div>
-            <div class="module-details">
-              <h4 class="module-title">{{ module.title }}</h4>
-              <span class="module-progress">{{ module.progress }}% completado</span>
-            </div>
-          </div>
-          <div class="module-toggle">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </div>
-        </div>
-
-        <div class="topics-container" *ngIf="expandedModules[i]">
-          <div
-            *ngFor="let topic of module.topics; let j = index"
-            class="topic-item"
-            [class.active]="topic.id === selectedTopic.id"
-            [class.expanded]="expandedTopics[i][j]"
-          >
-            <div class="topic-header" (click)="toggleTopic(i, j)">
-              <div class="topic-info">
-                <span class="topic-status" [class.completed]="topic.completed">
-                  {{ topic.completed ? '✓' : '•' }}
-                </span>
-                <span class="topic-title">{{ topic.title }}</span>
-              </div>
-              <div class="topic-meta">
-                <span class="lesson-count">{{ topic.lessons.length }} clases</span>
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
-              </div>
-            </div>
-
-            <div class="lessons-list" *ngIf="expandedTopics[i][j]">
-              <div
-                *ngFor="let lesson of topic.lessons"
-                class="lesson-item"
-                [class.active]="lesson.id === selectedLesson.id"
-                [class.completed]="lesson.completed"
-                (click)="selectLesson(lesson)"
-              >
-                <div class="lesson-icon">
-                  <span *ngIf="lesson.completed" class="completed-icon">✓</span>
-                  <span *ngIf="!lesson.completed" class="play-icon">▶</span>
-                </div>
-                <span class="lesson-title">{{ lesson.title }}</span>
-                <span class="lesson-duration">{{ lesson.duration }}</span>
-                <span class="lesson-preview" *ngIf="lesson.isPreview">Vista previa</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Boton para cerrar el sidebar -->
-    <div class="close-button" (click)="closeSidebar()" class="close-button">
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <line x1="18" y1="6" x2="6" y2="18" />
-        <line x1="6" y1="6" x2="18" y2="18" />
-      </svg>
-    </div>
-
-    <!-- Boton para Realizar Prueba -->
-
-    <div class="quiz-button">
-      <button (click)="openQuiz()">Realizar Prueba</button>
-    </div>
+  <!-- Estado de carga -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando contenido del curso...</p>
   </div>
 
-  <!-- Área principal de contenido -->
-  <div class="content-area">
-    <!-- Selector de método de aprendizaje -->
-    <div class="method-selector">
-      <div class="selector-header">
-        <h3>Método de Aprendizaje</h3>
-        <span class="current-method">{{ selectedMethod.name }}</span>
+  <!-- Estado de error -->
+  <div *ngIf="error && !isLoading" class="error-state">
+    <h3>Error al cargar el contenido</h3>
+    <p>{{ error }}</p>
+    <button (click)="reloadData()" class="retry-btn">Reintentar</button>
+  </div>
+
+  <!-- Contenido principal cuando los datos están cargados -->
+  <div
+    *ngIf="!isLoading && !error && selectedModule && selectedTopic && selectedLesson"
+    class="content-loaded"
+  >
+    <!-- Sidebar de navegación -->
+    <div class="navigation-sidebar">
+      <div class="sidebar-header">
+        <h3>Contenido del Curso</h3>
+        <div class="progress-indicator">
+          <span>Progreso: {{ selectedModule.progress }}%</span>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="selectedModule.progress"></div>
+          </div>
+        </div>
       </div>
 
-      <div class="methods-grid">
+      <div class="modules-list">
         <div
-          *ngFor="let method of learningMethods"
-          class="method-card"
-          [class.active]="method.id === selectedMethod.id"
-          [class.disabled]="!isMethodAvailable(method)"
-          (click)="isMethodAvailable(method) && selectMethod(method)"
+          *ngFor="let module of modules; let i = index"
+          class="module-item"
+          [class.active]="module.id === selectedModule.id"
+          [class.expanded]="expandedModules[i]"
         >
-          <div class="method-icon" [style.background]="method.color">
-            {{ method.icon }}
-          </div>
-          <div class="method-info">
-            <h4 class="method-name">{{ method.name }}</h4>
-            <p class="method-description">{{ method.description }}</p>
-          </div>
-          <div class="method-status" *ngIf="!isMethodAvailable(method)">
-            <span>No disponible</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Contenido principal -->
-    <div class="main-content">
-      <!-- Encabezado del tema -->
-      <div class="content-header">
-        <div class="breadcrumb">
-          <span class="module-name">{{ selectedModule.title }}</span>
-          <span class="separator">/</span>
-          <span class="topic-name">{{ selectedTopic.title }}</span>
-          <span class="separator">/</span>
-          <span class="lesson-name">{{ selectedLesson.title }}</span>
-        </div>
-
-        <div class="lesson-actions">
-          <button class="next-btn" (click)="nextExplanation()">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-            Siguiente Explicación
-          </button>
-          <button
-            class="complete-btn"
-            [class.completed]="selectedLesson.completed"
-            (click)="completeLesson()"
-          >
-            {{ selectedLesson.completed ? '✓ Completado' : 'Marcar como completado' }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Contenido del tema según el método seleccionado -->
-      <div class="content-display">
-        <div class="content-wrapper" *ngIf="getCurrentContent(); else noContent">
-          <!-- Video -->
-          <div *ngIf="getContentType() === 'video'" class="video-container">
-            <iframe
-              [src]="getCurrentContent() | safeResourceUrl"
-              class="learning-video"
-              frameborder="0"
-              allowfullscreen
-            >
-            </iframe>
-          </div>
-
-          <!-- Audio -->
-          <div *ngIf="getContentType() === 'audio'" class="audio-container">
-            <div class="audio-player">
-              <div class="audio-icon">🎧</div>
-              <audio controls class="learning-audio">
-                <source [src]="getCurrentContent() | safeUrl" type="audio/mp3" />
-                Tu navegador no soporta el elemento audio.
-              </audio>
-            </div>
-          </div>
-
-          <!-- Documento -->
-          <div *ngIf="getContentType() === 'document'" class="document-container">
-            <iframe
-              [src]="getCurrentContent() | safeResourceUrl"
-              class="document-viewer"
-              frameborder="0"
-            >
-            </iframe>
-          </div>
-
-          <!-- Código (Modo Kinestésico) -->
-          <div *ngIf="getContentType() === 'code'" class="code-learning-container">
-            <div class="code-explanation-section">
-              <h4>Explicación del Código</h4>
-              <div class="code-explanations">
-                <div *ngFor="let explanation of getCodeExplanations()" class="explanation-item">
-                  <div class="code-line">
-                    <span class="line-number">{{ explanation.line }}</span>
-                    <code class="line-code">{{ explanation.code }}</code>
-                  </div>
-                  <div class="explanation-text">
-                    {{ explanation.explanation }}
-                  </div>
-                </div>
+          <div class="module-header" (click)="toggleModule(i)">
+            <div class="module-info">
+              <div class="module-status">
+                <span class="module-icon" [class.completed]="module.completed">
+                  {{ module.completed ? '✓' : i + 1 }}
+                </span>
+              </div>
+              <div class="module-details">
+                <h4 class="module-title">{{ module.title }}</h4>
+                <span class="module-progress">{{ module.progress }}% completado</span>
               </div>
             </div>
-
-            <div class="code-practice-section">
-              <div class="code-editor-header">
-                <h4>Editor de Código C++</h4>
-                <button class="run-btn" (click)="compileAndRun()" [disabled]="isCompiling">
-                  {{ isCompiling ? 'Compilando...' : '▶ Ejecutar Código' }}
-                </button>
-              </div>
-
-              <textarea
-                [(ngModel)]="userCode"
-                class="code-editor"
-                placeholder="Escribe tu código C++ aquí..."
-                spellcheck="false"
+            <div class="module-toggle">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
               >
-              </textarea>
-
-              <div class="code-output">
-                <h5>Salida del Programa:</h5>
-                <pre class="output-content">{{ codeOutput }}</pre>
-              </div>
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
             </div>
           </div>
-        </div>
 
-        <ng-template #noContent>
-          <div class="no-content">
-            <div class="no-content-icon">📚</div>
-            <h3>Contenido no disponible</h3>
-            <p>Este método de aprendizaje no está disponible para esta lección.</p>
-            <p>Intenta con otro método o continúa con el siguiente tema.</p>
-          </div>
-        </ng-template>
-      </div>
-
-      <!-- Sección de comentarios y apuntes -->
-      <div class="comments-section">
-        <div class="comments-header">
-          <h3>Comentarios y Apuntes</h3>
-          <span class="comments-count">{{ comments.length }} comentarios</span>
-        </div>
-
-        <!-- Formulario de nuevo comentario -->
-        <div class="new-comment">
-          <textarea
-            [(ngModel)]="newComment"
-            placeholder="Escribe tu comentario o apunte..."
-            class="comment-input"
-          >
-          </textarea>
-
-          <div class="comment-actions">
-            <div class="file-upload">
-              <input
-                type="file"
-                id="file-upload"
-                (change)="onFileSelected($event)"
-                accept="image/*"
-                style="display: none"
-              />
-              <label for="file-upload" class="upload-btn">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-                Adjuntar imagen
-              </label>
-              <span *ngIf="selectedFile" class="file-name">
-                {{ selectedFile.name }}
-                <button (click)="removeFile()" class="remove-file">×</button>
-              </span>
-            </div>
-
-            <button (click)="addComment()" [disabled]="!newComment.trim()" class="submit-comment">
-              Publicar comentario
-            </button>
-          </div>
-        </div>
-
-        <!-- Lista de comentarios -->
-        <div class="comments-list">
-          <div *ngFor="let comment of comments" class="comment-item">
-            <div class="comment-avatar">
-              <img [src]="comment.avatar" [alt]="comment.user" />
-            </div>
-            <div class="comment-content">
-              <div class="comment-header">
-                <span class="comment-user">{{ comment.user }}</span>
-                <span class="comment-time">{{ comment.timestamp | date : 'short' }}</span>
-              </div>
-              <p class="comment-text">{{ comment.text }}</p>
-
-              <div *ngIf="comment.image" class="comment-image">
-                <img [src]="comment.image" alt="Imagen adjunta" />
-              </div>
-
-              <div class="comment-actions">
-                <button (click)="likeComment(comment)" class="like-btn">
+          <div class="topics-container" *ngIf="expandedModules[i] && module.topics">
+            <div
+              *ngFor="let topic of module.topics; let j = index"
+              class="topic-item"
+              [class.active]="topic.id === selectedTopic.id"
+              [class.expanded]="expandedTopics[i][j]"
+            >
+              <div class="topic-header" (click)="toggleTopic(i, j)">
+                <div class="topic-info">
+                  <span class="topic-status" [class.completed]="topic.completed">
+                    {{ topic.completed ? '✓' : '•' }}
+                  </span>
+                  <span class="topic-title">{{ topic.title }}</span>
+                </div>
+                <div class="topic-meta">
+                  <span class="lesson-count">{{ topic.lessons?.length || 0 }} clases</span>
                   <svg
                     width="14"
                     height="14"
@@ -350,17 +87,309 @@
                     stroke="currentColor"
                     stroke-width="2"
                   >
-                    <path
-                      d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
-                    />
+                    <polyline points="6 9 12 15 18 9" />
                   </svg>
-                  Me gusta ({{ comment.likes }})
-                </button>
+                </div>
+              </div>
+
+              <div class="lessons-list" *ngIf="expandedTopics[i][j] && topic.lessons">
+                <div
+                  *ngFor="let lesson of topic.lessons"
+                  class="lesson-item"
+                  [class.active]="lesson.id === selectedLesson.id"
+                  [class.completed]="lesson.completed"
+                  (click)="selectLesson(lesson)"
+                >
+                  <div class="lesson-icon">
+                    <span *ngIf="lesson.completed" class="completed-icon">✓</span>
+                    <span *ngIf="!lesson.completed" class="play-icon">▶</span>
+                  </div>
+                  <span class="lesson-title">{{ lesson.title }}</span>
+                  <span class="lesson-duration">{{ lesson.duration }}</span>
+                  <span class="lesson-preview" *ngIf="lesson.isPreview">Vista previa</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón para cerrar el sidebar -->
+      <div class="close-button" (click)="closeSidebar()">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+        Cerrar
+      </div>
+
+      <!-- Botón para Realizar Prueba -->
+      <div class="quiz-button">
+        <button (click)="openQuiz()">Realizar Prueba</button>
+      </div>
+    </div>
+
+    <!-- Área principal de contenido -->
+    <div class="content-area">
+      <!-- Selector de método de aprendizaje -->
+      <div class="method-selector">
+        <div class="selector-header">
+          <h3>Método de Aprendizaje</h3>
+          <span class="current-method">{{ selectedMethod.name }}</span>
+        </div>
+
+        <div class="methods-grid">
+          <div
+            *ngFor="let method of learningMethods"
+            class="method-card"
+            [class.active]="method.id === selectedMethod.id"
+            [class.disabled]="!isMethodAvailable(method)"
+            (click)="isMethodAvailable(method) && selectMethod(method)"
+          >
+            <div class="method-icon" [style.background]="method.color">
+              {{ method.icon }}
+            </div>
+            <div class="method-info">
+              <h4 class="method-name">{{ method.name }}</h4>
+              <p class="method-description">{{ method.description }}</p>
+            </div>
+            <div class="method-status" *ngIf="!isMethodAvailable(method)">
+              <span>No disponible</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido principal -->
+      <div class="main-content">
+        <!-- Encabezado del tema -->
+        <div class="content-header">
+          <div class="breadcrumb">
+            <span class="module-name">{{ selectedModule.title }}</span>
+            <span class="separator">/</span>
+            <span class="topic-name">{{ selectedTopic.title }}</span>
+            <span class="separator">/</span>
+            <span class="lesson-name">{{ selectedLesson.title }}</span>
+          </div>
+
+          <div class="lesson-actions">
+            <button class="next-btn" (click)="nextExplanation()">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+              Siguiente Explicación
+            </button>
+            <button
+              class="complete-btn"
+              [class.completed]="selectedLesson.completed"
+              (click)="completeLesson()"
+            >
+              {{ selectedLesson.completed ? '✓ Completado' : 'Marcar como completado' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Contenido del tema según el método seleccionado -->
+        <div class="content-display">
+          <div class="content-wrapper" *ngIf="getCurrentContent(); else noContent">
+            <!-- Video -->
+            <div *ngIf="getContentType() === 'video'" class="video-container">
+              <iframe
+                [src]="getCurrentContent() | safeResourceUrl"
+                class="learning-video"
+                frameborder="0"
+                allowfullscreen
+              >
+              </iframe>
+            </div>
+
+            <!-- Audio -->
+            <div *ngIf="getContentType() === 'audio'" class="audio-container">
+              <div class="audio-player">
+                <div class="audio-icon">🎧</div>
+                <audio controls class="learning-audio">
+                  <source [src]="getCurrentContent() | safeUrl" type="audio/mp3" />
+                  Tu navegador no soporta el elemento audio.
+                </audio>
+              </div>
+            </div>
+
+            <!-- Documento -->
+            <div *ngIf="getContentType() === 'document'" class="document-container">
+              <iframe
+                [src]="getCurrentContent() | safeResourceUrl"
+                class="document-viewer"
+                frameborder="0"
+              >
+              </iframe>
+            </div>
+
+            <!-- Código (Modo Kinestésico) -->
+            <div *ngIf="getContentType() === 'code'" class="code-learning-container">
+              <div class="code-explanation-section">
+                <h4>Explicación del Código</h4>
+                <div class="code-explanations">
+                  <div *ngFor="let explanation of getCodeExplanations()" class="explanation-item">
+                    <div class="code-line">
+                      <span class="line-number">{{ explanation.line }}</span>
+                      <code class="line-code">{{ explanation.code }}</code>
+                    </div>
+                    <div class="explanation-text">
+                      {{ explanation.explanation }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="code-practice-section">
+                <div class="code-editor-header">
+                  <h4>Editor de Código C++</h4>
+                  <button class="run-btn" (click)="compileAndRun()" [disabled]="isCompiling">
+                    {{ isCompiling ? 'Compilando...' : '▶ Ejecutar Código' }}
+                  </button>
+                </div>
+
+                <textarea
+                  [(ngModel)]="userCode"
+                  class="code-editor"
+                  placeholder="Escribe tu código C++ aquí..."
+                  spellcheck="false"
+                >
+                </textarea>
+
+                <div class="code-output">
+                  <h5>Salida del Programa:</h5>
+                  <pre class="output-content">{{ codeOutput }}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noContent>
+            <div class="no-content">
+              <div class="no-content-icon">📚</div>
+              <h3>Contenido no disponible</h3>
+              <p>Este método de aprendizaje no está disponible para esta lección.</p>
+              <p>Intenta con otro método o continúa con el siguiente tema.</p>
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- Sección de comentarios y apuntes -->
+        <div class="comments-section">
+          <div class="comments-header">
+            <h3>Comentarios y Apuntes</h3>
+            <span class="comments-count">{{ comments.length }} comentarios</span>
+          </div>
+
+          <!-- Formulario de nuevo comentario -->
+          <div class="new-comment">
+            <textarea
+              [(ngModel)]="newComment"
+              placeholder="Escribe tu comentario o apunte..."
+              class="comment-input"
+            >
+            </textarea>
+
+            <div class="comment-actions">
+              <div class="file-upload">
+                <input
+                  type="file"
+                  id="file-upload"
+                  (change)="onFileSelected($event)"
+                  accept="image/*"
+                  style="display: none"
+                />
+                <label for="file-upload" class="upload-btn">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  Adjuntar imagen
+                </label>
+                <span *ngIf="selectedFile" class="file-name">
+                  {{ selectedFile.name }}
+                  <button (click)="removeFile()" class="remove-file">×</button>
+                </span>
+              </div>
+
+              <button (click)="addComment()" [disabled]="!newComment.trim()" class="submit-comment">
+                Publicar comentario
+              </button>
+            </div>
+          </div>
+
+          <!-- Lista de comentarios -->
+          <div class="comments-list">
+            <div *ngFor="let comment of comments" class="comment-item">
+              <div class="comment-avatar">
+                <img [src]="comment.avatar" [alt]="comment.user" />
+              </div>
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-user">{{ comment.user }}</span>
+                  <span class="comment-time">{{ comment.timestamp | date : 'short' }}</span>
+                </div>
+                <p class="comment-text">{{ comment.text }}</p>
+
+                <div *ngIf="comment.image" class="comment-image">
+                  <img [src]="comment.image" alt="Imagen adjunta" />
+                </div>
+
+                <div class="comment-actions">
+                  <button (click)="likeComment(comment)" class="like-btn">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"
+                      />
+                    </svg>
+                    Me gusta ({{ comment.likes }})
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Mensaje cuando no hay datos cargados -->
+  <div
+    *ngIf="!isLoading && !error && (!selectedModule || !selectedTopic || !selectedLesson)"
+    class="no-data"
+  >
+    <h3>No hay contenido disponible</h3>
+    <p>No se pudo cargar el contenido del curso. Por favor, intenta nuevamente.</p>
+    <button (click)="reloadData()" class="retry-btn">Reintentar</button>
   </div>
 </div>

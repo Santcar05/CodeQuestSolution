@@ -17,4 +17,12 @@ export class CommentModelService {
   findById(id: number): Observable<CommentModel> {
     return this.http.get<CommentModel>(`${this.apiUrl}/${id}`);
   }
+
+  save(commentModel: CommentModel): Observable<CommentModel> {
+    return this.http.post<CommentModel>(`${this.apiUrl}/save`, commentModel);
+  }
+
+  update(commentModel: CommentModel): Observable<CommentModel> {
+    return this.http.put<CommentModel>(`${this.apiUrl}/update`, commentModel);
+  }
 }

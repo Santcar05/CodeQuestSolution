@@ -18,6 +18,10 @@ export class LessonService {
     return this.http.get<Lesson>(`${this.apiUrl}/${id}`);
   }
 
+  findByTopicId(id: number): Observable<Lesson[]> {
+    return this.http.get<Lesson[]>(`${this.apiUrl}/topic/${id}`);
+  }
+
   save(lesson: Lesson, topicId: number): Observable<Lesson> {
     return this.http.post<Lesson>(`${this.apiUrl}/save/${topicId}`, lesson);
   }

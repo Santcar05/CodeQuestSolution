@@ -58,6 +58,16 @@ public class LessonController {
         }
     }
 
+    @GetMapping("/topic/{idTopic}")
+    public ResponseEntity<List<Lesson>> findByTopicId(@PathVariable Long idTopic) {
+        try {
+            List<Lesson> lessons = lessonService.findByTopicId(idTopic);
+            return ResponseEntity.ok(lessons);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @PostMapping("/save/{idTopic}")
     public ResponseEntity<Lesson> save(@RequestBody Lesson lesson, @PathVariable Long idTopic) {
         Topic topic = topicService.findById(idTopic);

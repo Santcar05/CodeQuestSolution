@@ -14,6 +14,7 @@ public class CommentModelService {
     private CommentModelRepository commentModelRepository;
 
     public void save(CommentModel commentModel) {
+        commentModel.setId(null);
         commentModelRepository.save(commentModel);
     }
 
@@ -31,5 +32,9 @@ public class CommentModelService {
 
     public List<CommentModel> findAll() {
         return commentModelRepository.findAll();
+    }
+
+    public void update(CommentModel commentModel) {
+        commentModelRepository.save(commentModel);
     }
 }

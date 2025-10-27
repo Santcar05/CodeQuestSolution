@@ -35,6 +35,10 @@ public class LessonService {
         return lessonRepository.findAll();
     }
 
+    public List<Lesson> findByTopicId(Long idTopic) {
+        return lessonRepository.findByTopicId(idTopic);
+    }
+
     public void update(Lesson lesson) {
         lessonRepository.save(lesson);
     }

@@ -13,9 +13,25 @@ public class LessonContentService {
     @Autowired
     private LessonContentRepository lessonContentRepository;
 
-    public void save(LessonContent lessonContent) {
-        lessonContent.setId(null);
-        lessonContentRepository.save(lessonContent);
+    public LessonContent save(LessonContent lessonContent) {
+        // Para crear nuevo, asegurar que el ID sea null
+        if (lessonContent.getId() != null) {
+            // Si tiene ID, es una actualización
+            return lessonContentRepository.save(lessonContent);
+        } else {
+            // Para creación nueva, verificar si ya existe
+            if (lessonContent.getLesson() != null && lessonContent.getLesson().getId() != null) {
+                LessonContent existing = findByLessonId(lessonContent.getLesson().getId());
+                if (existing != null) {
+                    // Actualizar el existente
+                    lessonContent.setId(existing.getId());
+                    return lessonContentRepository.save(lessonContent);
+                }
+            }
+            // Crear nuevo
+            lessonContent.setId(null);
+            return lessonContentRepository.save(lessonContent);
+        }
     }
 
     public void delete(LessonContent lessonContent) {

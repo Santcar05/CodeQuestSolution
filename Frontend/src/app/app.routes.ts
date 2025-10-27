@@ -88,7 +88,7 @@ export const routes: Routes = [
         path: 'cursos/:id/modules',
         loadComponent: () =>
           import('./admin-module-component/admin-module-component').then(
-            (m) => m.AdminModuleComponentComponent
+            (m) => m.AdminModuleComponent
           ),
       },
       {
