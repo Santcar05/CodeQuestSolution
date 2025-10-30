@@ -47,12 +47,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   upcomingAchievements$: Observable<UpcomingAchievement[]> = of([]);
   weeklyActivity$: Observable<WeeklyActivity[]> = of([]);
 
-  // 🔔 Notificación flotante
+  //Notificación flotante
   mensaje: string = '';
   mostrarNotificacion: boolean = false;
   tipoNotificacion: 'exito' | 'error' = 'exito';
 
-  // 🛑 Subject para controlar desuscripciones
+  // Propiedades para paginación
+  currentPage = 0;
+  pageSize = 3;
+  totalCourses = 0;
+  // Subject para controlar desuscripciones
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -69,12 +73,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // 🛑 Desuscribirse de todos los observables
+    // Desuscribirse de todos los observables
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  // 📘 Cargar cursos del backend
+  // Cargar cursos del backend
   cargarCursos(): void {
     this.courses$ = this.courseService.findAll().pipe(
       tap((data) => {
@@ -89,7 +93,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
-  // 🧡 Cargar wishlist (ejemplo: backend puede tener endpoint /wishlist)
+  // Cargar wishlist (ejemplo: backend puede tener endpoint /wishlist)
   cargarWishlist(): void {
     this.wishlistCourses$ = this.courseService.findWishlist().pipe(
       catchError((err) => {
@@ -101,7 +105,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
-  // 🏆 Cargar logros desde el backend
+  // Cargar logros desde el backend
   cargarLogros(): void {
     this.courseService
       .findAll()
@@ -141,7 +145,48 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  // 📈 Cargar actividad semanal
+  // Método para obtener cursos paginados
+  getPaginatedCourses(courses: Course[] | null): Course[] {
+    if (!courses) return [];
+    this.totalCourses = courses.length;
+    const startIndex = this.currentPage * this.pageSize;
+    return courses.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  // También actualiza el getter para pageNumbers:
+  get pageNumbers(): number[] {
+    if (this.totalCourses === 0) return [];
+    return Array.from({ length: this.totalPages }, (_, i) => i);
+  }
+
+  // Métodos para navegación de paginación
+  nextPage(): void {
+    const totalPages = Math.ceil(this.totalCourses / this.pageSize);
+    if (this.currentPage < totalPages - 1) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+    }
+  }
+
+  // Método para ir a una página específica
+  goToPage(page: number): void {
+    const totalPages = Math.ceil(this.totalCourses / this.pageSize);
+    if (page >= 0 && page < totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  // Getter para obtener el número total de páginas
+  get totalPages(): number {
+    return Math.ceil(this.totalCourses / this.pageSize);
+  }
+
+  // Cargar actividad semanal
   cargarActividadSemanal(): void {
     this.weeklyActivity$ = this.courseService.findWeeklyActivity().pipe(
       catchError((err) => {
@@ -152,7 +197,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
-  // 🔔 Mostrar notificaciones flotantes
+  // Mostrar notificaciones flotantes
   mostrarMensaje(texto: string, tipo: 'exito' | 'error' = 'exito'): void {
     this.mensaje = texto;
     this.tipoNotificacion = tipo;
@@ -160,13 +205,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     setTimeout(() => (this.mostrarNotificacion = false), 2500);
   }
 
-  // 📊 Progreso de curso
+  // Progreso de curso
   getCourseProgress(course: Course): number {
     if (!course.lessons || !course.completedLessons) return 0;
     return Math.round((course.completedLessons / course.lessons) * 100);
   }
 
-  // 📚 Icono de curso según categoría
+  // Icono de curso según categoría
   getCourseIcon(course: Course): string {
     const icons: { [key: string]: string } = {
       Frontend: '🚀',

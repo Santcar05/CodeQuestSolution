@@ -52,69 +52,147 @@
       <div class="main-grid">
         <!-- Current Courses -->
         <div class="section courses-section">
-          <div class="section-header">
-            <svg
-              class="section-icon"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-            </svg>
-            <h2>Mis Cursos</h2>
-          </div>
+          <!-- Current Courses -->
+          <div class="section courses-section">
+            <div class="section-header">
+              <svg
+                class="section-icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+              </svg>
+              <h2>Mis Cursos</h2>
+            </div>
 
-          <div class="courses-grid">
-            <div
-              *ngFor="let course of courses$ | async; let i = index"
-              class="course-card"
-              [style.animation-delay.s]="i * 0.1"
-            >
-              <div class="course-content" (click)="openCourse(course.id)">
-                <div class="course-icon-wrapper">
-                  <span class="course-icon">{{ getCourseIcon(course) }}</span>
+            <!-- Contenedor de cursos con diseño de imagen a la izquierda -->
+            <div class="courses-container">
+              <div
+                *ngFor="let course of getPaginatedCourses(courses$ | async); let i = index"
+                class="course-card-new"
+                [style.animation-delay.s]="i * 0.1"
+              >
+                <div class="course-card-content" (click)="openCourse(course.id)">
+                  <!-- Imagen del thumbnail a la izquierda -->
+                  <div class="course-image-container">
+                    <img
+                      [src]="course.thumbnail || '/assets/default-course.jpg'"
+                      [alt]="course.title"
+                      class="course-thumbnail"
+                      onerror="this.src='/assets/default-course.jpg'"
+                    />
+                  </div>
+
+                  <!-- Información del curso a la derecha -->
+                  <div class="course-info-new">
+                    <div class="course-header-new">
+                      <h3 class="course-title">{{ course.title }}</h3>
+                      <span class="category-badge">{{ course.category }}</span>
+                    </div>
+
+                    <div class="course-meta-new">
+                      <span class="level-badge">{{ course.level }}</span>
+                      <span class="rating-new">
+                        ⭐ {{ course.rating }} ({{ course.students?.toLocaleString() }})
+                      </span>
+                    </div>
+
+                    <div class="course-lessons-new">
+                      {{ course.completedLessons }} de {{ course.lessons }} lecciones completadas
+                    </div>
+
+                    <div class="next-lesson-new">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <polygon points="5 3 19 12 5 21 5 3" />
+                      </svg>
+                      Siguiente: {{ course.nextLesson }}
+                    </div>
+
+                    <div class="instructor-info-new">
+                      <small>Instructor: {{ course.instructor?.name }}</small>
+                    </div>
+                  </div>
                 </div>
-                <div class="course-info">
-                  <div class="course-header">
-                    <h3>{{ course.title }}</h3>
-                    <span class="category-badge">{{ course.category }}</span>
+
+                <!-- Barra de progreso -->
+                <div class="progress-container-new">
+                  <div class="progress-bar-container">
+                    <div class="progress-bar" [style.width.%]="getCourseProgress(course)"></div>
                   </div>
-                  <div class="course-meta">
-                    <span class="level-badge">{{ course.level }}</span>
-                    <span class="rating">
-                      ⭐ {{ course.rating }} ({{ course.students?.toLocaleString() }})
-                    </span>
-                  </div>
-                  <div class="course-lessons">
-                    {{ course.completedLessons }} de {{ course.lessons }} lecciones completadas
-                  </div>
-                  <div class="next-lesson">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <polygon points="5 3 19 12 5 21 5 3" />
-                    </svg>
-                    Siguiente: {{ course.nextLesson }}
-                  </div>
-                  <div class="instructor-info">
-                    <small>Instructor: {{ course.instructor?.name }}</small>
-                  </div>
+                  <div class="progress-text">{{ getCourseProgress(course) }}%</div>
                 </div>
               </div>
+            </div>
 
-              <div class="progress-bar-container">
-                <div class="progress-bar" [style.width.%]="getCourseProgress(course)"></div>
+            <!-- Paginación -->
+            <div class="pagination-container" *ngIf="totalCourses > pageSize">
+              <div class="pagination-controls">
+                <button
+                  class="pagination-btn"
+                  (click)="previousPage()"
+                  [disabled]="currentPage === 0"
+                  [class.disabled]="currentPage === 0"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                  Anterior
+                </button>
+
+                <div class="pagination-numbers">
+                  <button
+                    *ngFor="let page of pageNumbers"
+                    class="page-number"
+                    [class.active]="page === currentPage"
+                    (click)="goToPage(page)"
+                  >
+                    {{ page + 1 }}
+                  </button>
+                </div>
+
+                <button
+                  class="pagination-btn"
+                  (click)="nextPage()"
+                  [disabled]="currentPage >= totalPages - 1"
+                  [class.disabled]="currentPage >= totalPages - 1"
+                >
+                  Siguiente
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
               </div>
-              <div class="progress-text">{{ getCourseProgress(course) }}%</div>
+
+              <div class="pagination-info">
+                Página {{ currentPage + 1 }} de {{ totalPages }} - Mostrando
+                {{ getPaginatedCourses(courses$ | async).length }} de {{ totalCourses }} cursos
+              </div>
             </div>
           </div>
         </div>
