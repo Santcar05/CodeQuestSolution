@@ -43,7 +43,7 @@ public class Lesson {
     private Boolean isPreview;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "content_id") // Esta es la FK en la tabla lessons
+    @JoinColumn(name = "content_id")
     private LessonContent content;
 
     @JsonIgnore

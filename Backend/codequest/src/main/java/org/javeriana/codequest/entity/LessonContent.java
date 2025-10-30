@@ -40,7 +40,7 @@ public class LessonContent {
 
     private String document;
 
-    @Column(length = 4000)
+    @Column(length = 40000)
     private String code;
 
     private String mindmap;

@@ -14,18 +14,15 @@
   </div>
 
   <!-- Contenido principal cuando los datos están cargados -->
-  <div
-    *ngIf="!isLoading && !error && selectedModule && selectedTopic && selectedLesson"
-    class="content-loaded"
-  >
+  <div *ngIf="!isLoading && !error" class="content-loaded">
     <!-- Sidebar de navegación -->
     <div class="navigation-sidebar">
       <div class="sidebar-header">
         <h3>Contenido del Curso</h3>
         <div class="progress-indicator">
-          <span>Progreso: {{ selectedModule.progress }}%</span>
+          <span>Progreso: {{ selectedModule!.progress }}%</span>
           <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="selectedModule.progress"></div>
+            <div class="progress-fill" [style.width.%]="selectedModule!.progress"></div>
           </div>
         </div>
       </div>
@@ -34,13 +31,13 @@
         <div
           *ngFor="let module of modules; let i = index"
           class="module-item"
-          [class.active]="module.id === selectedModule.id"
+          [class.active]="module.id === selectedModule!.id"
           [class.expanded]="expandedModules[i]"
         >
           <div class="module-header" (click)="toggleModule(i)">
             <div class="module-info">
               <div class="module-status">
-                <span class="module-icon" [class.completed]="module.completed">
+                <span class="module-icon" [class.completed]="module.completed!">
                   {{ module.completed ? '✓' : i + 1 }}
                 </span>
               </div>
@@ -67,12 +64,12 @@
             <div
               *ngFor="let topic of module.topics; let j = index"
               class="topic-item"
-              [class.active]="topic.id === selectedTopic.id"
+              [class.active]="topic.id === selectedTopic!.id"
               [class.expanded]="expandedTopics[i][j]"
             >
               <div class="topic-header" (click)="toggleTopic(i, j)">
                 <div class="topic-info">
-                  <span class="topic-status" [class.completed]="topic.completed">
+                  <span class="topic-status" [class.completed]="topic.completed!">
                     {{ topic.completed ? '✓' : '•' }}
                   </span>
                   <span class="topic-title">{{ topic.title }}</span>
@@ -96,13 +93,13 @@
                 <div
                   *ngFor="let lesson of topic.lessons"
                   class="lesson-item"
-                  [class.active]="lesson.id === selectedLesson.id"
-                  [class.completed]="lesson.completed"
+                  [class.active]="lesson.id === selectedLesson!.id"
+                  [class.completed]="lesson.completed!"
                   (click)="selectLesson(lesson)"
                 >
                   <div class="lesson-icon">
-                    <span *ngIf="lesson.completed" class="completed-icon">✓</span>
-                    <span *ngIf="!lesson.completed" class="play-icon">▶</span>
+                    <span *ngIf="lesson.completed!" class="completed-icon">✓</span>
+                    <span *ngIf="!lesson.completed!" class="play-icon">▶</span>
                   </div>
                   <span class="lesson-title">{{ lesson.title }}</span>
                   <span class="lesson-duration">{{ lesson.duration }}</span>
@@ -172,11 +169,11 @@
         <!-- Encabezado del tema -->
         <div class="content-header">
           <div class="breadcrumb">
-            <span class="module-name">{{ selectedModule.title }}</span>
+            <span class="module-name">{{ selectedModule!.title }}</span>
             <span class="separator">/</span>
-            <span class="topic-name">{{ selectedTopic.title }}</span>
+            <span class="topic-name">{{ selectedTopic!.title }}</span>
             <span class="separator">/</span>
-            <span class="lesson-name">{{ selectedLesson.title }}</span>
+            <span class="lesson-name">{{ selectedLesson!.title }}</span>
           </div>
 
           <div class="lesson-actions">
@@ -195,10 +192,10 @@
             </button>
             <button
               class="complete-btn"
-              [class.completed]="selectedLesson.completed"
+              [class.completed]="selectedLesson!.completed"
               (click)="completeLesson()"
             >
-              {{ selectedLesson.completed ? '✓ Completado' : 'Marcar como completado' }}
+              {{ selectedLesson!.completed ? '✓ Completado' : 'Marcar como completado' }}
             </button>
           </div>
         </div>
