@@ -34,7 +34,7 @@ export class DetalleCursoComponent implements OnInit {
     private courseService: CourseService,
     private route: ActivatedRoute,
     private router: Router,
-    private cdRef: ChangeDetectorRef // Agregar ChangeDetectorRef
+    private cdRef: ChangeDetectorRef 
   ) {}
 
   ngOnInit(): void {
