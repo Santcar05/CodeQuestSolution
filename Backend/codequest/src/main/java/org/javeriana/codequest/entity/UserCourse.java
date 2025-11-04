@@ -2,7 +2,9 @@ package org.javeriana.codequest.entity;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,17 +34,18 @@ public class UserCourse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Se mantiene ManyToOne como EAGER por defecto o explícito si siempre se necesita
-    // Se usa @JsonIgnoreProperties para cortar el ciclo de serialización
-    @ManyToOne
+    // Solo muestra el ID del usuario en la respuesta JSON
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_profile_id")
-    @JsonBackReference("user-usercourse")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private UserProfile userProfile;
 
-    // Se usa @JsonIgnoreProperties para cortar el ciclo de serialización
-    @ManyToOne(fetch = FetchType.EAGER) // Se mantiene EAGER, si se necesita el Course al cargar UserCourse
+    // Solo muestra el ID del curso en la respuesta JSON
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id")
-    @JsonBackReference("course-usercourse")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Course course;
 
     @Enumerated(EnumType.STRING)

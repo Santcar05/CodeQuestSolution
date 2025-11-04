@@ -65,7 +65,15 @@ export class DetalleCursoComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadCourseData(courseId: number): void {
+  loadCourseDataFromRoute() {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const courseId = Number(idParam); // Conversión aquí
+      this.loadCourseData(courseId);
+    }
+  }
+
+  loadCourseData(courseId: number): void {
     // Resetear estado antes de cargar nuevo curso
     this.resetComponentState();
 

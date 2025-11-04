@@ -12,9 +12,7 @@
   <div class="error-container" *ngIf="hasError && !isLoading">
     <h2>Error al cargar el curso</h2>
     <p>No se pudo cargar la información del curso. Por favor, intenta nuevamente.</p>
-    <button class="retry-btn" (click)="loadCourseData(Number(route.snapshot.paramMap.get('id')))">
-      Reintentar
-    </button>
+    <button class="retry-btn" (click)="loadCourseDataFromRoute()">Reintentar</button>
   </div>
 
   <div class="curso-detalle-container" *ngIf="course && !isLoading && !hasError">

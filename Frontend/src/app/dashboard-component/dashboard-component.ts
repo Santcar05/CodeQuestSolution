@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable, Subject } from 'rxjs';
-import { tap, catchError, takeUntil } from 'rxjs/operators';
+import { forkJoin, Observable, Subject } from 'rxjs';
+import { tap, catchError, takeUntil, switchMap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
@@ -15,6 +15,7 @@ import { AchievementService } from '../service/achievement/achievement-service';
 import { CourseService } from '../service/Course/course-service';
 import { UserCourseService } from '../service/UserCourse/user-course-service';
 import { Router } from '@angular/router';
+import { UserProfileService } from '../service/UserProfile/user-profile-service';
 
 interface UpcomingAchievement {
   id: number;
@@ -69,7 +70,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private achievementService: AchievementService,
     private courseService: CourseService,
     private userCourseService: UserCourseService,
-    private router: Router
+    private router: Router,
+    private userProfileService: UserProfileService
   ) {}
 
   ngOnInit(): void {
@@ -88,8 +90,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // Cargar cursos del usuario actual desde el backend
   cargarCursosUsuario(): void {
     this.userCourses$ = this.userCourseService.findByUserProfileId(this.currentUserProfileId).pipe(
+      switchMap((userCourses) => {
+        // Para cada UserCourse, cargamos los objetos completos
+        const observables = userCourses.map((uc: any) =>
+          forkJoin({
+            course: this.courseService.findById(uc.course),
+            userProfile: this.userProfileService.findById(uc.userProfile),
+          }).pipe(
+            map((res) => ({
+              ...uc,
+              course: res.course,
+              userProfile: res.userProfile,
+            }))
+          )
+        );
+
+        // Espera a que todos los forkJoin terminen
+        return forkJoin(observables);
+      }),
       tap((data) => {
         console.log('Cursos cargados:', data);
+
         this.mostrarMensaje('Cursos cargados correctamente');
       }),
       catchError((err) => {
@@ -100,7 +121,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
   }
-
   // Cargar wishlist (ejemplo: backend puede tener endpoint /wishlist)
   cargarWishlist(): void {
     this.wishlistCourses$ = this.courseService.findWishlist().pipe(
