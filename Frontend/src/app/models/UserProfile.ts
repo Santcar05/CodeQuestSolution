@@ -1,3 +1,5 @@
+import { UserCourse } from './UserCourse';
+
 export interface UserProfile {
   id: number;
   name: string;
@@ -6,4 +8,5 @@ export interface UserProfile {
   xp: number;
   maxXp: number;
   rank: string;
+  userCourses?: UserCourse[];
 }

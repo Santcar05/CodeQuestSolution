@@ -227,7 +227,7 @@
             <span class="stat-text">{{ course.duration || 'N/A' }}</span>
           </div>
         </div>
-
+        <!--
         <div class="course-progress" *ngIf="course.status === 'in-progress'">
           <div class="progress-header">
             <span class="progress-label">Progreso</span>
@@ -237,7 +237,7 @@
             <div class="progress-fill" [style.width.%]="getProgressPercentage(course)"></div>
           </div>
         </div>
-
+-->
         <div class="course-footer">
           <div class="course-price">
             <span class="price-current">{{ course.price || '$0' }}</span>
@@ -256,10 +256,11 @@
             <span class="xp-value">{{ course.xp || 0 }} XP</span>
           </div>
         </div>
-
+        <!--
         <div class="course-status-badge" [style.background]="getStatusInfo(course.status).color">
           {{ getStatusInfo(course.status).icon }} {{ getStatusInfo(course.status).label }}
         </div>
+        -->
       </div>
     </div>
   </div>
@@ -436,7 +437,7 @@
               <span class="checkbox-text">🔥 Marcar como Trending</span>
             </label>
           </div>
-
+          <!--
           <div class="form-group">
             <label class="form-label">Estado del Curso</label>
             <select [(ngModel)]="newCourse.status" class="form-select">
@@ -445,6 +446,7 @@
               </option>
             </select>
           </div>
+          -->
         </div>
       </div>
 

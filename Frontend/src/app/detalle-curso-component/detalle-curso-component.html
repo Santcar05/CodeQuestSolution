@@ -1,7 +1,23 @@
 <!-- detalle-curso-component.html -->
 <div class="super-container">
   <app-sidebar-component></app-sidebar-component>
-  <div class="curso-detalle-container">
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Cargando curso...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="hasError && !isLoading">
+    <h2>Error al cargar el curso</h2>
+    <p>No se pudo cargar la información del curso. Por favor, intenta nuevamente.</p>
+    <button class="retry-btn" (click)="loadCourseData(Number(route.snapshot.paramMap.get('id')))">
+      Reintentar
+    </button>
+  </div>
+
+  <div class="curso-detalle-container" *ngIf="course && !isLoading && !hasError">
     <!-- Hero Section -->
     <div class="hero-section">
       <div class="hero-content">
@@ -17,7 +33,7 @@
           >
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <a href="#" class="breadcrumb-link">{{ course!.category }}</a>
+          <a href="#" class="breadcrumb-link">{{ course.category }}</a>
           <svg
             width="16"
             height="16"
@@ -28,15 +44,15 @@
           >
             <polyline points="9 18 15 12 9 6" />
           </svg>
-          <span class="breadcrumb-current">{{ course!.title }}</span>
+          <span class="breadcrumb-current">{{ course.title }}</span>
         </div>
 
         <div class="hero-main">
           <div class="hero-info">
             <div class="course-badges">
-              <span class="level-badge" [attr.data-level]="course!.level">{{ course!.level }}</span>
-              <span class="new-badge" *ngIf="course!.isNew">NUEVO</span>
-              <span class="trending-badge" *ngIf="course!.isTrending">
+              <span class="level-badge" [attr.data-level]="course.level">{{ course.level }}</span>
+              <span class="new-badge" *ngIf="course.isNew">NUEVO</span>
+              <span class="trending-badge" *ngIf="course.isTrending">
                 <svg
                   width="14"
                   height="14"
@@ -52,19 +68,19 @@
               </span>
             </div>
 
-            <h1 class="course-title">{{ course!.title }}</h1>
-            <p class="course-description">{{ course!.description }}</p>
+            <h1 class="course-title">{{ course.title }}</h1>
+            <p class="course-description">{{ course.description }}</p>
 
             <div class="course-stats">
-              <div class="stat-item">
+              <div class="stat-item" *ngIf="course.rating">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <polygon
                     points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
                   />
                 </svg>
-                <span class="stat-value">{{ course!.rating }}</span>
+                <span class="stat-value">{{ course.rating }}</span>
               </div>
-              <div class="stat-item">
+              <div class="stat-item" *ngIf="course.students">
                 <svg
                   width="18"
                   height="18"
@@ -78,10 +94,10 @@
                   <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
-                <span class="stat-value">{{ course!.students!.toLocaleString() }}</span>
+                <span class="stat-value">{{ course.students.toLocaleString() }}</span>
                 <span class="stat-label">estudiantes</span>
               </div>
-              <div class="stat-item">
+              <div class="stat-item" *ngIf="course.duration">
                 <svg
                   width="18"
                   height="18"
@@ -93,10 +109,10 @@
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
-                <span class="stat-value">{{ course!.duration }}</span>
+                <span class="stat-value">{{ course.duration }}</span>
                 <span class="stat-label">duración</span>
               </div>
-              <div class="stat-item">
+              <div class="stat-item" *ngIf="course.totalPoints">
                 <svg
                   width="18"
                   height="18"
@@ -107,20 +123,20 @@
                 >
                   <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                 </svg>
-                <span class="stat-value">{{ course!.totalPoints }}</span>
+                <span class="stat-value">{{ course.totalPoints }}</span>
                 <span class="stat-label">CodeCoins totales</span>
               </div>
             </div>
 
-            <div class="instructor-info">
+            <div class="instructor-info" *ngIf="course.instructor">
               <img
-                [src]="course!.instructor?.avatar"
-                [alt]="course!.instructor?.name"
+                [src]="course.instructor.avatar"
+                [alt]="course.instructor.name"
                 class="instructor-avatar"
               />
               <div class="instructor-details">
                 <span class="instructor-label">Instructor</span>
-                <span class="instructor-name">{{ course!.instructor?.name }}</span>
+                <span class="instructor-name">{{ course.instructor.name }}</span>
               </div>
             </div>
 
@@ -139,9 +155,9 @@
             </button>
           </div>
 
-          <div class="hero-video">
+          <div class="hero-video" *ngIf="course.thumbnail">
             <div class="video-container">
-              <img [src]="course!.thumbnail" [alt]="course!.title" class="video-thumbnail" />
+              <img [src]="course.thumbnail" [alt]="course.title" class="video-thumbnail" />
               <div class="video-overlay">
                 <button class="video-play-btn">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
@@ -204,7 +220,10 @@
     <!-- Main Content -->
     <div class="main-content">
       <!-- What You'll Learn -->
-      <section class="learning-section section-card">
+      <section
+        class="learning-section section-card"
+        *ngIf="course.learningPoints && course.learningPoints.length > 0"
+      >
         <h2 class="section-title">
           <svg
             width="24"
@@ -221,7 +240,7 @@
         <div class="learning-grid">
           <div
             class="learning-item"
-            *ngFor="let item of course!.learningPoints; let i = index"
+            *ngFor="let item of course.learningPoints; let i = index"
             [style.animation-delay.ms]="i * 50"
           >
             <svg
@@ -240,7 +259,10 @@
       </section>
 
       <!-- Modules Section -->
-      <section class="modules-section section-card">
+      <section
+        class="modules-section section-card"
+        *ngIf="course.modules && course.modules.length > 0"
+      >
         <div class="section-header">
           <h2 class="section-title">
             <svg
@@ -257,18 +279,18 @@
             Contenido del Curso
           </h2>
           <div class="modules-summary">
-            <span>{{ course!.modules!.length }} módulos</span>
+            <span>{{ course.modules.length }} módulos</span>
             <span>•</span>
             <span>{{ getTotalLessons() }} clases</span>
             <span>•</span>
-            <span>{{ course!.duration }}</span>
+            <span>{{ course.duration }}</span>
           </div>
         </div>
 
         <div class="modules-list">
           <div
             class="module-item"
-            *ngFor="let module of course!.modules; let i = index"
+            *ngFor="let module of course.modules; let i = index"
             [style.animation-delay.ms]="i * 100"
           >
             <div class="module-header" (click)="toggleModule(i)">
@@ -276,11 +298,11 @@
                 <div class="module-number">Módulo {{ i + 1 }}</div>
                 <h3 class="module-title">{{ module.title }}</h3>
                 <div class="module-meta">
-                  <span class="module-lessons">{{ module.topics.length }} temas</span>
+                  <span class="module-lessons">{{ module.topics?.length || 0 }} temas</span>
                   <span>•</span>
                   <span class="module-duration">{{ module.duration }}</span>
                   <span>•</span>
-                  <span class="module-points">
+                  <span class="module-points" *ngIf="module.points">
                     <svg
                       width="14"
                       height="14"
@@ -310,7 +332,10 @@
               </div>
             </div>
 
-            <div class="module-content" *ngIf="expandedModules[i]">
+            <div
+              class="module-content"
+              *ngIf="expandedModules[i] && module.topics && module.topics.length > 0"
+            >
               <div class="topics-list">
                 <div class="topic-item" *ngFor="let topic of module.topics; let j = index">
                   <div class="topic-header" (click)="toggleTopic(i, j)">
@@ -330,7 +355,7 @@
                       <span class="topic-title">{{ topic.title }}</span>
                     </div>
                     <div class="topic-meta">
-                      <span class="topic-lessons">{{ topic.lessons.length }} clases</span>
+                      <span class="topic-lessons">{{ topic.lessons?.length || 0 }} clases</span>
                       <svg
                         width="16"
                         height="16"
@@ -345,7 +370,10 @@
                     </div>
                   </div>
 
-                  <div class="lessons-list" *ngIf="expandedTopics[i]?.[j]">
+                  <div
+                    class="lessons-list"
+                    *ngIf="expandedTopics[i]?.[j] && topic.lessons && topic.lessons.length > 0"
+                  >
                     <div class="lesson-item" *ngFor="let lesson of topic.lessons">
                       <div class="lesson-icon">
                         <svg
@@ -372,7 +400,10 @@
       </section>
 
       <!-- Requirements -->
-      <section class="requirements-section section-card">
+      <section
+        class="requirements-section section-card"
+        *ngIf="course.requirements && course.requirements.length > 0"
+      >
         <h2 class="section-title">
           <svg
             width="24"
@@ -392,7 +423,7 @@
         </h2>
         <ul class="requirements-list">
           <li
-            *ngFor="let req of course!.requirements; let i = index"
+            *ngFor="let req of course.requirements; let i = index"
             [style.animation-delay.ms]="i * 50"
           >
             {{ req }}
@@ -401,7 +432,10 @@
       </section>
 
       <!-- Reviews Section -->
-      <section class="reviews-section section-card">
+      <section
+        class="reviews-section section-card"
+        *ngIf="course.reviewsList && course.reviewsList.length > 0"
+      >
         <h2 class="section-title">
           <svg
             width="24"
@@ -419,15 +453,15 @@
         </h2>
 
         <div class="reviews-summary">
-          <div class="rating-overview">
-            <div class="rating-big">{{ course!.rating }}</div>
+          <div class="rating-overview" *ngIf="course.rating">
+            <div class="rating-big">{{ course.rating }}</div>
             <div class="stars-display">
               <svg
                 *ngFor="let star of [1, 2, 3, 4, 5]"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
-                [attr.fill]="star <= course!.rating! ? '#fbbf24' : 'none'"
+                [attr.fill]="star <= course.rating! ? '#fbbf24' : 'none'"
                 stroke="#fbbf24"
                 stroke-width="2"
               >
@@ -452,7 +486,7 @@
         <div class="reviews-list">
           <div
             class="review-card"
-            *ngFor="let review of course!.reviewsList; let i = index"
+            *ngFor="let review of course.reviewsList; let i = index"
             [style.animation-delay.ms]="i * 100"
           >
             <div class="review-header">
@@ -502,7 +536,7 @@
       </section>
 
       <!-- Related Courses -->
-      <section class="related-section">
+      <section class="related-section" *ngIf="relatedCourses && relatedCourses.length > 0">
         <h2 class="section-title">
           <svg
             width="24"
@@ -524,10 +558,10 @@
               class="related-course-card"
               *ngFor="let relatedCourse of relatedCourses; let i = index"
               [style.animation-delay.ms]="i * 80"
-              (click)="openCourse(relatedCourse!.id)"
+              (click)="openCourse(relatedCourse.id)"
             >
-              <div class="related-course-image">
-                <img [src]="relatedCourse!.image" [alt]="relatedCourse!.title" />
+              <div class="related-course-image" *ngIf="relatedCourse.image">
+                <img [src]="relatedCourse.image" [alt]="relatedCourse.title" />
                 <div class="related-course-overlay">
                   <button class="related-play-btn">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
@@ -537,28 +571,41 @@
                 </div>
               </div>
               <div class="related-course-content">
-                <h4 class="related-course-title">{{ relatedCourse!.title }}</h4>
+                <h4 class="related-course-title">{{ relatedCourse.title }}</h4>
                 <div class="related-course-meta">
-                  <div class="related-rating">
+                  <div class="related-rating" *ngIf="relatedCourse.rating">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="#fbbf24">
                       <polygon
-                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9 27 8.91 8.26 12 2"
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
                       />
                     </svg>
-                    <span>{{ relatedCourse!.rating }}</span>
+                    <span>{{ relatedCourse.rating }}</span>
                   </div>
-                  <span class="related-students"
-                    >{{ relatedCourse!.students!.toLocaleString() }} estudiantes</span
-                  >
+                  <span class="related-students" *ngIf="relatedCourse.students">
+                    {{ relatedCourse.students.toLocaleString() }} estudiantes
+                  </span>
                 </div>
-                <div class="related-course-price">
-                  <span class="related-points">{{ relatedCourse!.totalPoints }} CodeCoins</span>
+                <div class="related-course-price" *ngIf="relatedCourse.totalPoints">
+                  <span class="related-points">{{ relatedCourse.totalPoints }} CodeCoins</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      <!-- No Content Sections Message -->
+      <div
+        class="no-content-message"
+        *ngIf="
+          !course.learningPoints?.length &&
+          !course.modules?.length &&
+          !course.requirements?.length &&
+          !course.reviewsList?.length
+        "
+      >
+        <p>Este curso está siendo preparado. El contenido estará disponible pronto.</p>
+      </div>
     </div>
   </div>
 </div>

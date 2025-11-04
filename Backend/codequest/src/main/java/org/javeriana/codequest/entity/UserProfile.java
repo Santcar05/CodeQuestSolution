@@ -2,8 +2,11 @@ package org.javeriana.codequest.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -46,52 +49,63 @@ public class UserProfile {
     @Column(nullable = false)
     private String rank;
 
-    //Debe tener sus proyectos realizados, inscritos
-    //Debe tener sus cursos realizados, en proceso y en WishList
-    //Debe tener sus reviews realizados
-    //Debe tener sus carrerPath realizados y en proceso
-    //Debe tener sus posts realizados
-    //Debe tener sus badges obtenidos
-    //Debe tener sus powers obtenidos
-    //Debe tener sus products obtenidos
-    @Column(nullable = true)
+    // Relación con UserCourses: CAMBIADO a FetchType.LAZY para mejor rendimiento
+    @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY)
+    @JsonIgnore // Mantiene la solución al ciclo de serialización
+    private List<UserCourse> userCourses;
+
+    // Métodos helper para obtener cursos por estado (dependerán de que 'userCourses' esté inicializado)
+    public List<UserCourse> getCoursesInProgress() {
+        return userCourses == null ? List.of()
+                : userCourses.stream()
+                        .filter(uc -> uc.getStatus() == UserCourse.CourseStatus.IN_PROGRESS)
+                        .toList();
+    }
+
+    public List<UserCourse> getCompletedCourses() {
+        return userCourses == null ? List.of()
+                : userCourses.stream()
+                        .filter(uc -> uc.getStatus() == UserCourse.CourseStatus.COMPLETED)
+                        .toList();
+    }
+
+    public List<UserCourse> getNotStartedCourses() {
+        return userCourses == null ? List.of()
+                : userCourses.stream()
+                        .filter(uc -> uc.getStatus() == UserCourse.CourseStatus.NOT_STARTED)
+                        .toList();
+    }
+
+    // Resto de las relaciones: CAMBIADO a FetchType.LAZY (por defecto) si no se especifica, pero se mantiene la estructura
     @OneToMany(mappedBy = "userProfile")
+    @JsonIgnore
     private List<Project> projectsDone;
 
-    @Column(nullable = true)
     @OneToMany(mappedBy = "userProfile")
+    @JsonIgnore
     private List<Project> projectsInProgress;
 
-    @Column(nullable = true)
     @OneToMany(mappedBy = "userProfile")
-    private List<Course> coursesDone;
-
-    @Column(nullable = true)
-    @OneToMany(mappedBy = "userProfile")
-    private List<Course> coursesInProgress;
-
-    @Column(nullable = true)
-    @OneToMany(mappedBy = "userProfile")
+    @JsonIgnore
     private List<Review> reviews;
 
-    @Column(nullable = true)
     @OneToMany(mappedBy = "userProfile")
+    @JsonIgnore
     private List<CareerPath> carrerPathsDone;
 
-    @Column(nullable = true)
     @OneToMany(mappedBy = "userProfile")
+    @JsonIgnore
     private List<CareerPath> carrerPathsInProgress;
 
-    @Column(nullable = true)
     @OneToMany(mappedBy = "userProfile")
+    @JsonIgnore
     private List<Post> posts;
 
-    @Column(nullable = true)
     @OneToMany(mappedBy = "userProfile")
+    @JsonIgnore
     private List<Badge> badges;
 
-    @Column(nullable = true)
     @OneToMany(mappedBy = "userProfile")
+    @JsonIgnore
     private List<Power> powers;
-
 }

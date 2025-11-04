@@ -2,14 +2,14 @@ package org.javeriana.codequest.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.FetchType; // Se usa LAZY para colecciones
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -56,12 +56,6 @@ public class Course {
 
     private Integer lessons;
 
-    @Column(name = "completed_lessons")
-    private Integer completedLessons;
-
-    @Column(name = "next_lesson")
-    private String nextLesson;
-
     private String thumbnail;
 
     private String image;
@@ -79,11 +73,10 @@ public class Course {
     @Column(name = "is_trending")
     private Boolean isTrending;
 
-    @Enumerated(EnumType.STRING)
-    private CourseStatus status;
-
+    // ManyToOne con LAZY para optimización
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "instructor_id")
+    @JsonIgnore
     private Instructor instructor;
 
     @ElementCollection
@@ -96,10 +89,13 @@ public class Course {
     @Column(name = "requirement")
     private List<String> requirements;
 
+    // Colecciones con FetchType.LAZY y @JsonIgnore para optimización y corte de ciclo
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ModuleModel> modules;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Review> reviewsList;
 
     @Column(name = "total_points", nullable = false)
@@ -107,12 +103,14 @@ public class Course {
 
     private String difficulty;
 
+    // Colección con FetchType.LAZY (por defecto) y @JsonIgnore para corte de ciclo
     @ManyToMany
     @JoinTable(
             name = "course_prerequisites",
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "prerequisite_id")
     )
+    @JsonIgnore
     private List<Course> preRequisites;
 
     @ElementCollection
@@ -120,11 +118,8 @@ public class Course {
     @Column(name = "tag")
     private List<String> tags;
 
-    @ManyToOne
-    @JoinColumn(name = "user_profile_id")
-    private UserProfile userProfile;
-
-    public enum CourseStatus {
-        COMPLETED, IN_PROGRESS, NOT_STARTED
-    }
+    // Relación con UserCourses: Se mantiene FetchType.LAZY y @JsonIgnore
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<UserCourse> userCourses;
 }

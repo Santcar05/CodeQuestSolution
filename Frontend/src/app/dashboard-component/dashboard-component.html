@@ -4,7 +4,6 @@
   <div class="dashboard-container">
     <div class="dashboard-content">
       <!-- Header -->
-
       <div class="header">
         <img id="logo" src="/logo.png" alt="" />
         <div class="title-container">
@@ -52,13 +51,153 @@
       <div class="main-grid">
         <!-- Current Courses -->
         <div class="section courses-section">
-          <!-- Current Courses -->
-          <div class="section courses-section">
-            <div class="section-header">
+          <div class="section-header">
+            <svg
+              class="section-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+            <h2>Mis Cursos</h2>
+          </div>
+
+          <!-- Sección de cursos actualizada -->
+          <div class="courses-container">
+            <div
+              *ngFor="let userCourse of getPaginatedCourses(userCourses$ | async); let i = index"
+              class="course-card-new"
+              [style.animation-delay.s]="i * 0.1"
+            >
+              <div class="course-card-content" (click)="openCourse(userCourse.course.id)">
+                <!-- Imagen del thumbnail a la izquierda (desde Course) -->
+                <div class="course-image-container">
+                  <img
+                    [src]="userCourse.course?.thumbnail"
+                    [alt]="userCourse.course?.title"
+                    class="course-thumbnail"
+                  />
+                  <!-- Badge de estado (desde UserCourse) -->
+                  <div
+                    class="status-badge-overlay"
+                    [class]="'status-' + userCourse.status.toLowerCase()"
+                  >
+                    {{ getStatusLabel(userCourse.status) }}
+                  </div>
+                </div>
+
+                <!-- Información del curso a la derecha -->
+                <div class="course-info-new">
+                  <div class="course-header-new">
+                    <!-- Título desde Course -->
+                    <h3 class="course-title">{{ userCourse.course?.title }}</h3>
+                    <!-- Categoría desde Course -->
+                    <span class="category-badge">{{ userCourse.course?.category }}</span>
+                  </div>
+
+                  <div class="course-meta-new">
+                    <!-- Level desde Course -->
+                    <span class="level-badge">{{ userCourse.course?.level }}</span>
+                    <!-- Rating y estudiantes desde Course -->
+                    <span class="rating-new">
+                      ⭐ {{ userCourse.course?.rating }} ({{
+                        userCourse.course?.students?.toLocaleString()
+                      }})
+                    </span>
+                  </div>
+
+                  <!-- Información de progreso específica del usuario (desde UserCourse) -->
+                  <div class="course-lessons-new">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M9 11l3 3L22 4" />
+                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                    </svg>
+                    {{ userCourse.completedLessons || 0 }} de
+                    {{ userCourse.course.lessons || 0 }} lecciones completadas
+                  </div>
+
+                  <!-- Próxima lección desde UserCourse -->
+                  <div class="next-lesson-new" *ngIf="userCourse.nextLesson">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                    Siguiente: {{ userCourse.nextLesson }}
+                  </div>
+
+                  <!-- Módulo actual desde UserCourse -->
+                  <div class="current-module" *ngIf="userCourse.currentModule">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                    </svg>
+                    Módulo actual: {{ userCourse.currentModule }}
+                  </div>
+
+                  <!-- Instructor desde Course -->
+                  <div class="instructor-info-new">
+                    <small
+                      >Instructor: {{ userCourse.course.instructor?.name || 'No asignado' }}</small
+                    >
+                  </div>
+
+                  <!-- Último acceso desde UserCourse -->
+                  <div class="last-accessed" *ngIf="userCourse.lastAccessed">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    Último acceso: {{ formatDate(userCourse.lastAccessed) }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Barra de progreso desde UserCourse -->
+              <div class="progress-container-new">
+                <div class="progress-bar-container">
+                  <div class="progress-bar" [style.width.%]="getCourseProgress(userCourse)"></div>
+                </div>
+                <div class="progress-text">{{ getCourseProgress(userCourse) }}%</div>
+              </div>
+            </div>
+
+            <!-- Mensaje cuando no hay cursos -->
+            <div class="no-courses" *ngIf="(userCourses$ | async)?.length === 0">
               <svg
-                class="section-icon"
-                width="24"
-                height="24"
+                width="64"
+                height="64"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -67,132 +206,67 @@
                 <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                 <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
               </svg>
-              <h2>Mis Cursos</h2>
+              <h3>No tienes cursos inscritos</h3>
+              <p>Explora nuestro catálogo y comienza tu viaje de aprendizaje</p>
             </div>
+          </div>
 
-            <!-- Contenedor de cursos con diseño de imagen a la izquierda -->
-            <div class="courses-container">
-              <div
-                *ngFor="let course of getPaginatedCourses(courses$ | async); let i = index"
-                class="course-card-new"
-                [style.animation-delay.s]="i * 0.1"
+          <!-- Paginación -->
+          <div class="pagination-container" *ngIf="totalCourses > pageSize">
+            <div class="pagination-controls">
+              <button
+                class="pagination-btn"
+                (click)="previousPage()"
+                [disabled]="currentPage === 0"
+                [class.disabled]="currentPage === 0"
               >
-                <div class="course-card-content" (click)="openCourse(course.id)">
-                  <!-- Imagen del thumbnail a la izquierda -->
-                  <div class="course-image-container">
-                    <img
-                      [src]="course.thumbnail || '/assets/default-course.jpg'"
-                      [alt]="course.title"
-                      class="course-thumbnail"
-                      onerror="this.src='/assets/default-course.jpg'"
-                    />
-                  </div>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Anterior
+              </button>
 
-                  <!-- Información del curso a la derecha -->
-                  <div class="course-info-new">
-                    <div class="course-header-new">
-                      <h3 class="course-title">{{ course.title }}</h3>
-                      <span class="category-badge">{{ course.category }}</span>
-                    </div>
-
-                    <div class="course-meta-new">
-                      <span class="level-badge">{{ course.level }}</span>
-                      <span class="rating-new">
-                        ⭐ {{ course.rating }} ({{ course.students?.toLocaleString() }})
-                      </span>
-                    </div>
-
-                    <div class="course-lessons-new">
-                      {{ course.completedLessons }} de {{ course.lessons }} lecciones completadas
-                    </div>
-
-                    <div class="next-lesson-new">
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <polygon points="5 3 19 12 5 21 5 3" />
-                      </svg>
-                      Siguiente: {{ course.nextLesson }}
-                    </div>
-
-                    <div class="instructor-info-new">
-                      <small>Instructor: {{ course.instructor?.name }}</small>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Barra de progreso -->
-                <div class="progress-container-new">
-                  <div class="progress-bar-container">
-                    <div class="progress-bar" [style.width.%]="getCourseProgress(course)"></div>
-                  </div>
-                  <div class="progress-text">{{ getCourseProgress(course) }}%</div>
-                </div>
+              <div class="pagination-numbers">
+                <button
+                  *ngFor="let page of pageNumbers"
+                  class="page-number"
+                  [class.active]="page === currentPage"
+                  (click)="goToPage(page)"
+                >
+                  {{ page + 1 }}
+                </button>
               </div>
+
+              <button
+                class="pagination-btn"
+                (click)="nextPage()"
+                [disabled]="currentPage >= totalPages - 1"
+                [class.disabled]="currentPage >= totalPages - 1"
+              >
+                Siguiente
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
             </div>
 
-            <!-- Paginación -->
-            <div class="pagination-container" *ngIf="totalCourses > pageSize">
-              <div class="pagination-controls">
-                <button
-                  class="pagination-btn"
-                  (click)="previousPage()"
-                  [disabled]="currentPage === 0"
-                  [class.disabled]="currentPage === 0"
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                  </svg>
-                  Anterior
-                </button>
-
-                <div class="pagination-numbers">
-                  <button
-                    *ngFor="let page of pageNumbers"
-                    class="page-number"
-                    [class.active]="page === currentPage"
-                    (click)="goToPage(page)"
-                  >
-                    {{ page + 1 }}
-                  </button>
-                </div>
-
-                <button
-                  class="pagination-btn"
-                  (click)="nextPage()"
-                  [disabled]="currentPage >= totalPages - 1"
-                  [class.disabled]="currentPage >= totalPages - 1"
-                >
-                  Siguiente
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                  </svg>
-                </button>
-              </div>
-
-              <div class="pagination-info">
-                Página {{ currentPage + 1 }} de {{ totalPages }} - Mostrando
-                {{ getPaginatedCourses(courses$ | async).length }} de {{ totalCourses }} cursos
-              </div>
+            <div class="pagination-info">
+              Página {{ currentPage + 1 }} de {{ totalPages }} - Mostrando
+              {{ getPaginatedCourses(userCourses$ | async).length }} de {{ totalCourses }} cursos
             </div>
           </div>
         </div>
@@ -273,7 +347,7 @@
         </div>
       </div>
 
-      <!-- Wishlist Section with Horizontal Scroll -->
+      <!-- Wishlist Section -->
       <div class="section horizontal-section wishlist-section">
         <div class="section-header">
           <svg
@@ -342,7 +416,7 @@
         </div>
       </div>
 
-      <!-- Recent Achievements Section with Horizontal Scroll -->
+      <!-- Recent Achievements Section -->
       <div class="section horizontal-section achievements-section">
         <div class="section-header">
           <svg
@@ -397,7 +471,7 @@
         </div>
       </div>
 
-      <!-- Upcoming Achievements Section with Horizontal Scroll -->
+      <!-- Upcoming Achievements Section -->
       <div class="section horizontal-section upcoming-section">
         <div class="section-header">
           <svg

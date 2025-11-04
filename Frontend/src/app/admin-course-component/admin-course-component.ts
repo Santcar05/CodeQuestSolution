@@ -47,8 +47,7 @@ export class AdminCourseComponent implements OnInit {
     duration: '',
     students: 0,
     lessons: 0,
-    completedLessons: 0,
-    nextLesson: '',
+
     thumbnail: '',
     image: '',
     price: '0',
@@ -56,7 +55,7 @@ export class AdminCourseComponent implements OnInit {
     xp: 0,
     isNew: false,
     isTrending: false,
-    status: 'NOT_STARTED',
+
     totalPoints: 0,
     difficulty: 'beginner',
     tags: [],
@@ -132,10 +131,6 @@ export class AdminCourseComponent implements OnInit {
       result = result.filter((course) => course.level === this.filterLevel);
     }
 
-    if (this.filterStatus !== 'all') {
-      result = result.filter((course) => course.status === this.filterStatus);
-    }
-
     result.sort((a, b) => {
       switch (this.sortBy) {
         case 'title':
@@ -182,8 +177,7 @@ export class AdminCourseComponent implements OnInit {
       duration: '',
       students: 0,
       lessons: 0,
-      completedLessons: 0,
-      nextLesson: '',
+
       thumbnail: '',
       image: '',
       price: '0',
@@ -191,7 +185,7 @@ export class AdminCourseComponent implements OnInit {
       xp: 0,
       isNew: false,
       isTrending: false,
-      status: 'NOT_STARTED',
+
       totalPoints: 0,
       difficulty: 'beginner',
       tags: [],
@@ -400,11 +394,12 @@ export class AdminCourseComponent implements OnInit {
   getTotalXP(): number {
     return this.courses.reduce((sum, course) => sum + (course.xp || 0), 0);
   }
-
+  /* SLIMINADO POR CAMBIO DE ATRIBUTOS
   getProgressPercentage(course: Course): number {
     if (!course.lessons || course.lessons === 0) return 0;
     return Math.round(((course.completedLessons || 0) / course.lessons) * 100);
   }
+    */
 
   getDiscountPercentage(course: Course): number {
     if (!course.originalPrice || !course.price) return 0;

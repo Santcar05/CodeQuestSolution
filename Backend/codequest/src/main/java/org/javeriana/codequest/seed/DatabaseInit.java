@@ -461,7 +461,7 @@ public class DatabaseInit {
                         "Variables y Tipos de Datos",
                         "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$49.99", "$89.99", 850, true, true, Course.CourseStatus.NOT_STARTED,
+                        "$49.99", "$89.99", 850, true, true,
                         Arrays.asList("ES6+ Features", "Async/Await", "Closures", "DOM Manipulation", "Event Loop"),
                         Arrays.asList("Conocimientos básicos de programación", "HTML y CSS básico"),
                         Arrays.asList("JavaScript", "Frontend", "ES6"),
@@ -474,7 +474,7 @@ public class DatabaseInit {
                         "Introducción a Pandas",
                         "https://images.unsplash.com/photo-1526379879527-8559ecfcaec0?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1526379879527-8559ecfcaec0?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$79.99", "$129.99", 1200, true, true, Course.CourseStatus.IN_PROGRESS,
+                        "$79.99", "$129.99", 1200, true, true,
                         Arrays.asList("Pandas avanzado", "NumPy", "Scikit-learn", "Visualización", "Modelado predictivo"),
                         Arrays.asList("Python básico", "Matemáticas básicas", "Estadística fundamental"),
                         Arrays.asList("Python", "MachineLearning", "DataScience"),
@@ -487,7 +487,7 @@ public class DatabaseInit {
                         "Fundamentos de React",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$69.99", "$119.99", 950, true, true, Course.CourseStatus.IN_PROGRESS,
+                        "$69.99", "$119.99", 950, true, true,
                         Arrays.asList("React Hooks", "Next.js App Router", "Server Components", "Optimización", "Deployment"),
                         Arrays.asList("JavaScript avanzado", "HTML/CSS", "Conceptos de React básico"),
                         Arrays.asList("React", "NextJS", "Frontend"),
@@ -500,7 +500,7 @@ public class DatabaseInit {
                         "Configuración de TypeScript",
                         "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1563089145-599997674d42?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$59.99", "$99.99", 800, false, true, Course.CourseStatus.NOT_STARTED,
+                        "$59.99", "$99.99", 800, false, true,
                         Arrays.asList("TypeScript", "Express.js", "APIs REST", "Autenticación JWT", "Testing"),
                         Arrays.asList("JavaScript avanzado", "Conceptos de backend", "Conocimientos de HTTP"),
                         Arrays.asList("NodeJS", "TypeScript", "Backend"),
@@ -513,7 +513,7 @@ public class DatabaseInit {
                         "Introducción a Dart",
                         "https://es.fiverr.com/maisam_abbas_/develop-professional-a-mobile-app-using-flutter",
                         "https://es.fiverr.com/maisam_abbas_/develop-professional-a-mobile-app-using-flutter",
-                        "$64.99", "$109.99", 900, true, false, Course.CourseStatus.NOT_STARTED,
+                        "$64.99", "$109.99", 900, true, false,
                         Arrays.asList("Dart avanzado", "Widgets personalizados", "State Management", "Animaciones", "Firebase"),
                         Arrays.asList("Programación básica", "Conceptos OOP"),
                         Arrays.asList("Flutter", "Dart", "Mobile"),
@@ -526,7 +526,7 @@ public class DatabaseInit {
                         "Introducción a AWS",
                         "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$89.99", "$149.99", 700, false, true, Course.CourseStatus.IN_PROGRESS,
+                        "$89.99", "$149.99", 700, false, true,
                         Arrays.asList("EC2 y S3", "IAM y Security", "VPC", "RDS", "Cost Optimization"),
                         Arrays.asList("Conocimientos básicos de TI", "Conceptos de redes"),
                         Arrays.asList("AWS", "Cloud", "DevOps"),
@@ -539,7 +539,7 @@ public class DatabaseInit {
                         "Fundamentos de Docker",
                         "https://images.unsplash.com/photo-1626721105368-a69248e93b32?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1626721105368-a69248e93b32?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$74.99", "$124.99", 850, true, true, Course.CourseStatus.NOT_STARTED,
+                        "$74.99", "$124.99", 850, true, true,
                         Arrays.asList("Docker avanzado", "Kubernetes clusters", "Helm charts", "CI/CD", "Monitoring"),
                         Arrays.asList("Linux básico", "Conceptos de redes", "Experiencia en línea de comandos"),
                         Arrays.asList("Docker", "Kubernetes", "DevOps"),
@@ -552,7 +552,7 @@ public class DatabaseInit {
                         "Reconocimiento y Footprinting",
                         "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$99.99", "$169.99", 1500, false, false, Course.CourseStatus.NOT_STARTED,
+                        "$99.99", "$169.99", 1500, false, false,
                         Arrays.asList("Pentesting Web", "Explotación", "Post-explotación", "OWASP Top 10", "Forensics"),
                         Arrays.asList("Redes avanzadas", "Linux", "Programación básica", "Conceptos de seguridad"),
                         Arrays.asList("Security", "Hacking", "Pentesting"),
@@ -565,7 +565,7 @@ public class DatabaseInit {
                         "Vue.js Fundamentals",
                         "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$54.99", "$94.99", 750, true, false, Course.CourseStatus.IN_PROGRESS,
+                        "$54.99", "$94.99", 750, true, false,
                         Arrays.asList("Composition API", "Vue Router", "Pinia State Management", "Testing", "Performance"),
                         Arrays.asList("JavaScript avanzado", "HTML/CSS", "Conceptos de Vue.js básico"),
                         Arrays.asList("VueJS", "Frontend", "JavaScript"),
@@ -578,7 +578,7 @@ public class DatabaseInit {
                         "Fundamentos de SQL",
                         "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "Gratis", null, 600, false, false, Course.CourseStatus.COMPLETED,
+                        "Gratis", null, 600, false, false,
                         Arrays.asList("Query Optimization", "Indexing", "Transactions", "Stored Procedures", "Normalization"),
                         Arrays.asList("SQL básico", "Conceptos de bases de datos"),
                         Arrays.asList("SQL", "Database", "PostgreSQL"),
@@ -591,7 +591,7 @@ public class DatabaseInit {
                         "Sintaxis de Go",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$59.99", "$99.99", 800, false, true, Course.CourseStatus.NOT_STARTED,
+                        "$59.99", "$99.99", 800, false, true,
                         Arrays.asList("Concurrencia", "Goroutines", "Channels", "Testing", "APIs REST"),
                         Arrays.asList("Programación básica", "Conceptos de concurrencia"),
                         Arrays.asList("Go", "Backend", "Concurrency"),
@@ -604,7 +604,7 @@ public class DatabaseInit {
                         "Introducción a TensorFlow",
                         "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$89.99", "$159.99", 1400, true, true, Course.CourseStatus.NOT_STARTED,
+                        "$89.99", "$159.99", 1400, true, true,
                         Arrays.asList("Redes Neuronales", "Computer Vision", "NLP", "Transfer Learning", "Model Deployment"),
                         Arrays.asList("Python avanzado", "Matemáticas", "Machine Learning básico"),
                         Arrays.asList("TensorFlow", "DeepLearning", "AI"),
@@ -617,7 +617,7 @@ public class DatabaseInit {
                         "TypeScript para Angular",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$69.99", "$119.99", 900, false, false, Course.CourseStatus.NOT_STARTED,
+                        "$69.99", "$119.99", 900, false, false,
                         Arrays.asList("Components", "Services", "RxJS", "Routing", "Testing"),
                         Arrays.asList("TypeScript", "JavaScript avanzado", "HTML/CSS"),
                         Arrays.asList("Angular", "TypeScript", "Frontend"),
@@ -630,7 +630,7 @@ public class DatabaseInit {
                         "Fundamentos de Blockchain",
                         "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$79.99", "$139.99", 1100, true, false, Course.CourseStatus.NOT_STARTED,
+                        "$79.99", "$139.99", 1100, true, false,
                         Arrays.asList("Solidity", "Smart Contracts", "DeFi", "NFTs", "Web3.js"),
                         Arrays.asList("JavaScript", "Programación básica", "Conceptos de criptografía"),
                         Arrays.asList("Blockchain", "Solidity", "Web3"),
@@ -643,7 +643,7 @@ public class DatabaseInit {
                         "Comandos Básicos de Git",
                         "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png",
                         "https://miro.medium.com/v2/resize:fit:1400/1*_6M2zk7d9wXp2T_7bVgn8w.png",
-                        "Gratis", null, 400, false, false, Course.CourseStatus.COMPLETED,
+                        "Gratis", null, 400, false, false,
                         Arrays.asList("Branching Strategies", "Git Flow", "Conflict Resolution", "Hooks", "CI/CD Integration"),
                         Arrays.asList("Conocimientos básicos de Git"),
                         Arrays.asList("Git", "DevOps", "Collaboration"),
@@ -656,7 +656,7 @@ public class DatabaseInit {
                         "Introducción a Spring Boot",
                         "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$74.99", "$129.99", 1000, false, true, Course.CourseStatus.NOT_STARTED,
+                        "$74.99", "$129.99", 1000, false, true,
                         Arrays.asList("Spring MVC", "Spring Security", "JPA/Hibernate", "Testing", "Microservices"),
                         Arrays.asList("Java avanzado", "Conceptos OOP", "Bases de datos"),
                         Arrays.asList("Spring", "Java", "Backend"),
@@ -669,7 +669,7 @@ public class DatabaseInit {
                         "Principios de Diseño",
                         "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$49.99", "$89.99", 550, true, false, Course.CourseStatus.IN_PROGRESS,
+                        "$49.99", "$89.99", 550, true, false,
                         Arrays.asList("Design Thinking", "Figma", "Prototyping", "User Research", "Accessibility"),
                         Arrays.asList("Conocimientos básicos de diseño", "Interés en experiencia de usuario"),
                         Arrays.asList("UI/UX", "Design", "Figma"),
@@ -682,7 +682,7 @@ public class DatabaseInit {
                         "Sintaxis de Rust",
                         "https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$69.99", "$119.99", 950, false, true, Course.CourseStatus.NOT_STARTED,
+                        "$69.99", "$119.99", 950, false, true,
                         Arrays.asList("Ownership", "Concurrency", "Memory Safety", "WebAssembly", "Systems Programming"),
                         Arrays.asList("Programación avanzada", "Conceptos de sistemas", "C/C++ experiencia útil"),
                         Arrays.asList("Rust", "Systems", "Performance"),
@@ -695,7 +695,7 @@ public class DatabaseInit {
                         "Fundamentos de GraphQL",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$54.99", "$94.99", 700, true, false, Course.CourseStatus.NOT_STARTED,
+                        "$54.99", "$94.99", 700, true, false,
                         Arrays.asList("GraphQL Schema", "Resolvers", "Apollo Server", "Apollo Client", "Caching"),
                         Arrays.asList("JavaScript", "Node.js básico", "Conceptos de APIs"),
                         Arrays.asList("GraphQL", "API", "Backend"),
@@ -708,7 +708,7 @@ public class DatabaseInit {
                         "Introducción a Azure",
                         "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
                         "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&w=400&h=250&fit=crop&crop=center",
-                        "$79.99", "$139.99", 850, false, true, Course.CourseStatus.NOT_STARTED,
+                        "$79.99", "$139.99", 850, false, true,
                         Arrays.asList("Azure Pipelines", "Terraform", "Kubernetes en Azure", "Monitoring", "Security"),
                         Arrays.asList("Conceptos de cloud", "Linux", "Scripting básico"),
                         Arrays.asList("Azure", "DevOps", "Cloud"),
@@ -721,7 +721,7 @@ public class DatabaseInit {
                         "¿Qué es la programación?",
                         "https://i.imgur.com/XSgpcs0.gif",
                         "https://www.profesionalreview.com/wp-content/uploads/2024/07/Lenguaje-C.jpg",
-                        "Gratis", null, 2000, true, true, Course.CourseStatus.NOT_STARTED,
+                        "Gratis", null, 2000, true, true,
                         Arrays.asList(
                                 "Fundamentos de programación y pensamiento algorítmico",
                                 "Sintaxis completa de C++ desde variables hasta punteros",
@@ -783,8 +783,6 @@ public class DatabaseInit {
         Lesson lesson1_1_1 = createLesson("Git Status y Log Avanzados", "15 min", true, false);
         lesson1_1_1.setTopic(topic1_1);
 
-      
-
         LessonContent content1_1_1 = createLessonContent(
                 "https://example.com/videos/git-status-advanced",
                 "https://example.com/audio/git-status-advanced",
@@ -802,11 +800,8 @@ public class DatabaseInit {
         lesson1_1_1.setContent(content1_1_1);
         lessonService.save(lesson1_1_1);
 
-        
-
         Lesson lesson1_1_2 = createLesson("Staging y Commits Efectivos", "20 min", true, false);
         lesson1_1_2.setTopic(topic1_1);
-      
 
         LessonContent content1_1_2 = createLessonContent(
                 "https://example.com/videos/git-commit-effective",
@@ -830,7 +825,6 @@ public class DatabaseInit {
 
         Lesson lesson1_2_1 = createLesson("Creación y Navegación de Ramas", "18 min", true, false);
         lesson1_2_1.setTopic(topic1_2);
-       
 
         LessonContent content1_2_1 = createLessonContent(
                 "https://example.com/videos/git-branching",
@@ -862,7 +856,6 @@ public class DatabaseInit {
 
         Lesson lesson2_1_1 = createLesson("Introducción a Git Flow", "25 min", false, true);
         lesson2_1_1.setTopic(topic2_1);
-        
 
         LessonContent content2_1_1 = createLessonContent(
                 "https://example.com/videos/git-flow-intro",
@@ -880,10 +873,8 @@ public class DatabaseInit {
         lesson2_1_1.setContent(content2_1_1);
         lessonService.save(lesson2_1_1);
 
-
         Lesson lesson2_1_2 = createLesson("Ramas Principales: main, develop, features", "30 min", false, false);
         lesson2_1_2.setTopic(topic2_1);
-        
 
         LessonContent content2_1_2 = createLessonContent(
                 "https://example.com/videos/git-flow-branches",
@@ -898,7 +889,7 @@ public class DatabaseInit {
                         new CodeExplanation(3, "feature/*", "Ramas temporales para nuevas funcionalidades")
                 )
         );
-       
+
         lesson2_1_2.setContent(content2_1_2);
         lessonService.save(lesson2_1_2);
 
@@ -909,7 +900,6 @@ public class DatabaseInit {
 
         Lesson lesson2_2_1 = createLesson("Pull Requests y Code Review", "35 min", false, false);
         lesson2_2_1.setTopic(topic2_2);
-       
 
         LessonContent content2_2_1 = createLessonContent(
                 "https://example.com/videos/github-flow-pr",
@@ -924,7 +914,7 @@ public class DatabaseInit {
                         new CodeExplanation(3, "git push origin feature/auth", "Subir cambios para crear PR")
                 )
         );
-        
+
         lesson2_2_1.setContent(content2_2_1);
         lessonService.save(lesson2_2_1);
 
@@ -942,7 +932,6 @@ public class DatabaseInit {
 
         Lesson lesson3_1_1 = createLesson("Conflictos Comunes y Su Origen", "22 min", false, false);
         lesson3_1_1.setTopic(topic3_1);
-    
 
         LessonContent content3_1_1 = createLessonContent(
                 "https://example.com/videos/git-conflicts",
@@ -959,11 +948,10 @@ public class DatabaseInit {
         );
         lesson3_1_1.setContent(content3_1_1);
         lessonService.save(lesson3_1_1);
-        
 
         Lesson lesson3_1_2 = createLesson("Herramientas de Resolución", "28 min", false, false);
         lesson3_1_2.setTopic(topic3_1);
-     
+
         LessonContent content3_1_2 = createLessonContent(
                 "https://example.com/videos/git-tools",
                 "https://example.com/audio/git-tools",
@@ -993,7 +981,6 @@ public class DatabaseInit {
 
         Lesson lesson4_1_1 = createLesson("Hooks de Cliente: pre-commit y pre-push", "32 min", false, false);
         lesson4_1_1.setTopic(topic4_1);
-    
 
         LessonContent content4_1_1 = createLessonContent(
                 "https://example.com/videos/git-hooks",
@@ -1010,7 +997,6 @@ public class DatabaseInit {
         );
         lesson4_1_1.setContent(content4_1_1);
         lessonService.save(lesson4_1_1);
-       
 
         // Tema 4.2: Integración CI/CD
         Topic topic4_2 = createTopic("Git en Pipelines de CI/CD", false);
@@ -1019,7 +1005,6 @@ public class DatabaseInit {
 
         Lesson lesson4_2_1 = createLesson("GitHub Actions para Automatización", "40 min", false, false);
         lesson4_2_1.setTopic(topic4_2);
-       
 
         LessonContent content4_2_1 = createLessonContent(
                 "https://example.com/videos/github-actions",
@@ -1036,7 +1021,6 @@ public class DatabaseInit {
         );
         lesson4_2_1.setContent(content4_2_1);
         lessonService.save(lesson4_2_1);
-        
 
         // Módulo 5: Proyecto Final
         ModuleModel module5 = createModule("Proyecto Final: Workflow Completo",
@@ -1052,7 +1036,6 @@ public class DatabaseInit {
 
         Lesson lesson5_1_1 = createLesson("Setup y Configuración Inicial", "45 min", false, false);
         lesson5_1_1.setTopic(topic5_1);
-      
 
         LessonContent content5_1_1 = createLessonContent(
                 "https://example.com/videos/git-project-setup",
@@ -1069,7 +1052,7 @@ public class DatabaseInit {
         );
         lesson5_1_1.setContent(content5_1_1);
         lessonService.save(lesson5_1_1);
-        
+
     }
 
     //Curso de C++ 
@@ -1127,7 +1110,7 @@ public class DatabaseInit {
                 )
         );
         content1_1_2.setLesson(lesson1_1_2);
-   
+
         lesson1_1_2.setContent(content1_1_2);
         lessonService.save(lesson1_1_2);
 
@@ -1151,7 +1134,7 @@ public class DatabaseInit {
                 )
         );
         content1_1_3.setLesson(lesson1_1_3);
-      
+
         lesson1_1_3.setContent(content1_1_3);
         lessonService.save(lesson1_1_3);
 
@@ -1180,7 +1163,7 @@ public class DatabaseInit {
                 )
         );
         content1_2_1.setLesson(lesson1_2_1);
-       
+
         lesson1_2_1.setContent(content1_2_1);
         lessonService.save(lesson1_2_1);
 
@@ -1205,7 +1188,7 @@ public class DatabaseInit {
                 )
         );
         content1_2_2.setLesson(lesson1_2_2);
-       
+
         lesson1_2_2.setContent(content1_2_2);
         lessonService.save(lesson1_2_2);
 
@@ -1231,7 +1214,7 @@ public class DatabaseInit {
                 )
         );
         content1_2_3.setLesson(lesson1_2_3);
-      
+
         lesson1_2_3.setContent(content1_2_3);
         lessonService.save(lesson1_2_3);
 
@@ -1267,7 +1250,7 @@ public class DatabaseInit {
                 )
         );
         content2_1_1.setLesson(lesson2_1_1);
-    
+
         lesson2_1_1.setContent(content2_1_1);
         lessonService.save(lesson2_1_1);
 
@@ -1292,7 +1275,7 @@ public class DatabaseInit {
                 )
         );
         content2_1_2.setLesson(lesson2_1_2);
-       
+
         lesson2_1_2.setContent(content2_1_2);
         lessonService.save(lesson2_1_2);
 
@@ -1316,7 +1299,7 @@ public class DatabaseInit {
                 )
         );
         content2_1_3.setLesson(lesson2_1_3);
-       
+
         lesson2_1_3.setContent(content2_1_3);
         lessonService.save(lesson2_1_3);
 
@@ -1328,7 +1311,6 @@ public class DatabaseInit {
         // Lección 2.2.1: Ciclo While
         Lesson lesson2_2_1 = createLesson("Ciclo While", "26 min", false, false);
         lesson2_2_1.setTopic(topic2_2);
-     
 
         LessonContent content2_2_1 = createLessonContent(
                 "https://example.com/videos/cpp-while-loop",
@@ -1345,14 +1327,13 @@ public class DatabaseInit {
                 )
         );
         content2_2_1.setLesson(lesson2_2_1);
-      
+
         lesson2_2_1.setContent(content2_2_1);
-           lessonService.save(lesson2_2_1);
+        lessonService.save(lesson2_2_1);
 
         // Lección 2.2.2: Ciclo Do-While
         Lesson lesson2_2_2 = createLesson("Ciclo Do-While", "20 min", false, false);
         lesson2_2_2.setTopic(topic2_2);
-       
 
         LessonContent content2_2_2 = createLessonContent(
                 "https://example.com/videos/cpp-do-while-loop",
@@ -1368,14 +1349,13 @@ public class DatabaseInit {
                 )
         );
         content2_2_2.setLesson(lesson2_2_2);
-       
+
         lesson2_2_2.setContent(content2_2_2);
         lessonService.save(lesson2_2_2);
 
         // Lección 2.2.3: Ciclo For
         Lesson lesson2_2_3 = createLesson("Ciclo For", "28 min", false, false);
         lesson2_2_3.setTopic(topic2_2);
-       
 
         LessonContent content2_2_3 = createLessonContent(
                 "https://example.com/videos/cpp-for-loop",
@@ -1392,15 +1372,13 @@ public class DatabaseInit {
                         new CodeExplanation(5, "i += 2", "Incrementos personalizados para saltos mayores")
                 )
         );
-    
+
         lesson2_2_3.setContent(content2_2_3);
         lessonService.save(lesson2_2_3);
-
 
         // Lección 2.2.4: Ciclos Anidados
         Lesson lesson2_2_4 = createLesson("Ciclos Anidados", "30 min", false, false);
         lesson2_2_4.setTopic(topic2_2);
-      
 
         LessonContent content2_2_4 = createLessonContent(
                 "https://example.com/videos/cpp-nested-loops",
@@ -1438,7 +1416,6 @@ public class DatabaseInit {
         // Lección 3.1.1: Definición y Llamada de Funciones
         Lesson lesson3_1_1 = createLesson("Definición y Llamada de Funciones", "30 min", false, false);
         lesson3_1_1.setTopic(topic3_1);
-    
 
         LessonContent content3_1_1 = createLessonContent(
                 "https://example.com/videos/cpp-functions-intro",
@@ -1456,14 +1433,13 @@ public class DatabaseInit {
                 )
         );
         content3_1_1.setLesson(lesson3_1_1);
-     
+
         lesson3_1_1.setContent(content3_1_1);
         lessonService.save(lesson3_1_1);
 
         // Lección 3.1.2: Parámetros y Argumentos
         Lesson lesson3_1_2 = createLesson("Parámetros y Argumentos", "25 min", false, false);
         lesson3_1_2.setTopic(topic3_1);
-        
 
         LessonContent content3_1_2 = createLessonContent(
                 "https://example.com/videos/cpp-parameters",
@@ -1480,15 +1456,13 @@ public class DatabaseInit {
                 )
         );
         content3_1_2.setLesson(lesson3_1_2);
-       
+
         lesson3_1_2.setContent(content3_1_2);
         lessonService.save(lesson3_1_2);
-
 
         // Lección 3.1.3: Retorno de Valores
         Lesson lesson3_1_3 = createLesson("Retorno de Valores", "22 min", false, false);
         lesson3_1_3.setTopic(topic3_1);
-       
 
         LessonContent content3_1_3 = createLessonContent(
                 "https://example.com/videos/cpp-return-values",
@@ -1505,7 +1479,7 @@ public class DatabaseInit {
                 )
         );
         content3_1_3.setLesson(lesson3_1_3);
-    
+
         lesson3_1_3.setContent(content3_1_3);
         lessonService.save(lesson3_1_3);
 
@@ -1517,7 +1491,6 @@ public class DatabaseInit {
         // Lección 3.2.1: Paso por Referencia
         Lesson lesson3_2_1 = createLesson("Paso por Referencia", "28 min", false, false);
         lesson3_2_1.setTopic(topic3_2);
-        
 
         LessonContent content3_2_1 = createLessonContent(
                 "https://example.com/videos/cpp-pass-by-reference",
@@ -1535,14 +1508,13 @@ public class DatabaseInit {
                 )
         );
         content3_2_1.setLesson(lesson3_2_1);
-     
+
         lesson3_2_1.setContent(content3_2_1);
         lessonService.save(lesson3_2_1);
 
         // Lección 3.2.2: Sobrecarga de Funciones
         Lesson lesson3_2_2 = createLesson("Sobrecarga de Funciones", "24 min", false, false);
         lesson3_2_2.setTopic(topic3_2);
-        
 
         LessonContent content3_2_2 = createLessonContent(
                 "https://example.com/videos/cpp-function-overloading",
@@ -1559,14 +1531,13 @@ public class DatabaseInit {
                 )
         );
         content3_2_2.setLesson(lesson3_2_2);
-       
+
         lesson3_2_2.setContent(content3_2_2);
         lessonService.save(lesson3_2_2);
 
         // Lección 3.2.3: Recursividad
         Lesson lesson3_2_3 = createLesson("Recursividad", "32 min", false, false);
         lesson3_2_3.setTopic(topic3_2);
-       
 
         LessonContent content3_2_3 = createLessonContent(
                 "https://example.com/videos/cpp-recursion",
@@ -1584,9 +1555,9 @@ public class DatabaseInit {
                 )
         );
         content3_2_3.setLesson(lesson3_2_3);
-      
+
         lesson3_2_3.setContent(content3_2_3);
-         lessonService.save(lesson3_2_3);
+        lessonService.save(lesson3_2_3);
 
         // ========== MÓDULO 4: ARREGLOS Y VECTORES ==========
         ModuleModel module4 = createModule(
@@ -1604,7 +1575,6 @@ public class DatabaseInit {
         // Lección 4.1.1: Declaración e Inicialización de Arreglos
         Lesson lesson4_1_1 = createLesson("Declaración e Inicialización de Arreglos", "26 min", false, false);
         lesson4_1_1.setTopic(topic4_1);
-   
 
         LessonContent content4_1_1 = createLessonContent(
                 "https://example.com/videos/cpp-arrays-intro",
@@ -1622,14 +1592,13 @@ public class DatabaseInit {
                 )
         );
         content4_1_1.setLesson(lesson4_1_1);
-        
+
         lesson4_1_1.setContent(content4_1_1);
         lessonService.save(lesson4_1_1);
 
         // Lección 4.1.2: Recorrido y Manipulación de Arreglos
         Lesson lesson4_1_2 = createLesson("Recorrido y Manipulación de Arreglos", "30 min", false, false);
         lesson4_1_2.setTopic(topic4_1);
-        
 
         LessonContent content4_1_2 = createLessonContent(
                 "https://example.com/videos/cpp-array-manipulation",
@@ -1647,14 +1616,13 @@ public class DatabaseInit {
                 )
         );
         content4_1_2.setLesson(lesson4_1_2);
-        
+
         lesson4_1_2.setContent(content4_1_2);
         lessonService.save(lesson4_1_2);
 
         // Lección 4.1.3: Búsqueda y Ordenamiento Básico
         Lesson lesson4_1_3 = createLesson("Búsqueda y Ordenamiento Básico", "35 min", false, false);
         lesson4_1_3.setTopic(topic4_1);
-        
 
         LessonContent content4_1_3 = createLessonContent(
                 "https://example.com/videos/cpp-search-sort",
@@ -1672,7 +1640,7 @@ public class DatabaseInit {
                 )
         );
         content4_1_3.setLesson(lesson4_1_3);
-       
+
         lesson4_1_3.setContent(content4_1_3);
         lessonService.save(lesson4_1_3);
 
@@ -1684,7 +1652,6 @@ public class DatabaseInit {
         // Lección 4.2.1: Matrices (Arreglos 2D)
         Lesson lesson4_2_1 = createLesson("Matrices (Arreglos 2D)", "32 min", false, false);
         lesson4_2_1.setTopic(topic4_2);
-       
 
         LessonContent content4_2_1 = createLessonContent(
                 "https://example.com/videos/cpp-matrices",
@@ -1702,14 +1669,13 @@ public class DatabaseInit {
                 )
         );
         content4_2_1.setLesson(lesson4_2_1);
-        
+
         lesson4_2_1.setContent(content4_2_1);
         lessonService.save(lesson4_2_1);
 
         // Lección 4.2.2: Recorrido de Matrices
         Lesson lesson4_2_2 = createLesson("Recorrido de Matrices", "28 min", false, false);
         lesson4_2_2.setTopic(topic4_2);
-       
 
         LessonContent content4_2_2 = createLessonContent(
                 "https://example.com/videos/cpp-matrix-traversal",
@@ -1727,9 +1693,9 @@ public class DatabaseInit {
                 )
         );
         content4_2_2.setLesson(lesson4_2_2);
-        
+
         lesson4_2_2.setContent(content4_2_2);
-         lessonService.save(lesson4_2_2);
+        lessonService.save(lesson4_2_2);
 
         // Tema 4.3: Introducción a Vectores STL
         Topic topic4_3 = createTopic("Introducción a Vectores STL", false);
@@ -1739,7 +1705,6 @@ public class DatabaseInit {
         // Lección 4.3.1: Vectores Dinámicos
         Lesson lesson4_3_1 = createLesson("Vectores Dinámicos", "30 min", false, false);
         lesson4_3_1.setTopic(topic4_3);
-      
 
         LessonContent content4_3_1 = createLessonContent(
                 "https://example.com/videos/cpp-vectors",
@@ -1759,7 +1724,7 @@ public class DatabaseInit {
                 )
         );
         content4_3_1.setLesson(lesson4_3_1);
-        
+
         lesson4_3_1.setContent(content4_3_1);
         lessonService.save(lesson4_3_1);
 
@@ -1779,7 +1744,6 @@ public class DatabaseInit {
         // Lección 5.1.1: Arreglos de Caracteres vs String
         Lesson lesson5_1_1 = createLesson("Arreglos de Caracteres vs String", "25 min", false, false);
         lesson5_1_1.setTopic(topic5_1);
-        
 
         LessonContent content5_1_1 = createLessonContent(
                 "https://example.com/videos/cpp-strings-intro",
@@ -1797,14 +1761,13 @@ public class DatabaseInit {
                 )
         );
         content5_1_1.setLesson(lesson5_1_1);
-       
+
         lesson5_1_1.setContent(content5_1_1);
         lessonService.save(lesson5_1_1);
 
         // Lección 5.1.2: Operaciones con Strings
         Lesson lesson5_1_2 = createLesson("Operaciones con Strings", "30 min", false, false);
         lesson5_1_2.setTopic(topic5_1);
-        
 
         LessonContent content5_1_2 = createLessonContent(
                 "https://example.com/videos/cpp-string-operations",
@@ -1824,14 +1787,13 @@ public class DatabaseInit {
                 )
         );
         content5_1_2.setLesson(lesson5_1_2);
-        
+
         lesson5_1_2.setContent(content5_1_2);
         lessonService.save(lesson5_1_2);
 
         // Lección 5.1.3: Procesamiento de Texto
         Lesson lesson5_1_3 = createLesson("Procesamiento de Texto", "28 min", false, false);
         lesson5_1_3.setTopic(topic5_1);
-
 
         LessonContent content5_1_3 = createLessonContent(
                 "https://example.com/videos/cpp-text-processing",
@@ -1849,7 +1811,7 @@ public class DatabaseInit {
                 )
         );
         content5_1_3.setLesson(lesson5_1_3);
-        
+
         lesson5_1_3.setContent(content5_1_3);
         lessonService.save(lesson5_1_3);
 
@@ -1869,7 +1831,6 @@ public class DatabaseInit {
         // Lección 6.1.1: Introducción a Punteros
         Lesson lesson6_1_1 = createLesson("Introducción a Punteros", "35 min", false, false);
         lesson6_1_1.setTopic(topic6_1);
-        
 
         LessonContent content6_1_1 = createLessonContent(
                 "https://example.com/videos/cpp-pointers-intro",
@@ -1894,7 +1855,6 @@ public class DatabaseInit {
         // Lección 6.1.2: Punteros y Arreglos
         Lesson lesson6_1_2 = createLesson("Punteros y Arreglos", "30 min", false, false);
         lesson6_1_2.setTopic(topic6_1);
-        
 
         LessonContent content6_1_2 = createLessonContent(
                 "https://example.com/videos/cpp-pointers-arrays",
@@ -1912,7 +1872,7 @@ public class DatabaseInit {
                 )
         );
         content6_1_2.setLesson(lesson6_1_2);
-      
+
         lesson6_1_2.setContent(content6_1_2);
         lessonService.save(lesson6_1_2);
 
@@ -1924,7 +1884,6 @@ public class DatabaseInit {
         // Lección 6.2.1: Operadores new y delete
         Lesson lesson6_2_1 = createLesson("Operadores new y delete", "32 min", false, false);
         lesson6_2_1.setTopic(topic6_2);
-       
 
         LessonContent content6_2_1 = createLessonContent(
                 "https://example.com/videos/cpp-dynamic-memory",
@@ -1943,7 +1902,7 @@ public class DatabaseInit {
                 )
         );
         content6_2_1.setLesson(lesson6_2_1);
-    
+
         lesson6_2_1.setContent(content6_2_1);
         lessonService.save(lesson6_2_1);
 
@@ -1963,7 +1922,6 @@ public class DatabaseInit {
         // Lección 7.1.1: Definición y Uso de Estructuras
         Lesson lesson7_1_1 = createLesson("Definición y Uso de Estructuras", "28 min", false, false);
         lesson7_1_1.setTopic(topic7_1);
-       
 
         LessonContent content7_1_1 = createLessonContent(
                 "https://example.com/videos/cpp-structs",
@@ -1981,14 +1939,13 @@ public class DatabaseInit {
                 )
         );
         content7_1_1.setLesson(lesson7_1_1);
-      
+
         lesson7_1_1.setContent(content7_1_1);
         lessonService.save(lesson7_1_1);
 
         // Lección 7.1.2: Arreglos de Estructuras
         Lesson lesson7_1_2 = createLesson("Arreglos de Estructuras", "26 min", false, false);
         lesson7_1_2.setTopic(topic7_1);
-        
 
         LessonContent content7_1_2 = createLessonContent(
                 "https://example.com/videos/cpp-struct-arrays",
@@ -2006,7 +1963,7 @@ public class DatabaseInit {
                 )
         );
         content7_1_2.setLesson(lesson7_1_2);
-      
+
         lesson7_1_2.setContent(content7_1_2);
         lessonService.save(lesson7_1_2);
 
@@ -2018,7 +1975,6 @@ public class DatabaseInit {
         // Lección 7.2.1: Diferencia entre Struct y Class
         Lesson lesson7_2_1 = createLesson("Diferencia entre Struct y Class", "25 min", false, false);
         lesson7_2_1.setTopic(topic7_2);
-      
 
         LessonContent content7_2_1 = createLessonContent(
                 "https://example.com/videos/cpp-struct-vs-class",
@@ -2037,7 +1993,7 @@ public class DatabaseInit {
                 )
         );
         content7_2_1.setLesson(lesson7_2_1);
-      
+
         lesson7_2_1.setContent(content7_2_1);
         lessonService.save(lesson7_2_1);
 
@@ -2057,7 +2013,6 @@ public class DatabaseInit {
         // Lección 8.1.1: Lectura de Archivos
         Lesson lesson8_1_1 = createLesson("Lectura de Archivos", "30 min", false, false);
         lesson8_1_1.setTopic(topic8_1);
-        
 
         LessonContent content8_1_1 = createLessonContent(
                 "https://example.com/videos/cpp-file-reading",
@@ -2077,14 +2032,13 @@ public class DatabaseInit {
                 )
         );
         content8_1_1.setLesson(lesson8_1_1);
-        
+
         lesson8_1_1.setContent(content8_1_1);
         lessonService.save(lesson8_1_1);
 
         // Lección 8.1.2: Escritura de Archivos
         Lesson lesson8_1_2 = createLesson("Escritura de Archivos", "28 min", false, false);
         lesson8_1_2.setTopic(topic8_1);
-       
 
         LessonContent content8_1_2 = createLessonContent(
                 "https://example.com/videos/cpp-file-writing",
@@ -2103,14 +2057,13 @@ public class DatabaseInit {
                 )
         );
         content8_1_2.setLesson(lesson8_1_2);
-      
+
         lesson8_1_2.setContent(content8_1_2);
         lessonService.save(lesson8_1_2);
 
         // Lección 8.1.3: Manipulación Avanzada
         Lesson lesson8_1_3 = createLesson("Manipulación Avanzada", "32 min", false, false);
         lesson8_1_3.setTopic(topic8_1);
-      
 
         LessonContent content8_1_3 = createLessonContent(
                 "https://example.com/videos/cpp-file-advanced",
@@ -2129,7 +2082,7 @@ public class DatabaseInit {
                 )
         );
         content8_1_3.setLesson(lesson8_1_3);
- 
+
         lesson8_1_3.setContent(content8_1_3);
         lessonService.save(lesson8_1_3);
 
@@ -2149,7 +2102,6 @@ public class DatabaseInit {
         // Lección 9.1.1: Especificaciones del Proyecto
         Lesson lesson9_1_1 = createLesson("Especificaciones del Proyecto", "45 min", false, false);
         lesson9_1_1.setTopic(topic9_1);
-        
 
         LessonContent content9_1_1 = createLessonContent(
                 "https://example.com/videos/cpp-final-project-specs",
@@ -2167,14 +2119,13 @@ public class DatabaseInit {
                 )
         );
         content9_1_1.setLesson(lesson9_1_1);
-     
+
         lesson9_1_1.setContent(content9_1_1);
         lessonService.save(lesson9_1_1);
 
         // Lección 9.1.2: Ejemplo Base - Sistema de Biblioteca
         Lesson lesson9_1_2 = createLesson("Ejemplo Base - Sistema de Biblioteca", "60 min", false, false);
         lesson9_1_2.setTopic(topic9_1);
-        
 
         LessonContent content9_1_2 = createLessonContent(
                 "https://example.com/videos/cpp-library-system",
@@ -2193,14 +2144,13 @@ public class DatabaseInit {
                 )
         );
         content9_1_2.setLesson(lesson9_1_2);
-   
+
         lesson9_1_2.setContent(content9_1_2);
         lessonService.save(lesson9_1_2);
 
         // Lección 9.1.3: Guía de Desarrollo y Mejores Prácticas
         Lesson lesson9_1_3 = createLesson("Guía de Desarrollo y Mejores Prácticas", "40 min", false, false);
         lesson9_1_3.setTopic(topic9_1);
-       
 
         LessonContent content9_1_3 = createLessonContent(
                 "https://example.com/videos/cpp-best-practices",
@@ -2219,14 +2169,13 @@ public class DatabaseInit {
                 )
         );
         content9_1_3.setLesson(lesson9_1_3);
-     
+
         lesson9_1_3.setContent(content9_1_3);
         lessonService.save(lesson9_1_3);
 
         // Lección 9.1.4: Rúbrica de Evaluación
         Lesson lesson9_1_4 = createLesson("Rúbrica de Evaluación", "20 min", false, false);
         lesson9_1_4.setTopic(topic9_1);
-        
 
         LessonContent content9_1_4 = createLessonContent(
                 "https://example.com/videos/cpp-project-rubric",
@@ -2244,9 +2193,9 @@ public class DatabaseInit {
                 )
         );
         content9_1_4.setLesson(lesson9_1_4);
-      
+
         lesson9_1_4.setContent(content9_1_4);
-        lessonService.save(lesson9_1_4);        
+        lessonService.save(lesson9_1_4);
 
         System.out.println("✅ Curso de C++ creado exitosamente con todos los módulos, temas y lecciones");
     }
@@ -2298,7 +2247,7 @@ public class DatabaseInit {
     private Course createCourse(String title, String desc, String cat, String level, Double rating,
             String duration, Integer students, Integer lessons, Integer completedLessons,
             String nextLesson, String thumbnail, String image, String price, String originalPrice,
-            Integer xp, Boolean isNew, Boolean isTrending, Course.CourseStatus status,
+            Integer xp, Boolean isNew, Boolean isTrending,
             List<String> learningPoints, List<String> requirements, List<String> tags,
             Instructor instructor) {
 
@@ -2312,15 +2261,13 @@ public class DatabaseInit {
         c.setDuration(duration);
         c.setStudents(students);
         c.setLessons(lessons);
-        c.setCompletedLessons(completedLessons);
-        c.setNextLesson(nextLesson);
         c.setThumbnail(thumbnail);
         c.setPrice(price);
         c.setOriginalPrice(originalPrice);
         c.setXp(xp);
         c.setIsNew(isNew);
         c.setIsTrending(isTrending);
-        c.setStatus(status);
+
         c.setLearningPoints(learningPoints);
         c.setRequirements(requirements);
         c.setTags(tags);

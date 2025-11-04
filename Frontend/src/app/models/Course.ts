@@ -11,9 +11,7 @@ export interface Course {
   rating?: number;
   duration?: string;
   students?: number;
-  lessons?: number;
-  completedLessons?: number;
-  nextLesson?: string;
+  lessons?: number; // Total de lecciones del curso
   thumbnail?: string;
   image?: string;
   price?: string;
@@ -21,7 +19,6 @@ export interface Course {
   xp?: number;
   isNew?: boolean;
   isTrending?: boolean;
-  status?: string;
   instructor?: Instructor;
   learningPoints?: string[];
   requirements?: string[];

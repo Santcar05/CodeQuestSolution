@@ -102,7 +102,7 @@ export class RutaProfesionalComponent implements OnInit {
       id: 1,
       title: 'JavaScript Moderno ES6+',
       description: 'Domina las nuevas características de JavaScript',
-      status: 'completed',
+
       duration: '15h',
       difficulty: 'Intermedio',
       xp: 500,
@@ -132,7 +132,7 @@ export class RutaProfesionalComponent implements OnInit {
       id: 2,
       title: 'React desde Cero',
       description: 'Aprende React con Hooks y Context API',
-      status: 'completed',
+
       duration: '20h',
       difficulty: 'Intermedio',
       xp: 750,

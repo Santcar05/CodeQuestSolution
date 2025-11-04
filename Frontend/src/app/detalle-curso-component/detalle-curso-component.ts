@@ -1,9 +1,13 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../sidebar-component/sidebar-component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Course } from '../models/Course';
 import { CourseService } from '../service/Course/course-service';
+import { UserCourse } from '../models/UserCourse';
+import { UserCourseService } from '../service/UserCourse/user-course-service';
+import { UserProfileService } from '../service/UserProfile/user-profile-service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-detalle-curso',
@@ -12,8 +16,8 @@ import { CourseService } from '../service/Course/course-service';
   templateUrl: './detalle-curso-component.html',
   styleUrls: ['./detalle-curso-component.css'],
 })
-export class DetalleCursoComponent implements OnInit {
-  course: Course | null = null; // Inicializar como null
+export class DetalleCursoComponent implements OnInit, OnDestroy {
+  course: Course | null = null;
   relatedCourses: Course[] = [];
 
   expandedModules: boolean[] = [];
@@ -30,54 +34,81 @@ export class DetalleCursoComponent implements OnInit {
   isLoading = true;
   hasError = false;
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private courseService: CourseService,
     private route: ActivatedRoute,
     private router: Router,
-    private cdRef: ChangeDetectorRef 
+    private cdRef: ChangeDetectorRef,
+    private userCourseService: UserCourseService,
+    private userProfileService: UserProfileService
   ) {}
 
   ngOnInit(): void {
-    const courseId = Number(this.route.snapshot.paramMap.get('id'));
-    if (!courseId || isNaN(courseId)) {
-      this.hasError = true;
-      this.isLoading = false;
-      this.cdRef.detectChanges(); // Forzar detección de cambios
-      return;
-    }
+    // Suscribirse a cambios en los parámetros de la ruta
+    this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      const courseId = Number(params.get('id'));
+      if (!courseId || isNaN(courseId)) {
+        this.hasError = true;
+        this.isLoading = false;
+        this.cdRef.detectChanges();
+        return;
+      }
 
-    this.loadCourseData(courseId);
+      this.loadCourseData(courseId);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private loadCourseData(courseId: number): void {
+    // Resetear estado antes de cargar nuevo curso
+    this.resetComponentState();
+
     this.isLoading = true;
     this.hasError = false;
 
-    this.courseService.findById(courseId).subscribe({
-      next: (data) => {
-        this.course = data;
+    this.courseService
+      .findById(courseId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data) => {
+          this.course = data;
 
-        // Inicializar estados de expansión de forma segura
-        this.initializeExpansionStates();
+          // Inicializar estados de expansión de forma segura
+          this.initializeExpansionStates();
 
-        if (this.expandedModules.length > 0) {
-          this.expandedModules[0] = true;
-        }
+          if (this.expandedModules.length > 0) {
+            this.expandedModules[0] = true;
+          }
 
-        // Cargar cursos relacionados
-        this.loadRelatedCourses();
+          // Cargar cursos relacionados
+          this.loadRelatedCourses();
 
-        this.isLoading = false;
-        this.cdRef.detectChanges(); // Forzar detección de cambios después de cargar
-      },
-      error: (err) => {
-        console.error('Error al cargar el curso', err);
-        this.hasError = true;
-        this.isLoading = false;
-        this.course = null;
-        this.cdRef.detectChanges(); // Forzar detección de cambios en error
-      },
-    });
+          this.isLoading = false;
+          this.cdRef.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error al cargar el curso', err);
+          this.hasError = true;
+          this.isLoading = false;
+          this.course = null;
+          this.cdRef.detectChanges();
+        },
+      });
+  }
+
+  private resetComponentState(): void {
+    this.course = null;
+    this.relatedCourses = [];
+    this.expandedModules = [];
+    this.expandedTopics = [];
+    this.isLoading = true;
+    this.hasError = false;
   }
 
   private initializeExpansionStates(): void {
@@ -95,16 +126,19 @@ export class DetalleCursoComponent implements OnInit {
   }
 
   private loadRelatedCourses(): void {
-    this.courseService.findAll().subscribe({
-      next: (related) => {
-        this.relatedCourses = related;
-        this.cdRef.detectChanges(); // Forzar detección de cambios
-      },
-      error: (err) => {
-        console.error('Error cargando cursos relacionados', err);
-        this.relatedCourses = [];
-      },
-    });
+    this.courseService
+      .findAll()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (related) => {
+          this.relatedCourses = related;
+          this.cdRef.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error cargando cursos relacionados', err);
+          this.relatedCourses = [];
+        },
+      });
   }
 
   toggleModule(index: number): void {
@@ -143,12 +177,58 @@ export class DetalleCursoComponent implements OnInit {
 
   enrollInCourse(): void {
     if (!this.course?.id) return;
-    this.router.navigate(['/visualizar-tema', this.course.id]);
+
+    this.userProfileService
+      .findById(1)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (userProfile) => {
+          const now = new Date().toISOString();
+
+          const userCourse: UserCourse = {
+            userProfile: { id: userProfile.id } as any,
+            course: { id: this.course!.id } as any,
+            status: 'IN_PROGRESS',
+            completedLessons: 0,
+            nextLesson: '',
+            startedAt: now,
+            completedAt: null,
+            lastAccessed: now,
+            progressPercentage: 0,
+            currentModule: '',
+            currentLesson: '',
+            rating: 0,
+            isFavorite: false,
+            notes: '',
+          };
+
+          console.log('📤 Enviando JSON:', JSON.stringify(userCourse, null, 2));
+
+          //TODO:Revisar si el usuario ya estaba inscrito antes de crear uno nuevo
+
+          this.userCourseService
+            .save(userCourse)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: (data) => {
+                console.log('✅ Inscripción exitosa', data);
+                this.router.navigate(['/visualizar-tema', this.course!.id]);
+              },
+              error: (err) => {
+                console.error('❌ Error al inscribir en el curso', err);
+                console.error('Detalles del error:', err.error);
+                console.error('Status:', err.status);
+              },
+            });
+        },
+        error: (err) => {
+          console.error('❌ Error al obtener el perfil del usuario', err);
+        },
+      });
   }
 
   openCourse(courseId: number): void {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/detalle-curso', courseId]);
-    });
+    // Navegar directamente sin recargar la página
+    this.router.navigate(['/detalle-curso', courseId]);
   }
 }

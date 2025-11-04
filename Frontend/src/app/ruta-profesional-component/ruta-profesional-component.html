@@ -66,12 +66,19 @@
           </div>
 
           <div class="roadmap-container">
+            <!--
             <div
               *ngFor="let item of roadmapItems"
               class="roadmap-item"
               [class.completed]="item.status === 'completed'"
               [class.current]="item.status === 'current'"
               [class.upcoming]="item.status === 'upcoming'"
+              (click)="navigateToRoadmapItem(item.id)"
+            >
+          -->
+            <div
+              *ngFor="let item of roadmapItems"
+              class="roadmap-item"
               (click)="navigateToRoadmapItem(item.id)"
             >
               <div class="roadmap-icon">{{ item.icon }}</div>
@@ -99,10 +106,11 @@
           </div>
 
           <div class="courses-grid">
+            <!--
             <div
               *ngFor="let course of courses"
               class="course-card"
-              [class.completed]="course.status === 'completed'"
+              [class.completed]="course.status === 'completed'" 
               (click)="startCourse(course.id)"
             >
               <div class="course-header">
@@ -131,7 +139,7 @@
                 <span class="course-xp">⭐ {{ course.xp }} XP</span>
               </div>
             </div>
-          </div>
+          --></div>
         </div>
 
         <!-- Proyectos Reales -->
